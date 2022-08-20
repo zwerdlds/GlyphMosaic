@@ -34,7 +34,7 @@ impl Document
     ) -> Result<Document, String>
     {
         serde_json::from_str(json).map_err(|e| {
-            format!("Unable to parse ({:?})", e).into()
+            format!("Unable to parse ({e})").into()
         })
     }
 
@@ -103,16 +103,33 @@ mod tests
     }
 
     #[test]
-    fn validate_simple_document_load()
+    fn validate_simple_document_load_json()
     {
-        let doc = r#"{
-            "preview_mode": Source,
-            "source_image_path": "./test resources/1x1.png"
-        }"#;
+        let doc = include_str!(
+            "../../../test resources/testdoc.json"
+        );
 
         let load_res = Document::load_from_json(doc);
         assert_eq!(
             load_res,
+            Ok(Document {
+                preview_mode: PreviewMode::Source,
+                source_image_path: "./test resources/1x1.\
+                                    png"
+                .to_string()
+            })
+        );
+    }
+
+    #[test]
+    fn validate_simple_document_load_from_path()
+    {
+        let doc = Document::load_from_location(
+            "./test resources/testdoc.json",
+        );
+
+        assert_eq!(
+            doc,
             Ok(Document {
                 preview_mode: PreviewMode::Source,
                 source_image_path: "./test resources/1x1.\
