@@ -24,7 +24,7 @@ impl Document
     ) -> Result<Document, String>
     {
         let data = fs::read_to_string(path)
-            .map_err(|_| "Unable to read file")?;
+            .map_err(|e| format!("Unable to read file ({e})"))?;
 
         Document::load_from_json(&data)
     }
@@ -45,8 +45,7 @@ impl Document
         serde_json::to_string_pretty(document).map_err(
             |e| {
                 format!(
-                    "Unable to serialize document ({:?})",
-                    e
+                    "Unable to serialize document ({e})"
                 )
                 .into()
             },

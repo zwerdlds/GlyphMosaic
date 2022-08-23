@@ -57,9 +57,7 @@ mod tests
             sm.create_preview(&doc).unwrap().to_rgb8();
 
         let mut constructed = RgbImage::new(1, 1);
-        let mut p = constructed.get_pixel_mut(0, 0);
-
-        p.0 = [255, 255, 255];
+        constructed.get_pixel_mut(0, 0).0 = [255, 255, 255];
 
         assert_eq!(preview, constructed);
     }
