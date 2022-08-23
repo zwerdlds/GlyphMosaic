@@ -4,15 +4,17 @@ empty_item_single_line = false
 fn_args_layout = "Vertical"
 force_multiline_blocks = true
 format_strings = true
-imports_indent = "Block"
-imports_layout = "Vertical"
 match_block_trailing_comma = true
 max_width = 60
-merge_imports = true
 newline_style = "Unix"
 normalize_comments = true
 reorder_impl_items = true
+unstable_features = true
+
+# Imports
+imports_granularity = "One"
+merge_imports = true
 reorder_imports = true
 reorder_modules = true
-unstable_features = true
-group_imports = "One"
+imports_indent = "Block"
+imports_layout = "Vertical"
