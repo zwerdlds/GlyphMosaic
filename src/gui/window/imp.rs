@@ -1,15 +1,23 @@
 use gtk4::{
-    glib::{self, subclass::InitializingObject},
+    glib::{
+        self,
+        subclass::InitializingObject,
+    },
     prelude::*,
     subclass::prelude::*,
-    ApplicationWindow, Button, CompositeTemplate, Notebook,
+    ApplicationWindow,
+    Button,
+    CompositeTemplate,
+    Notebook,
 };
+
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
 #[template(
     resource = "/me/zwerdlds/glyphmosaic/gui/gmwindow.ui"
 )]
-pub struct Window {
+pub struct Window
+{
     #[template_child]
     pub settings_notebook: TemplateChild<Notebook>,
 
@@ -19,47 +27,46 @@ pub struct Window {
 
 // The central trait for subclassing a GObject
 #[glib::object_subclass]
-impl ObjectSubclass for Window {
-    const NAME: &'static str = "GMMainWindow";
-    type Type = super::Window;
+impl ObjectSubclass for Window
+{
     type ParentType = ApplicationWindow;
+    type Type = super::Window;
 
-    fn class_init(klass: &mut Self::Class) {
-        klass.bind_template();
+    const NAME: &'static str = "GMMainWindow";
+
+    fn class_init(c: &mut Self::Class)
+    {
+        c.bind_template();
     }
 
-    fn instance_init(obj: &InitializingObject<Self>) {
+    fn instance_init(obj: &InitializingObject<Self>)
+    {
         obj.init_template();
     }
 }
 
-impl ObjectImpl for Window {
+impl ObjectImpl for Window
+{
     fn constructed(
         &self,
         obj: &Self::Type,
-    ) {
+    )
+    {
         self.parent_constructed(obj);
-
-        print!("Window constructed.");
-
-        self.select_source.connect_clicked(move |_| {
-            print!("select source clicked.");
-        });
-
-        self.settings_notebook.connect_change_current_page(
-            move |_, i| {
-                print!("Settings page changing ({i}).");
-                true
-            },
-        );
     }
 }
 
 // Trait shared by all widgets
-impl WidgetImpl for Window {}
+impl WidgetImpl for Window
+{
+}
 
 // Trait shared by all windows
-impl WindowImpl for Window {}
+impl WindowImpl for Window
+{
+}
 
 // Trait shared by all application windows
-impl ApplicationWindowImpl for Window {}
+impl ApplicationWindowImpl for Window
+{
+}

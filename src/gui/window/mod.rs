@@ -1,8 +1,11 @@
-mod imp;
-
+pub mod events;
+pub mod imp;
 use glib::Object;
-use gtk4::glib;
-use gtk4::{gio, Application};
+use gtk4::{
+    gio,
+    glib,
+    Application,
+};
 
 glib::wrapper! {
     pub struct Window(ObjectSubclass<imp::Window>)
@@ -11,8 +14,10 @@ glib::wrapper! {
                     gtk4::ConstraintTarget, gtk4::Native, gtk4::Root, gtk4::ShortcutManager;
 }
 
-impl Window {
-    pub fn new(app: &Application) -> Self {
+impl Window
+{
+    pub fn new(app: &Application) -> Self
+    {
         // Create new window
         Object::new(&[("application", app)])
             .expect("Failed to create Window")
