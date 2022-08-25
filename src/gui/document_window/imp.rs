@@ -1,8 +1,3 @@
-use std::{
-    cell::RefCell,
-    rc::Rc,
-};
-
 use glyph_mosaic::document::Document;
 use gtk4::{
     glib::{
@@ -17,6 +12,10 @@ use gtk4::{
     DrawingArea,
     Label,
     Notebook,
+};
+use std::{
+    cell::RefCell,
+    rc::Rc,
 };
 
 // Object holding the state

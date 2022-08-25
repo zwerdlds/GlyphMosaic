@@ -1,5 +1,7 @@
+use super::DocumentWindow;
+use glyph_mosaic::prelude::*;
 use gtk4::{
-    glib::clone,
+    gdk_pixbuf::Pixbuf,
     prelude::*,
     subclass::prelude::ObjectSubclassIsExt,
     FileChooserAction,
@@ -7,21 +9,56 @@ use gtk4::{
     ResponseType,
 };
 
-use super::DocumentWindow;
-
 impl DocumentWindow
 {
     pub fn setup_events(&self)
     {
-        let imp = self.imp();
-        let window = self.clone();
+        self.setup_base_image_select();
+        self.setup_preview_redraw();
+    }
 
-        imp.select_source.connect_clicked(clone!(
-            @strong window =>
-            move |_| {
-                window.select_source();
-            }
-        ));
+    fn setup_base_image_select(&self)
+    {
+        let gtk_window = self.clone();
+        let win = self.imp();
+        win.select_source.connect_clicked(move |_| {
+            gtk_window.select_source();
+        });
+    }
+
+    pub fn setup_preview_redraw(&self)
+    {
+        let gtk_window = self.clone();
+        let win = self.imp();
+        win.preview_area.set_draw_func(
+            move |_area, ctx, _width, _height| {
+                let res: Result<(), String> = try {
+                    let preview: Pixbuf = gtk_window
+                        .imp()
+                        .document
+                        .borrow()
+                        .create_preview()?;
+
+                    ctx.set_source_pixbuf(
+                        &preview, 0.0, 0.0,
+                    );
+
+                    ctx.paint().map_err(|_| {
+                        "Invalid cairo surface state."
+                    })?;
+                };
+
+                if let Err(e) = res
+                {
+                    gtk_window.imp().set_status(
+                        format!(
+                            "Error painting preview: {e}"
+                        )
+                        .as_str(),
+                    );
+                }
+            },
+        );
     }
 
     fn select_source(&self)
@@ -43,7 +80,7 @@ impl DocumentWindow
                   response: ResponseType| {
                 if response == ResponseType::Ok
                 {
-                    let result: Result<String, &str> = try {
+                    let result: Result<String, String> = try {
                         let file = d
                             .file()
                             .ok_or("Couldn't get file")?;

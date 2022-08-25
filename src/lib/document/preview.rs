@@ -1,9 +1,9 @@
 use crate::{
-    common::Previewable,
     document::{
         Document,
         PreviewMode,
     },
+    prelude::*,
 };
 use gtk4::gdk_pixbuf::Pixbuf;
 
@@ -40,10 +40,7 @@ impl Document
 mod tests
 {
     use super::Document;
-    use crate::{
-        common::Previewable,
-        document::PreviewMode,
-    };
+    use crate::prelude::*;
 
     #[test]
     fn validate_simple_document_source_preview()
