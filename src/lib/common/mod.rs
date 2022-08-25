@@ -1,32 +1,36 @@
-use crate::document::Document;
-use image::DynamicImage;
+use gtk4::gdk_pixbuf::Pixbuf;
 
 pub trait Previewable
 {
-    fn create_preview(
-        &self,
-        document: &Document,
-    ) -> Result<DynamicImage, String>;
+    fn create_preview(&self) -> Result<Pixbuf, String>;
 }
 
 #[cfg(test)]
 mod tests
 {
-    use image::{
-        imageops,
-        GenericImageView,
-        ImageBuffer,
-        RgbImage,
+    use gtk4::gdk_pixbuf::{
+        Colorspace,
+        Pixbuf,
     };
 
     #[test]
     fn validate_image_crop_immutability()
     {
-        let mut img: RgbImage = ImageBuffer::new(512, 512);
-        let subimg =
-            imageops::crop(&mut img, 0, 0, 100, 100);
+        let img: Pixbuf = Pixbuf::new(
+            Colorspace::Rgb,
+            false,
+            8,
+            512,
+            512,
+        )
+        .unwrap();
 
-        assert!(subimg.dimensions() == (100, 100));
-        assert!(img.dimensions() == (512, 512));
+        let subimg =
+            img.new_subpixbuf(0, 0, 100, 100).unwrap();
+
+        assert_eq!(subimg.width(), 100);
+        assert_eq!(subimg.height(), 100);
+        assert_eq!(img.height(), 512);
+        assert_eq!(img.width(), 512);
     }
 }

@@ -1,30 +1,47 @@
+pub mod preview;
+pub mod properties;
 use serde::{
     Deserialize,
     Serialize,
 };
 use std::fs;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(
+    Serialize, Deserialize, Debug, PartialEq, Eq, Default,
+)]
 pub struct Document
 {
-    pub preview_mode: PreviewMode,
-    pub source_image_path: String,
+    preview_mode: PreviewMode,
+    source_image_path: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
+#[derive(
+    Serialize, Deserialize, Debug, PartialEq, Eq, Default,
+)]
 pub enum PreviewMode
 {
+    #[default]
     Source,
 }
 
 impl Document
 {
+    pub fn new() -> Document
+    {
+        Document {
+            preview_mode: PreviewMode::Source,
+            source_image_path: None,
+        }
+    }
+
     pub fn load_from_location(
         path: &str
     ) -> Result<Document, String>
     {
-        let data = fs::read_to_string(path)
-            .map_err(|e| format!("Unable to read file ({e})"))?;
+        let data =
+            fs::read_to_string(path).map_err(|e| {
+                format!("Unable to read file ({e})")
+            })?;
 
         Document::load_from_json(&data)
     }
@@ -47,7 +64,6 @@ impl Document
                 format!(
                     "Unable to serialize document ({e})"
                 )
-                .into()
             },
         )
     }
@@ -83,21 +99,22 @@ mod tests
     {
         let doc = Document {
             preview_mode: PreviewMode::Source,
-            source_image_path: "./test resources/1x1.png"
-                .to_string(),
+            source_image_path: Some(
+                "./test resources/1x1.png".to_string(),
+            ),
         };
 
         let serialize_res =
-            Document::serialize_to_json(&doc);
+            Document::serialize_to_json(&doc).unwrap();
 
-        // print!("{:?}", serialize_res);
+        print!("{:?}", serialize_res);
 
         assert_eq!(
             serialize_res,
-            Ok("{\n  \"preview_mode\": \"Source\",\n  \
-                \"source_image_path\": \"./test \
-                resources/1x1.png\"\n}"
-                .to_string())
+            "{\n  \"preview_mode\": \"Source\",\n  \
+             \"source_image_path\": \"./test \
+             resources/1x1.png\"\n}"
+                .to_string()
         );
     }
 
@@ -113,9 +130,9 @@ mod tests
             load_res,
             Ok(Document {
                 preview_mode: PreviewMode::Source,
-                source_image_path: "./test resources/1x1.\
-                                    png"
-                .to_string()
+                source_image_path: Some(
+                    "./test resources/1x1.png".to_string()
+                )
             })
         );
     }
@@ -131,9 +148,9 @@ mod tests
             doc,
             Ok(Document {
                 preview_mode: PreviewMode::Source,
-                source_image_path: "./test resources/1x1.\
-                                    png"
-                .to_string()
+                source_image_path: Some(
+                    "./test resources/1x1.png".to_string()
+                )
             })
         );
     }

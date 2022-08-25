@@ -1,3 +1,9 @@
+use std::{
+    cell::RefCell,
+    rc::Rc,
+};
+
+use glyph_mosaic::document::Document;
 use gtk4::{
     glib::{
         self,
@@ -8,6 +14,8 @@ use gtk4::{
     ApplicationWindow,
     Button,
     CompositeTemplate,
+    DrawingArea,
+    Label,
     Notebook,
 };
 
@@ -16,23 +24,31 @@ use gtk4::{
 #[template(
     resource = "/me/zwerdlds/glyphmosaic/gui/gmwindow.ui"
 )]
-pub struct Window
+pub struct DocumentWindow
 {
+    pub document: Rc<RefCell<Document>>,
+
     #[template_child]
     pub settings_notebook: TemplateChild<Notebook>,
 
     #[template_child]
     pub select_source: TemplateChild<Button>,
+
+    #[template_child]
+    pub status_label: TemplateChild<Label>,
+
+    #[template_child]
+    pub preview_area: TemplateChild<DrawingArea>,
 }
 
 // The central trait for subclassing a GObject
 #[glib::object_subclass]
-impl ObjectSubclass for Window
+impl ObjectSubclass for DocumentWindow
 {
     type ParentType = ApplicationWindow;
-    type Type = super::Window;
+    type Type = super::DocumentWindow;
 
-    const NAME: &'static str = "GMMainWindow";
+    const NAME: &'static str = "GMDocumentWindow";
 
     fn class_init(c: &mut Self::Class)
     {
@@ -45,7 +61,7 @@ impl ObjectSubclass for Window
     }
 }
 
-impl ObjectImpl for Window
+impl ObjectImpl for DocumentWindow
 {
     fn constructed(
         &self,
@@ -57,16 +73,16 @@ impl ObjectImpl for Window
 }
 
 // Trait shared by all widgets
-impl WidgetImpl for Window
+impl WidgetImpl for DocumentWindow
 {
 }
 
 // Trait shared by all windows
-impl WindowImpl for Window
+impl WindowImpl for DocumentWindow
 {
 }
 
 // Trait shared by all application windows
-impl ApplicationWindowImpl for Window
+impl ApplicationWindowImpl for DocumentWindow
 {
 }

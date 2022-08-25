@@ -1,9 +1,13 @@
-mod window;
+#![feature(try_blocks)]
+mod document_window;
+use document_window::DocumentWindow;
+use glyph_mosaic::document::Document;
 use gtk4::{
     gio,
     prelude::*,
+    subclass::prelude::*,
 };
-use window::Window;
+use std::cell::RefCell;
 
 const APP_ID: &str = "me.zwerdlds.glyphmosaic";
 
@@ -19,8 +23,12 @@ fn main()
         .build();
 
     app.connect_activate(|app| {
-        let window = Window::new(app);
+        let window = DocumentWindow::new(app);
         window.setup_events();
+        window
+            .imp()
+            .document
+            .swap(&RefCell::new(Document::new()));
         window.present();
         print!("ran app!");
     });
