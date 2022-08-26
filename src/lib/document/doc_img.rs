@@ -29,21 +29,31 @@ impl PartialEq for DocumentImage
         {
             return false;
         }
+
         if self.pixbuf.bits_per_sample()
             != other.pixbuf.bits_per_sample()
         {
             return false;
         }
+
         if self.pixbuf.width() != other.pixbuf.width()
         {
             return false;
         }
+
         if self.pixbuf.height() != other.pixbuf.height()
         {
             return false;
         }
+
         if self.pixbuf.rowstride()
             != other.pixbuf.rowstride()
+        {
+            return false;
+        }
+
+        if self.pixbuf.colorspace()
+            != other.pixbuf.colorspace()
         {
             return false;
         }
