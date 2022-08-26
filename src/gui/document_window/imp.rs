@@ -1,4 +1,3 @@
-use glyph_mosaic::document::Document;
 use gtk4::{
     glib::{
         self,
@@ -18,6 +17,8 @@ use std::{
     rc::Rc,
 };
 
+use crate::view::View;
+
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
 #[template(
@@ -25,7 +26,7 @@ use std::{
 )]
 pub struct DocumentWindow
 {
-    pub document: Rc<RefCell<Document>>,
+    pub model: Rc<RefCell<View>>,
 
     #[template_child]
     pub settings_notebook: TemplateChild<Notebook>,

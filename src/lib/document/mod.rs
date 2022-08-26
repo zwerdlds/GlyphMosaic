@@ -1,39 +1,24 @@
-pub mod preview;
+mod doc_img;
 pub mod properties;
+pub mod render;
 use serde::{
     Deserialize,
     Serialize,
 };
 use std::fs;
 
+use self::doc_img::DocumentImage;
+
 #[derive(
-    Serialize, Deserialize, Debug, PartialEq, Eq, Default,
+    Serialize, Deserialize, Debug, Default, PartialEq,
 )]
 pub struct Document
 {
-    preview_mode: PreviewMode,
-    source_image_path: Option<String>,
-}
-
-#[derive(
-    Serialize, Deserialize, Debug, PartialEq, Eq, Default,
-)]
-pub enum PreviewMode
-{
-    #[default]
-    Source,
+    base_image: Option<DocumentImage>,
 }
 
 impl Document
 {
-    pub fn new() -> Document
-    {
-        Document {
-            preview_mode: PreviewMode::Source,
-            source_image_path: None,
-        }
-    }
-
     pub fn load_from_location(
         path: &str
     ) -> Result<Document, String>
@@ -72,8 +57,9 @@ impl Document
 #[cfg(test)]
 mod tests
 {
+    use gtk4::gdk_pixbuf::Pixbuf;
+
     use super::Document;
-    use crate::document::PreviewMode;
     use std::path::{
         Path,
         PathBuf,
@@ -98,9 +84,12 @@ mod tests
     fn validate_simple_document_serialization()
     {
         let doc = Document {
-            preview_mode: PreviewMode::Source,
-            source_image_path: Some(
-                "./test resources/1x1.png".to_string(),
+            base_image: Some(
+                Pixbuf::from_file(
+                    "./test resources/1x1.png",
+                )
+                .unwrap()
+                .into(),
             ),
         };
 
@@ -111,10 +100,7 @@ mod tests
 
         assert_eq!(
             serialize_res,
-            "{\n  \"preview_mode\": \"Source\",\n  \
-             \"source_image_path\": \"./test \
-             resources/1x1.png\"\n}"
-                .to_string()
+            "{\n  \"base_image\": {\n    \"pixbuf\": {\n      \"data\": [\n        255,\n        255,\n        255\n      ],\n      \"has_alpha\": false,\n      \"bits_per_sample\": 8,\n      \"width\": 1,\n      \"height\": 1,\n      \"rowstride\": 4\n    }\n  }\n}"
         );
     }
 
@@ -125,16 +111,20 @@ mod tests
             "../../../test resources/testdoc.json"
         );
 
-        let load_res = Document::load_from_json(doc);
-        assert_eq!(
-            load_res,
-            Ok(Document {
-                preview_mode: PreviewMode::Source,
-                source_image_path: Some(
-                    "./test resources/1x1.png".to_string()
+        let load_res =
+            Document::load_from_json(doc).unwrap();
+
+        let gen_doc = Document {
+            base_image: Some(
+                Pixbuf::from_file(
+                    "./test resources/1x1.png",
                 )
-            })
-        );
+                .unwrap()
+                .into(),
+            ),
+        };
+
+        assert_eq!(load_res.base_image, gen_doc.base_image);
     }
 
     #[test]
@@ -142,16 +132,20 @@ mod tests
     {
         let doc = Document::load_from_location(
             "./test resources/testdoc.json",
-        );
+        )
+        .unwrap();
 
         assert_eq!(
             doc,
-            Ok(Document {
-                preview_mode: PreviewMode::Source,
-                source_image_path: Some(
-                    "./test resources/1x1.png".to_string()
+            Document {
+                base_image: Some(
+                    Pixbuf::from_file(
+                        "./test resources/1x1.png"
+                    )
+                    .unwrap()
+                    .into()
                 )
-            })
+            }
         );
     }
 }

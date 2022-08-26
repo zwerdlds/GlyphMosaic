@@ -1,5 +1,5 @@
 use super::DocumentWindow;
-use glyph_mosaic::prelude::*;
+use glyph_mosaic::prelude::DocumentPropertied;
 use gtk4::{
     gdk_pixbuf::Pixbuf,
     prelude::*,
@@ -22,7 +22,7 @@ impl DocumentWindow
         let gtk_window = self.clone();
         let win = self.imp();
         win.select_source.connect_clicked(move |_| {
-            gtk_window.select_source();
+            gtk_window.select_base_image();
         });
     }
 
@@ -35,7 +35,7 @@ impl DocumentWindow
                 let res: Result<(), String> = try {
                     let preview: Pixbuf = gtk_window
                         .imp()
-                        .document
+                        .model
                         .borrow()
                         .create_preview()?;
 
@@ -61,7 +61,7 @@ impl DocumentWindow
         );
     }
 
-    fn select_source(&self)
+    fn select_base_image(&self)
     {
         let win: DocumentWindow = self.clone();
 
@@ -80,49 +80,58 @@ impl DocumentWindow
                   response: ResponseType| {
                 if response == ResponseType::Ok
                 {
-                    let result: Result<String, String> = try {
-                        let file = d
-                            .file()
-                            .ok_or("Couldn't get file")?;
-
-                        let file_name = file.path().ok_or(
-                            "Couldn't get file path",
-                        )?;
-
-                        file_name
-                            .to_str()
-                            .ok_or(
-                                "Path not convertable to \
-                                 string.",
-                            )?
-                            .to_owned()
-                    };
                     d.close();
 
-                    let res = match result.as_ref()
-                    {
-                        Ok(p) =>
-                        {
-                            win.imp()
-                                .document
-                                .borrow_mut()
-                                .set_source_path(
-                                    p.to_string(),
-                                );
-                            format!(
-                                "Base image loaded from \
-                                 {p}."
-                            )
-                        },
-                        Err(e) =>
-                        {
-                            format!(
-                                "Error loading file: {e}"
-                            )
-                        },
-                    };
+                    let result: Result<String, String> =
+                        try {
+                            let file_path = d
+                                .file()
+                                .ok_or(
+                                    "Couldn't get file \
+                                     from filechooser.",
+                                )?
+                                .path()
+                                .ok_or(
+                                    "Couldn't get file \
+                                     path.",
+                                )?
+                                .to_str()
+                                .ok_or(
+                                    "Path not convertable \
+                                     to string.",
+                                )?
+                                .to_owned();
 
-                    win.imp().set_status(&res);
+                            let img = Pixbuf::from_file(
+                                    file_path.clone(),
+                                )
+                                .map_err(|e| {
+                                    format!(
+                                        "Failed getting image \
+                                        data: {e}"
+                                    )
+                                })?;
+
+                                
+                            win.imp()
+                                .model
+                                .borrow_mut()
+                                .set_base_image(img.into());
+
+                            format!("Loaded file from {file_path}")
+                        };
+
+                    let result = result
+                        .map_err(
+                            |e| {
+                                format!(
+                                    "Loading base image \
+                                     failed: {e}"
+                                )
+                            },
+                        );
+
+                    win.imp().set_status_from_res(result);
                     win.imp().refresh_preview();
                 }
             },

@@ -1,12 +1,26 @@
-use super::Document;
+use gtk4::gdk_pixbuf::Pixbuf;
 
-impl Document
+use super::{
+    doc_img::DocumentImage,
+    Document,
+};
+
+pub trait DocumentPropertied
 {
-    pub fn set_source_path(
+    fn set_base_image(
         &mut self,
-        source_image_path: String,
+        base_image: Option<Pixbuf>,
+    );
+}
+
+impl DocumentPropertied for Document
+{
+    fn set_base_image(
+        &mut self,
+        base_image: Option<Pixbuf>,
     )
     {
-        self.source_image_path = Some(source_image_path);
+        self.base_image =
+            base_image.map(|i| DocumentImage::new(i));
     }
 }

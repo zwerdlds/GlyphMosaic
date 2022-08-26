@@ -10,11 +10,8 @@ pub mod sources;
 
 pub mod prelude
 {
-    pub use crate::{
-        common::previewable::Previewable,
-        document::{
-            Document,
-            PreviewMode,
-        },
+    pub use crate::document::{
+        properties::DocumentPropertied,
+        Document,
     };
 }
