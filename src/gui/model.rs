@@ -2,16 +2,31 @@ use glyph_mosaic::{
     document::properties::DocumentPropertied,
     prelude::*,
 };
-use gtk4::gdk_pixbuf::Pixbuf;
+use gtk4::{
+    gdk_pixbuf::Pixbuf,
+    graphene::Point,
+};
 
-#[derive(Default)]
-pub struct View
+pub struct Model
 {
     document: Document,
     preview_mode: PreviewMode,
+    pub image_center_offset: Point,
 }
 
-impl DocumentPropertied for View
+impl Default for Model
+{
+    fn default() -> Self
+    {
+        Model {
+            document: Document::default(),
+            preview_mode: PreviewMode::BaseImage,
+            image_center_offset: Point::new(0f32, 0f32),
+        }
+    }
+}
+
+impl DocumentPropertied for Model
 {
     fn set_base_image(
         &mut self,
@@ -22,14 +37,12 @@ impl DocumentPropertied for View
     }
 }
 
-#[derive(Default)]
 pub enum PreviewMode
 {
-    #[default]
     BaseImage,
 }
 
-impl View
+impl Model
 {
     pub fn create_preview(&self) -> Result<Pixbuf, String>
     {

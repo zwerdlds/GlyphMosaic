@@ -26,7 +26,7 @@ impl DocumentWindow
         self.status_label.set_label(&msg);
     }
 
-    pub fn refresh_preview(&self)
+    pub fn queue_preview_refresh(&self)
     {
         self.preview_area.queue_draw();
     }

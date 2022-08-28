@@ -10,13 +10,12 @@
         <child>
           <object class="GtkBox">
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="preview_scroll">
                 <property name="hexpand">True</property>
-                <property name="hscrollbar-policy">always</property>
-                <property name="vexpand">True</property>
-                <property name="vscrollbar-policy">always</property>
                 <child>
                   <object class="GtkViewport">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkDrawingArea" id="preview_area"/>
                     </child>
@@ -25,65 +24,90 @@
               </object>
             </child>
             <child>
-              <object class="GtkNotebook" id="settings_notebook">
-                <property name="tab-pos">right</property>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="baseline-position">bottom</property>
                     <property name="orientation">vertical</property>
-                    <property name="vexpand">True</property>
                     <child>
-                      <object class="GtkButton" id="select_source">
-                        <property name="halign">end</property>
-                        <property name="label">Select Source</property>
-                        <property name="valign">start</property>
+                      <object class="GtkBox">
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label">Zoom</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton" id="zoom_spinner">
+                            <property name="digits">4</property>
+                            <property name="value">1.0</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
                 </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="sources-tab-label">
-                    <property name="label">Sources</property>
-                  </object>
-                </child>
                 <child>
-                  <object class="GtkBox"/>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="regions-tab-button">
-                    <property name="label">Regions</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox"/>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="lines-tab-button">
-                    <property name="label">Lines</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox"/>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="points-tab-button">
-                    <property name="label">Points</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox"/>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="glyph-tab-button">
-                    <property name="label">Glyphs</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox"/>
-                </child>
-                <child type="tab">
-                  <object class="GtkLabel" id="export-tab-button">
-                    <property name="label">Export</property>
+                  <object class="GtkNotebook" id="settings_notebook">
+                    <property name="tab-pos">right</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="baseline-position">bottom</property>
+                        <property name="orientation">vertical</property>
+                        <property name="vexpand">True</property>
+                        <child>
+                          <object class="GtkButton" id="select_source">
+                            <property name="halign">end</property>
+                            <property name="label">Select Source</property>
+                            <property name="valign">start</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="sources-tab-label">
+                        <property name="label">Sources</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox"/>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="regions-tab-button">
+                        <property name="label">Regions</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox"/>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="lines-tab-button">
+                        <property name="label">Lines</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox"/>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="points-tab-button">
+                        <property name="label">Points</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox"/>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="glyph-tab-button">
+                        <property name="label">Glyphs</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox"/>
+                    </child>
+                    <child type="tab">
+                      <object class="GtkLabel" id="export-tab-button">
+                        <property name="label">Export</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

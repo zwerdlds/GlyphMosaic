@@ -1,6 +1,6 @@
 #![feature(try_blocks)]
 mod document_window;
-mod view;
+mod model;
 use document_window::DocumentWindow;
 use gtk4::{
     gio,

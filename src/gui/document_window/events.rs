@@ -6,7 +6,7 @@ use gtk4::{
     subclass::prelude::ObjectSubclassIsExt,
     FileChooserAction,
     FileChooserDialog,
-    ResponseType,
+    ResponseType, ScrollType,
 };
 
 impl DocumentWindow
@@ -15,32 +15,85 @@ impl DocumentWindow
     {
         self.setup_base_image_select();
         self.setup_preview_redraw();
+        self.setup_preview_scrolling();
+        self.setup_zoom();
     }
 
     fn setup_base_image_select(&self)
     {
         let gtk_window = self.clone();
-        let win = self.imp();
-        win.select_source.connect_clicked(move |_| {
+         self.imp().select_source.connect_clicked(move |_| {
             gtk_window.select_base_image();
         });
     }
 
-    pub fn setup_preview_redraw(&self)
+    fn setup_zoom(&self){
+        let win = self.clone();
+self.imp().zoom_spinner.connect_changed(move|_|{
+    win.imp().queue_preview_refresh();
+});
+    }
+
+
+    fn setup_preview_scrolling(&self){
+        let win = self.clone();
+        self.imp().preview_scroll.connect_scroll_child(move |_scroll,scroll_type, _horizontal|{
+            let win = win.imp();
+ 
+            let d: (Option<f32>, Option<f32>) = match scroll_type {
+                ScrollType::StepUp => (None,Some(-15f32)),
+                ScrollType::StepDown => (None,Some(15f32)),
+                ScrollType::StepLeft => (Some(-15f32),None),
+                ScrollType::StepRight=> (Some(45f32),None),
+                ScrollType::PageUp=> (None,Some(-45f32)),
+                ScrollType::PageDown=> (None,Some(45f32)),
+                ScrollType::PageLeft=> (Some(-45f32),None),
+                ScrollType::PageRight => (Some(45f32),None),
+                _ => (None,None),
+            };
+
+            if (d.0 != None) || (d.1 != None) {
+                let mut p = win.model.borrow_mut().image_center_offset;
+
+                match d.0 {
+                Some(dx) => {
+                    p.set_x(p.x() + dx);
+                    },None=>{}}
+                    match d.1 {
+                        Some(dy) =>
+                {    p.set_x(p.y() + dy);
+                }
+                None => {}
+                }
+            }
+
+            win.queue_preview_refresh();
+
+            true
+        });
+    }
+
+    fn setup_preview_redraw(&self)
     {
-        let gtk_window = self.clone();
-        let win = self.imp();
-        win.preview_area.set_draw_func(
+        let win = self.clone();
+        self.imp().preview_area.set_draw_func(
             move |_area, ctx, _width, _height| {
+                let win = win.imp();
+
                 let res: Result<(), String> = try {
-                    let preview: Pixbuf = gtk_window
-                        .imp()
-                        .model
-                        .borrow()
+                    let model = win.model.borrow();
+
+                    let preview = model
                         .create_preview()?;
 
+                        let zoom = win.zoom_spinner.value();
+
+                        let preview = preview.scale_simple((preview.width() as f64 * zoom) as i32, (preview.height() as  f64 * zoom) as i32, gtk4::gdk_pixbuf::InterpType::Bilinear).ok_or(|e| format!("Zoom failed."))?;
+
+                    let offset = model.image_center_offset;
+
                     ctx.set_source_pixbuf(
-                        &preview, 0.0, 0.0,
+                        &preview, offset.x() as f64,offset.y()as f64
                     );
 
                     ctx.paint().map_err(|_| {
@@ -50,9 +103,9 @@ impl DocumentWindow
 
                 if let Err(e) = res
                 {
-                    gtk_window.imp().set_status(
+                    win.set_status(
                         format!(
-                            "Error painting preview: {e}"
+                            "Painting preview encountered error: {e}"
                         )
                         .as_str(),
                     );
@@ -81,6 +134,7 @@ impl DocumentWindow
                 if response == ResponseType::Ok
                 {
                     d.close();
+                    let win = win.imp();
 
                     let result: Result<String, String> =
                         try {
@@ -113,8 +167,7 @@ impl DocumentWindow
                                 })?;
 
                                 
-                            win.imp()
-                                .model
+                            win.model
                                 .borrow_mut()
                                 .set_base_image(img.into());
 
@@ -131,8 +184,8 @@ impl DocumentWindow
                             },
                         );
 
-                    win.imp().set_status_from_res(result);
-                    win.imp().refresh_preview();
+                    win.set_status_from_res(result);
+                    win.queue_preview_refresh();
                 }
             },
         );

@@ -11,13 +11,15 @@ use gtk4::{
     DrawingArea,
     Label,
     Notebook,
+    ScrolledWindow,
+    SpinButton,
 };
 use std::{
     cell::RefCell,
     rc::Rc,
 };
 
-use crate::view::View;
+use crate::model::Model;
 
 // Object holding the state
 #[derive(CompositeTemplate, Default)]
@@ -26,7 +28,13 @@ use crate::view::View;
 )]
 pub struct DocumentWindow
 {
-    pub model: Rc<RefCell<View>>,
+    pub model: Rc<RefCell<Model>>,
+
+    #[template_child]
+    pub zoom_spinner: TemplateChild<SpinButton>,
+
+    #[template_child]
+    pub preview_scroll: TemplateChild<ScrolledWindow>,
 
     #[template_child]
     pub settings_notebook: TemplateChild<Notebook>,
