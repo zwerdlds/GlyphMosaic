@@ -11,7 +11,7 @@ use serde::{
 };
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct DocumentImage
+pub(crate) struct DocumentImage
 {
     #[serde(with = "PixbufDef")]
     pub pixbuf: Pixbuf,
@@ -182,9 +182,9 @@ pub mod tests
         ColorspaceDef,
         PixbufDef,
     };
-    use crate::document::doc_img::DocumentImage;
+    use crate::document::image::DocumentImage;
 
-    pub fn generate_test_img() -> DocumentImage
+    pub(crate) fn generate_test_img() -> DocumentImage
     {
         DocumentImage::new(
             PixbufDef {

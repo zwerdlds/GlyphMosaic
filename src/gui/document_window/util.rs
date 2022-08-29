@@ -1,6 +1,5 @@
-use gtk4::traits::WidgetExt;
-
 use super::imp::DocumentWindow;
+use gtk4::traits::WidgetExt;
 
 impl DocumentWindow
 {
@@ -29,5 +28,13 @@ impl DocumentWindow
     pub fn queue_preview_refresh(&self)
     {
         self.preview_area.queue_draw();
+    }
+
+    pub fn apply_command(
+        &self,
+        cmd: impl glyph_mosaic::commands::DocumentCommand,
+    )
+    {
+        self.model.borrow_mut().apply_command(cmd);
     }
 }

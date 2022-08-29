@@ -35,7 +35,11 @@
 	(13,25,"GtkLabel","export-tab-button",12,None,"tab",None,11),
 	(13,26,"GtkLabel","status_label",2,None,None,None,1),
 	(13,27,"GtkAdjustment","zoom",1,None,None,None,None),
-	(13,28,"GtkButton","select_source_text",13,None,None,None,None)
+	(13,28,"GtkButton","select_source_text",13,None,None,None,None),
+	(13,29,"GtkAdjustment","overlay_opacity",1,None,None,None,None),
+	(13,30,"GtkBox",None,8,None,None,None,None),
+	(13,31,"GtkBox",None,30,None,None,None,None),
+	(13,32,"GtkLabel",None,31,None,None,None,None)
   </object>
   <object_property>
 	(13,2,"GtkOrientable","orientation","vertical",None,None,None,None),
@@ -50,7 +54,8 @@
 	(13,10,"GtkLabel","label","Zoom",None,None,None,None),
 	(13,10,"GtkWidget","halign","start",None,None,None,None),
 	(13,11,"GtkSpinButton","adjustment","27",None,None,None,None),
-	(13,11,"GtkSpinButton","digits","4",None,None,None,None),
+	(13,11,"GtkSpinButton","digits","1",None,None,None,None),
+	(13,11,"GtkSpinButton","numeric","True",None,None,None,None),
 	(13,11,"GtkSpinButton","value","1.0",None,None,None,None),
 	(13,12,"GtkNotebook","tab-pos","right",None,None,None,None),
 	(13,12,"GtkWidget","can-focus","False",None,None,None,None),
@@ -74,13 +79,22 @@
 	(13,25,"GtkWidget","halign","start",None,None,None,None),
 	(13,26,"GtkLabel","label","Application Status...",None,None,None,None),
 	(13,26,"GtkWidget","halign","start",None,None,None,None),
-	(13,27,"GtkAdjustment","lower","0.5",None,None,None,None),
+	(13,27,"GtkAdjustment","lower","0.05",None,None,None,None),
 	(13,27,"GtkAdjustment","page-increment","1.0",None,None,None,None),
 	(13,27,"GtkAdjustment","page-size","1.0",None,None,None,None),
 	(13,27,"GtkAdjustment","step-increment","0.1",None,None,None,None),
 	(13,27,"GtkAdjustment","upper","10.0",None,None,None,None),
 	(13,27,"GtkAdjustment","value","1.0",None,None,None,None),
 	(13,28,"GtkButton","label","Select Source Text",None,None,None,None),
-	(13,28,"GtkWidget","valign","start",None,None,None,None)
+	(13,28,"GtkWidget","valign","start",None,None,None,None),
+	(13,29,"GtkAdjustment","lower","0.1",None,None,None,None),
+	(13,29,"GtkAdjustment","page-increment","0.1",None,None,None,None),
+	(13,29,"GtkAdjustment","page-size","0.1",None,None,None,None),
+	(13,29,"GtkAdjustment","step-increment","0.05",None,None,None,None),
+	(13,29,"GtkAdjustment","upper","1.0",None,None,None,None),
+	(13,29,"GtkAdjustment","value","0.5",None,None,None,None),
+	(13,30,"GtkOrientable","orientation","vertical",None,None,None,None),
+	(13,32,"GtkLabel","label","Overlay Opacity ",None,None,None,None),
+	(13,32,"GtkWidget","halign","start",None,None,None,None)
   </object_property>
 </cambalache-project>

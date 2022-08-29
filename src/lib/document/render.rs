@@ -12,6 +12,16 @@ impl Document
             .map(|bi| bi.pixbuf)
             .ok_or("No base image specified.".to_string())
     }
+
+    pub fn render_regions_image(
+        &mut self
+    ) -> Result<Pixbuf, String>
+    {
+        self.source_image
+            .clone()
+            .map(|bi| bi.pixbuf)
+            .ok_or("No region image specified.".to_string())
+    }
 }
 
 #[cfg(test)]

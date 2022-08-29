@@ -1,7 +1,6 @@
-use delegate::delegate;
 use glyph_mosaic::{
-    document::properties::DocumentPropertied,
-    prelude::*,
+    self,
+    prelude::Document,
 };
 use gtk4::{
     gdk_pixbuf::Pixbuf,
@@ -33,16 +32,6 @@ impl Default for Model
     }
 }
 
-impl DocumentPropertied for Model
-{
-    delegate! {
-        to self.document {
-            fn set_source_image(&mut self, image: Option<Pixbuf>);
-            fn set_source_text(&mut self, text: Option<String>);
-        }
-    }
-}
-
 pub enum PreviewMode
 {
     BaseImage,
@@ -61,6 +50,15 @@ impl Model
                 self.document.render_source_image()
             },
         }
+    }
+
+    pub fn apply_command(
+        &mut self,
+        cmd: impl glyph_mosaic::commands::DocumentCommand,
+    )
+    {
+        self.document =
+            cmd.transform_document(&self.document);
     }
 }
 
