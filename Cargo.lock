@@ -54,6 +54,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "delegate"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d70a2d4995466955a415223acf3c9c934b9ff2339631cdf4ffc893da4bacd717"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "field-offset"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -252,6 +263,7 @@ dependencies = [
 name = "glyph_mosaic"
 version = "0.1.0"
 dependencies = [
+ "delegate",
  "gtk4",
  "serde",
  "serde_json",

@@ -5,6 +5,7 @@ use gtk4::{
     },
     prelude::*,
     subclass::prelude::*,
+    Adjustment,
     ApplicationWindow,
     Button,
     CompositeTemplate,
@@ -12,7 +13,6 @@ use gtk4::{
     Label,
     Notebook,
     ScrolledWindow,
-    SpinButton,
 };
 use std::{
     cell::RefCell,
@@ -31,7 +31,7 @@ pub struct DocumentWindow
     pub model: Rc<RefCell<Model>>,
 
     #[template_child]
-    pub zoom_spinner: TemplateChild<SpinButton>,
+    pub zoom: TemplateChild<Adjustment>,
 
     #[template_child]
     pub preview_scroll: TemplateChild<ScrolledWindow>,
@@ -40,7 +40,10 @@ pub struct DocumentWindow
     pub settings_notebook: TemplateChild<Notebook>,
 
     #[template_child]
-    pub select_source: TemplateChild<Button>,
+    pub select_source_image: TemplateChild<Button>,
+
+    #[template_child]
+    pub select_source_text: TemplateChild<Button>,
 
     #[template_child]
     pub status_label: TemplateChild<Label>,

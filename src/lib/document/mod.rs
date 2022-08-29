@@ -14,7 +14,8 @@ use self::doc_img::DocumentImage;
 )]
 pub struct Document
 {
-    base_image: Option<DocumentImage>,
+    source_image: Option<DocumentImage>,
+    source_text: Option<String>,
 }
 
 impl Document
@@ -55,97 +56,31 @@ impl Document
 }
 
 #[cfg(test)]
-mod tests
+pub mod tests
 {
-    use gtk4::gdk_pixbuf::Pixbuf;
-
-    use super::Document;
-    use std::path::{
-        Path,
-        PathBuf,
+    use super::{
+        doc_img::tests::generate_test_img,
+        Document,
     };
 
-    #[test]
-    fn validate_path_canonicalization()
+    pub fn generate_test_doc() -> Document
     {
-        let path = Path::new("./test resources/1x1.png");
-        let canon = path.canonicalize().unwrap();
-
-        assert_eq!(
-            canon,
-            PathBuf::from(
-                "/mnt/Speedy/Development/GlyphMosaic/test \
-                 resources/1x1.png"
-            )
-        );
+        Document {
+            source_image: Some(generate_test_img()),
+            source_text: Some("Hello world!".to_string()),
+        }
     }
 
     #[test]
     fn validate_simple_document_serialization()
     {
-        let doc = Document {
-            base_image: Some(
-                Pixbuf::from_file(
-                    "./test resources/1x1.png",
-                )
-                .unwrap()
-                .into(),
-            ),
-        };
+        let doc = generate_test_doc();
 
-        let serialize_res =
-            Document::serialize_to_json(&doc).unwrap();
-
-        print!("{:?}", serialize_res);
-
-        assert_eq!(
-            serialize_res,
-            "{\n  \"base_image\": {\n    \"pixbuf\": {\n      \"data\": [\n        255,\n        255,\n        255\n      ],\n      \"has_alpha\": false,\n      \"bits_per_sample\": 8,\n      \"width\": 1,\n      \"height\": 1,\n      \"rowstride\": 4\n    }\n  }\n}"
-        );
-    }
-
-    #[test]
-    fn validate_simple_document_load_json()
-    {
-        let doc = include_str!(
-            "../../../test resources/testdoc.json"
-        );
-
-        let load_res =
-            Document::load_from_json(doc).unwrap();
-
-        let gen_doc = Document {
-            base_image: Some(
-                Pixbuf::from_file(
-                    "./test resources/1x1.png",
-                )
-                .unwrap()
-                .into(),
-            ),
-        };
-
-        assert_eq!(load_res.base_image, gen_doc.base_image);
-    }
-
-    #[test]
-    fn validate_simple_document_load_from_path()
-    {
-        let doc = Document::load_from_location(
-            "./test resources/testdoc.json",
+        let ser_res_deser = Document::load_from_json(
+            &Document::serialize_to_json(&doc).unwrap(),
         )
         .unwrap();
 
-        assert_eq!(
-            doc,
-            Document {
-                base_image: Some(
-                    Pixbuf::from_file(
-                        "./test resources/1x1.png"
-                    )
-                    .unwrap()
-                    .into()
-                )
-            }
-        );
+        assert_eq!(doc, ser_res_deser);
     }
 }

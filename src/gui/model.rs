@@ -1,39 +1,45 @@
+use delegate::delegate;
 use glyph_mosaic::{
     document::properties::DocumentPropertied,
     prelude::*,
 };
 use gtk4::{
     gdk_pixbuf::Pixbuf,
-    graphene::Point,
+    Adjustment,
 };
 
 pub struct Model
 {
     document: Document,
     preview_mode: PreviewMode,
-    pub image_center_offset: Point,
+    pub zoom_adj: Adjustment,
 }
 
 impl Default for Model
 {
     fn default() -> Self
     {
+        let document = Document::default();
+        let preview_mode = PreviewMode::BaseImage;
+        let zoom_adj = Adjustment::new(
+            1f64, 0f64, 30f64, 0.1f64, 1f64, 1f64,
+        );
+
         Model {
-            document: Document::default(),
-            preview_mode: PreviewMode::BaseImage,
-            image_center_offset: Point::new(0f32, 0f32),
+            document,
+            preview_mode,
+            zoom_adj,
         }
     }
 }
 
 impl DocumentPropertied for Model
 {
-    fn set_base_image(
-        &mut self,
-        base_image: Option<Pixbuf>,
-    )
-    {
-        self.document.set_base_image(base_image)
+    delegate! {
+        to self.document {
+            fn set_source_image(&mut self, image: Option<Pixbuf>);
+            fn set_source_text(&mut self, text: Option<String>);
+        }
     }
 }
 
@@ -50,7 +56,10 @@ impl Model
 
         match self.preview_mode
         {
-            BaseImage => self.document.render_base_image(),
+            BaseImage =>
+            {
+                self.document.render_source_image()
+            },
         }
     }
 }

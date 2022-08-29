@@ -74,20 +74,60 @@ impl PartialEq for DocumentImage
 
 #[derive(Serialize, Deserialize)]
 #[serde(remote = "gtk4::gdk_pixbuf::Pixbuf")]
-struct PixbufDef
+pub(super) struct PixbufDef
 {
     #[serde(getter = "get_pixbuf_data")]
-    data: Vec<u8>,
+    pub(super) data: Vec<u8>,
     #[serde(getter = "Pixbuf::has_alpha")]
-    has_alpha: bool,
+    pub(super) has_alpha: bool,
     #[serde(getter = "Pixbuf::bits_per_sample")]
-    bits_per_sample: i32,
+    pub(super) bits_per_sample: i32,
     #[serde(getter = "Pixbuf::width")]
-    width: i32,
+    pub(super) width: i32,
     #[serde(getter = "Pixbuf::height")]
-    height: i32,
+    pub(super) height: i32,
     #[serde(getter = "Pixbuf::rowstride")]
-    rowstride: i32,
+    pub(super) rowstride: i32,
+    #[serde(getter = "get_pixbuf_colorspace")]
+    pub(super) colorspace: ColorspaceDef,
+}
+
+#[derive(Serialize, Deserialize)]
+pub(super) enum ColorspaceDef
+{
+    Rgb,
+    Unk(i32),
+}
+
+impl From<ColorspaceDef> for Colorspace
+{
+    fn from(def: ColorspaceDef) -> Colorspace
+    {
+        match def
+        {
+            ColorspaceDef::Rgb => Colorspace::Rgb,
+            ColorspaceDef::Unk(i) =>
+            {
+                Colorspace::__Unknown(i)
+            },
+        }
+    }
+}
+
+fn get_pixbuf_colorspace(pb: &Pixbuf) -> ColorspaceDef
+{
+    match pb.colorspace()
+    {
+        Colorspace::Rgb => ColorspaceDef::Rgb,
+        Colorspace::__Unknown(i) => ColorspaceDef::Unk(i),
+        c =>
+        {
+            panic!(
+                "Colorspace {c} is not mapped to a \
+                 serializable ColorspaceDef."
+            )
+        },
+    }
 }
 
 fn get_pixbuf_data(pb: &Pixbuf) -> Vec<u8>
@@ -101,7 +141,7 @@ impl From<PixbufDef> for Pixbuf
     {
         Pixbuf::from_bytes(
             &Bytes::from(&def.data),
-            Colorspace::Rgb,
+            def.colorspace.into(),
             def.has_alpha,
             def.bits_per_sample,
             def.width,
@@ -136,45 +176,40 @@ impl DocumentImage
 }
 
 #[cfg(test)]
-mod tests
+pub mod tests
 {
-    use gtk4::gdk_pixbuf::Pixbuf;
-
+    use super::{
+        ColorspaceDef,
+        PixbufDef,
+    };
     use crate::document::doc_img::DocumentImage;
+
+    pub fn generate_test_img() -> DocumentImage
+    {
+        DocumentImage::new(
+            PixbufDef {
+                data: vec![255, 255, 255],
+                has_alpha: false,
+                bits_per_sample: 8,
+                width: 1,
+                height: 1,
+                rowstride: 4,
+                colorspace: ColorspaceDef::Rgb,
+            }
+            .into(),
+        )
+    }
 
     #[test]
     fn validate_simple_image_serialization()
     {
-        let img: DocumentImage =
-            Pixbuf::from_file("./test resources/1x1.png")
-                .unwrap()
-                .into();
+        let img = generate_test_img();
 
-        let serialize_res =
-            serde_json::to_string_pretty(&img).unwrap();
+        let desr_ser_res = serde_json::from_str(
+            &serde_json::to_string_pretty(&img).unwrap(),
+        )
+        .unwrap();
 
-        print!("{:?}", serialize_res);
-
-        assert_eq!(
-            serialize_res,
-            "{\n  \"pixbuf\": {\n    \"data\": [\n      255,\n      255,\n      255\n    ],\n    \"has_alpha\": false,\n    \"bits_per_sample\": 8,\n    \"width\": 1,\n    \"height\": 1,\n    \"rowstride\": 4\n  }\n}"        );
-    }
-
-    #[test]
-    fn validate_simple_document_load_json()
-    {
-        let img = include_str!(
-            "../../../test resources/testimg.json"
-        );
-
-        let load_res: DocumentImage =
-            serde_json::from_str(img).unwrap();
-
-        let pb = load_res.pixbuf.pixel_bytes().unwrap();
-
-        assert_eq!(pb.len(), 3);
-        assert_eq!(pb[0], 255);
-        assert_eq!(pb[1], 255);
-        assert_eq!(pb[2], 255);
+        assert_eq!(img, desr_ser_res);
     }
 }

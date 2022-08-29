@@ -12,7 +12,7 @@ reorder_impl_items = true
 unstable_features = true
 
 # Imports
-imports_granularity="Crate"
+imports_granularity = "Crate"
 reorder_imports = true
 reorder_modules = true
 imports_indent = "Block"
