@@ -261,14 +261,14 @@ mod tests
     #[test]
     fn validate_path_canonicalization()
     {
-        let path = Path::new("./test resources/1x1.png");
+        let path = Path::new("./Cargo.toml");
         let canon = path.canonicalize().unwrap();
 
         assert_eq!(
             canon,
             PathBuf::from(
-                "/mnt/Speedy/Development/GlyphMosaic/test \
-                 resources/1x1.png"
+                "/mnt/Speedy/Development/GlyphMosaic/\
+                 Cargo.toml"
             )
         );
     }
