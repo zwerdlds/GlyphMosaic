@@ -41,6 +41,11 @@ pub enum SettingsTab
 
 impl Model
 {
+    pub(crate) fn settings_tab(&self) -> &SettingsTab
+    {
+        &self.settings_tab
+    }
+
     pub(crate) fn set_last_drag_pos(
         &mut self,
         pos: Option<DocumentPoint>,

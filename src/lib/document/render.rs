@@ -30,6 +30,47 @@ impl Document
             (source_pixbuf.width(), source_pixbuf.height());
 
         let into_pixbuf =
+            Pixbuf::new(Colorspace::Rgb, true, 8, w, h)
+                .ok_or(
+                    "Could not build regions preview \
+                     pixbuf.",
+                )?;
+
+        let (w, h) = (w as u32, h as u32);
+
+        for pix in self
+            .region_border_pixels
+            .iter()
+            .filter(|p| ((p.x() > 0) && (p.x() < w)))
+            .filter(|p| ((p.y() > 0) && (p.y() < h)))
+        {
+            into_pixbuf.put_pixel(
+                pix.x(),
+                pix.y(),
+                255,
+                255,
+                255,
+                255,
+            )
+        }
+
+        Ok(into_pixbuf)
+    }
+
+    pub fn render_lines_image(
+        &self
+    ) -> Result<Pixbuf, String>
+    {
+        let source_pixbuf: Pixbuf = self
+            .source_image
+            .clone()
+            .ok_or("No source image specified.")?
+            .into();
+
+        let (w, h) =
+            (source_pixbuf.width(), source_pixbuf.height());
+
+        let into_pixbuf =
             Pixbuf::new(Colorspace::Rgb, false, 8, w, h)
                 .ok_or(
                     "Could not build regions preview \

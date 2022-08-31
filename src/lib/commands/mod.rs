@@ -10,10 +10,14 @@ pub use set_source_text::*;
 mod add_region_border;
 pub use add_region_border::*;
 
+mod add_line_kernel;
+pub use add_line_kernel::*;
+
 use crate::prelude::Document;
 
 pub enum DocumentCommands
 {
+    AddLineKernel(AddLineKernel),
     DrawRegionBorder(AddRegionBorder),
     SetSourceImage(SetSourceImage),
     SetSourceText(SetSourceText),
@@ -26,22 +30,24 @@ impl DocumentCommand for DocumentCommands
         doc: &Document,
     ) -> Document
     {
+        use DocumentCommands::*;
+
         match self
         {
-            DocumentCommands::DrawRegionBorder(c) =>
-            {
-                c.transform_document(doc)
-            },
-            DocumentCommands::SetSourceImage(c) =>
-            {
-                c.transform_document(doc)
-            },
-            DocumentCommands::SetSourceText(c) =>
-            {
-                c.transform_document(doc)
-            },
+            DrawRegionBorder(c) => td(c, doc),
+            SetSourceImage(c) => td(c, doc),
+            SetSourceText(c) => td(c, doc),
+            AddLineKernel(c) => td(c, doc),
         }
     }
+}
+
+fn td(
+    c: impl DocumentCommand,
+    doc: &Document,
+) -> Document
+{
+    c.transform_document(doc)
 }
 
 pub trait DocumentCommand

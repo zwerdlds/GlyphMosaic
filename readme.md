@@ -6,3 +6,5 @@ GlyphMosaic is a graphic design program which re-creates images using glyphs.  I
     - Set window's selected pane enum in default document when loaded
     - Limit specified region map image to source image size
     - Implement COW for document properties
+    - Move preview rendering to gui
+    - Sub-image preview rendering

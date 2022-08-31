@@ -1,53 +1,42 @@
-use glyph_mosaic::{document::DocumentPoint, commands::AddRegionBorder};
-use gtk4::{traits::GestureDragExt, glib::clone};
+use crate::model::SettingsTab;
+
 use super::DocumentWindow;
+use glyph_mosaic::{
+    commands::{
+        AddLineKernel,
+        AddRegionBorder,
+    },
+    document::DocumentPoint,
+};
 use gtk4::{
+    glib::clone,
     prelude::*,
     subclass::prelude::ObjectSubclassIsExt,
+    traits::GestureDragExt,
+    GestureDrag,
 };
 
 impl DocumentWindow
 {
-       pub(super) fn setup_drawing(&self)
+    pub(super) fn setup_drawing(&self)
     {
         let gesture = gtk4::GestureDrag::new();
 
         gesture.connect_drag_begin(
             clone!(@strong self as win => move |_,x,y|{
-                println!("drag start!");
-                let p = win.preview_area_coord_to_source_coord(x as u32,y as u32);
-                let res = win.paint_coord(p);
-                win.maybe_set_error_from_res(res);
+                win.drag_start(x,y);
             }),
         );
 
         gesture.connect_drag_end(
             clone!(@strong self as win => move |_,_,_|{
-                println!("drag end!");
                 win.imp().model.borrow_mut().set_last_drag_pos(None);
             }),
         );
 
         gesture.connect_drag_update(
             clone!(@strong self as win => move |dg,x,y|{
-                println!("drag update!");
-                let res = try {
-                    let from = win.imp().model.borrow().last_drag_pos()
-                    .ok_or("Dragged with no start point.")?;
-                    let sp = dg.start_point().ok_or("Drag start point not specified")?;
-                    let x = (x + sp.0) as u32;
-                    let y = (y + sp.1) as u32;
-                    
-                    let to = win.preview_area_coord_to_source_coord(x,y);
-
-                    let pts = from.raster_line_to(
-                        to
-                    );
-
-                    win.paint_coords(pts)?;
-                };
-
-                win.maybe_set_error_from_res(res);
+                win.drag_update(dg,x,y)
             }),
         );
 
@@ -56,13 +45,67 @@ impl DocumentWindow
         let gesture = gtk4::GestureClick::new();
         gesture.connect_released(
             clone!(@strong self as win => move |_,_,x,y|{
-                println!("clicked!");
-                let p = win.preview_area_coord_to_source_coord(x as u32,y as u32);
-                let res = win.paint_coord(p);
-                win.maybe_set_error_from_res(res);
+               win.click(x,y);
             }),
         );
         self.imp().preview_area.add_controller(&gesture);
+    }
+
+    fn drag_start(
+        &self,
+        x: f64,
+        y: f64,
+    )
+    {
+        let p = self.preview_area_coord_to_source_coord(
+            x as u32, y as u32,
+        );
+        let res = self.paint_coord(p);
+        self.maybe_set_error_from_res(res);
+    }
+
+    fn drag_update(
+        &self,
+        dg: &GestureDrag,
+        x: f64,
+        y: f64,
+    )
+    {
+        let res = try {
+            let from = self
+                .imp()
+                .model
+                .borrow()
+                .last_drag_pos()
+                .ok_or("Dragged with no start point.")?;
+            let sp = dg
+                .start_point()
+                .ok_or("Drag start point not specified")?;
+            let x = (x + sp.0) as u32;
+            let y = (y + sp.1) as u32;
+
+            let to = self
+                .preview_area_coord_to_source_coord(x, y);
+
+            let pts = from.raster_line_to(to);
+
+            self.paint_coords(pts)?;
+        };
+
+        self.maybe_set_error_from_res(res);
+    }
+
+    fn click(
+        &self,
+        x: f64,
+        y: f64,
+    )
+    {
+        let p = self.preview_area_coord_to_source_coord(
+            x as u32, y as u32,
+        );
+        let res = self.paint_coord(p);
+        self.maybe_set_error_from_res(res);
     }
 
     fn preview_area_coord_to_source_coord(
@@ -72,12 +115,15 @@ impl DocumentWindow
     ) -> DocumentPoint
     {
         let zoom = self.imp().zoom.value();
-        DocumentPoint::new(((x as f64) / zoom) as u32 , ((y as f64)/ zoom) as u32)
+        DocumentPoint::new(
+            ((x as f64) / zoom) as u32,
+            ((y as f64) / zoom) as u32,
+        )
     }
 
     fn paint_coord(
         &self,
-        pos: DocumentPoint
+        pos: DocumentPoint,
     ) -> Result<(), String>
     {
         let cmd: AddRegionBorder = pos.clone().into();
@@ -105,21 +151,67 @@ impl DocumentWindow
             );
         };
 
-        let last_pt = pts.last().ok_or(
-            "Paint point list didn't come with final \
-             point.",
-        )?.clone();
+        let last_pt = pts
+            .last()
+            .ok_or(
+                "Paint point list didn't come with final \
+                 point.",
+            )?
+            .clone();
 
-        let cmd: AddRegionBorder = pts.into();
+        use SettingsTab::*;
 
-        self.imp()
-            .model
-            .borrow_mut()
-            .set_last_drag_pos(Some(last_pt.to_owned()));
+        match self.imp().model.borrow().settings_tab()
+        {
+            Regions =>
+            {
+                let cmd: AddRegionBorder = pts.into();
 
-        self.apply_command(cmd);
-        self.queue_preview_refresh();
+                self.imp()
+                    .model
+                    .borrow_mut()
+                    .set_last_drag_pos(Some(
+                        last_pt.to_owned(),
+                    ));
 
-        Ok(())
+                self.apply_command(cmd);
+                self.queue_preview_refresh();
+
+                Ok(())
+            },
+            Sources =>
+            {
+                Err("Can't draw in sources or export mode"
+                    .to_string())
+            },
+            Points =>
+            {
+                Err("Can't draw in points mode".to_string())
+            },
+            Glyphs =>
+            {
+                Err("Can't draw in glyphs mode".to_string())
+            },
+            Export =>
+            {
+                Err("Can't draw in export mode".to_string())
+            },
+            Lines =>
+            {
+                let cmd: AddLineKernel = pts.into();
+
+                self.imp()
+                    .model
+                    .borrow_mut()
+                    .set_last_drag_pos(Some(
+                        last_pt.to_owned(),
+                    ));
+
+                self.apply_command(cmd);
+                self.queue_preview_refresh();
+
+                Ok(())
+            },
+        }
     }
 }

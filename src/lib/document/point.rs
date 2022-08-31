@@ -11,6 +11,7 @@ use serde::{
     Clone,
     Eq,
     Hash,
+    Copy,
 )]
 pub struct DocumentPoint
 {
