@@ -16,13 +16,30 @@ impl DocumentWindow
         res: Result<String, String>,
     )
     {
-        let msg = match res
+        match res
         {
-            Ok(s) => s,
-            Err(e) => format!("Error: {e}"),
+            Ok(msg) => self.set_status(&msg),
+            Err(e) => self.set_error(e),
         };
+    }
 
-        self.status_label.set_label(&msg);
+    pub fn maybe_set_error_from_res(
+        &self,
+        res: Result<(), String>,
+    )
+    {
+        if let Err(msg) = res
+        {
+            self.set_error(msg);
+        };
+    }
+
+    fn set_error(
+        &self,
+        e: String,
+    )
+    {
+        self.set_status(format!("Error: {e}").as_str());
     }
 
     pub fn queue_preview_refresh(&self)

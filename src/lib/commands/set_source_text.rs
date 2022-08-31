@@ -1,7 +1,10 @@
 use super::DocumentCommand;
 use crate::prelude::Document;
 
-pub struct SetSourceText(pub Option<String>);
+pub struct SetSourceText
+{
+    pub source_text: Option<String>,
+}
 
 impl DocumentCommand for SetSourceText
 {
@@ -10,13 +13,11 @@ impl DocumentCommand for SetSourceText
         doc: &Document,
     ) -> Document
     {
-        Document {
-            source_image: doc.source_image.clone(),
-            region_border_pixels: doc
-                .region_border_pixels
-                .clone(),
-            source_text: self.0,
-        }
+        let mut doc = doc.clone();
+
+        doc.source_text = self.source_text;
+
+        doc
     }
 }
 
@@ -25,7 +26,7 @@ pub mod tests
 {
     use crate::{
         commands::{
-            DocumentCommandApplyable,
+            DocumentCommand,
             SetSourceText,
         },
         document::tests::generate_test_doc,
@@ -41,16 +42,15 @@ pub mod tests
             "Hello world!"
         );
 
-        let cmd = SetSourceText(Some(
-            "Goodbye world!".to_string(),
-        ));
+        let cmd = SetSourceText {
+            source_text: Some("Goodbye world!".to_string()),
+        };
 
-        let res_doc = doc.apply_command(cmd);
+        let res_doc = cmd.transform_document(&doc);
 
         assert_eq!(
             res_doc.source_text.unwrap(),
             "Goodbye world!"
         );
-        todo!("Add assertions for dependent values.");
     }
 }

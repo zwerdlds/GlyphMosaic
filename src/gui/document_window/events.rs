@@ -1,4 +1,5 @@
 use super::DocumentWindow;
+use crate::model::SettingsTab;
 use glyph_mosaic::commands::{
     SetSourceImage,
     SetSourceText,
@@ -27,6 +28,62 @@ impl DocumentWindow
         self.setup_source_text_select();
         self.setup_preview_redraw();
         self.setup_zoom();
+        self.setup_preview_opacity();
+        self.setup_settings_tabs();
+        self.setup_drawing();
+    }
+
+    fn setup_settings_tabs(&self)
+    {
+        self.imp().settings_notebook.connect_switch_page(
+            clone!(@strong self as win => move |_,_,pg|{
+                win.update_settings_tab(pg);
+            }),
+        );
+    }
+
+    fn update_settings_tab(
+        &self,
+        page_index: u32,
+    )
+    {
+        use SettingsTab::*;
+
+        let p: Result<SettingsTab, String> =
+            match page_index
+            {
+                0 => Ok(Sources),
+                1 => Ok(Regions),
+                2 => Ok(Lines),
+                3 => Ok(Points),
+                4 => Ok(Glyphs),
+                5 => Ok(Export),
+                i =>
+                {
+                    Err(format!(
+                        "Tab index {i} is not supported."
+                    ))
+                },
+            };
+
+        match p
+        {
+            Ok(p) =>
+            {
+                self.imp()
+                    .model
+                    .borrow_mut()
+                    .set_settings_tab(p);
+                self.imp().queue_preview_refresh();
+            },
+            Err(e) =>
+            {
+                self.imp().set_status(
+                    format!("Error switching tab: {e}")
+                        .as_str(),
+                )
+            },
+        }
     }
 
     fn setup_source_image_select(&self)
@@ -85,8 +142,9 @@ impl DocumentWindow
                     )
                 })?;
 
-            self.imp()
-                .apply_command(SetSourceImage(Some(img)));
+            self.apply_command(SetSourceImage {
+                source_image: Some(img),
+            });
 
             format!("Loaded source image from {file_path}")
         };
@@ -95,8 +153,8 @@ impl DocumentWindow
             format!("Loading source image failed: {e}")
         });
 
-        self.imp().set_status_from_res(result);
-        self.imp().queue_preview_refresh();
+        self.set_status_from_res(result);
+        self.queue_preview_refresh();
     }
 
     fn setup_source_text_select(&self)
@@ -165,8 +223,9 @@ impl DocumentWindow
             let txt = read_to_string(file_path.clone())
                 .map_err(|e| e.to_string())?;
 
-            self.imp()
-                .apply_command(SetSourceText(Some(txt)));
+            self.imp().apply_command(SetSourceText {
+                source_text: Some(txt),
+            });
 
             format!("Loaded source text from {file_path}")
         };
@@ -175,15 +234,24 @@ impl DocumentWindow
             format!("Loading source text failed: {e}")
         });
 
-        self.imp().set_status_from_res(result);
-        self.imp().queue_preview_refresh();
+        self.set_status_from_res(result);
+        self.queue_preview_refresh();
+    }
+
+    fn setup_preview_opacity(&self)
+    {
+        self.imp().preview_opacity.connect_value_changed(
+            clone!(@strong self as win => move |_| {
+                win.queue_preview_refresh();
+            }),
+        );
     }
 
     fn setup_zoom(&self)
     {
         self.imp().zoom.connect_value_changed(
             clone!(@strong self as win => move |_| {
-                win.imp().queue_preview_refresh();
+                win.queue_preview_refresh();
             }),
         );
     }
@@ -207,7 +275,6 @@ impl DocumentWindow
 
         let res: Result<(), String> = try {
             let model = win.model.borrow();
-
             let zoom = win.zoom.value();
 
             let unproc_preview = model.create_preview()?;
@@ -220,9 +287,49 @@ impl DocumentWindow
             area.set_width_request(w);
             area.set_height_request(h);
 
-            let preview = unproc_preview
-                .scale_simple(w, h, InterpType::Bilinear)
-                .ok_or(format!("Zoom failed."))?;
+            let preview = {
+                let p = unproc_preview
+                    .scale_simple(
+                        w,
+                        h,
+                        InterpType::Bilinear,
+                    )
+                    .ok_or(format!(
+                        "Scaling preview result failed."
+                    ))?
+                    .clone();
+
+                let preview_opacity =
+                    win.preview_opacity.value();
+
+                model
+                    .create_source_preview_base()?
+                    .scale_simple(
+                        w,
+                        h,
+                        InterpType::Bilinear,
+                    )
+                    .ok_or(format!(
+                        "Scaling source for underlay \
+                         failed."
+                    ))?
+                    .composite(
+                        &p,
+                        0,
+                        0,
+                        w,
+                        h,
+                        0f64,
+                        0f64,
+                        1f64,
+                        1f64,
+                        InterpType::Bilinear,
+                        255 - (255 as f64 * preview_opacity)
+                            as i32,
+                    );
+
+                p
+            };
 
             ctx.set_source_pixbuf(&preview, 0f64, 0f64);
 
@@ -231,16 +338,11 @@ impl DocumentWindow
             })?;
         };
 
-        if let Err(e) = res
-        {
-            win.set_status(
-                format!(
-                    "Getting preview encountered error: \
-                     {e}"
-                )
-                .as_str(),
-            );
-        }
+        let res = res.map_err(|e| {
+            format!("Getting preview failed: {e}")
+        });
+
+        self.maybe_set_error_from_res(res);
     }
 }
 

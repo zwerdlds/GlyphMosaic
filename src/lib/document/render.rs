@@ -1,5 +1,8 @@
 use crate::document::Document;
-use gtk4::gdk_pixbuf::Pixbuf;
+use gtk4::gdk_pixbuf::{
+    Colorspace,
+    Pixbuf,
+};
 
 impl Document
 {
@@ -10,17 +13,48 @@ impl Document
         self.source_image
             .clone()
             .map(|bi| bi.pixbuf)
-            .ok_or("No base image specified.".to_string())
+            .ok_or("No source image specified.".to_string())
     }
 
     pub fn render_regions_image(
-        &mut self
+        &self
     ) -> Result<Pixbuf, String>
     {
-        self.source_image
+        let source_pixbuf: Pixbuf = self
+            .source_image
             .clone()
-            .map(|bi| bi.pixbuf)
-            .ok_or("No region image specified.".to_string())
+            .ok_or("No source image specified.")?
+            .into();
+
+        let (w, h) =
+            (source_pixbuf.width(), source_pixbuf.height());
+
+        let into_pixbuf =
+            Pixbuf::new(Colorspace::Rgb, false, 8, w, h)
+                .ok_or(
+                    "Could not build regions preview \
+                     pixbuf.",
+                )?;
+
+        let (w, h) = (w as u32, h as u32);
+
+        for pix in self
+            .region_border_pixels
+            .iter()
+            .filter(|p| ((p.x() > 0) && (p.x() < w)))
+            .filter(|p| ((p.y() > 0) && (p.y() < h)))
+        {
+            into_pixbuf.put_pixel(
+                pix.x(),
+                pix.y(),
+                255,
+                255,
+                255,
+                255,
+            )
+        }
+
+        Ok(into_pixbuf)
     }
 }
 

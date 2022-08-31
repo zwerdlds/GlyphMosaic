@@ -1,10 +1,13 @@
+pub mod drawing;
 pub mod events;
 pub mod imp;
 pub mod util;
+use delegate::delegate;
 use glib::Object;
 use gtk4::{
     gio,
     glib,
+    subclass::prelude::ObjectSubclassIsExt,
     Application,
 };
 
@@ -17,6 +20,15 @@ glib::wrapper! {
 
 impl DocumentWindow
 {
+    delegate! {
+        to self.imp() {
+            fn maybe_set_error_from_res(&self, res: Result<(), String>);
+            fn set_status_from_res(&self, res: Result<String, String>);
+            fn queue_preview_refresh(&self);
+            fn apply_command(&self, cmd: impl glyph_mosaic::commands::DocumentCommand);
+        }
+    }
+
     pub fn new(app: &Application) -> Self
     {
         // Create new window

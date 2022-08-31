@@ -1,10 +1,9 @@
 mod image;
+mod point;
 pub mod render;
 mod serialization;
-
-use crate::commands::DocumentCommandApplyable;
-
 use self::image::DocumentImage;
+pub use point::DocumentPoint;
 use serde::{
     Deserialize,
     Serialize,
@@ -17,19 +16,8 @@ use std::collections::HashSet;
 pub struct Document
 {
     pub(crate) source_image: Option<DocumentImage>,
-    pub(crate) region_border_pixels: HashSet<(i32, i32)>,
+    pub(crate) region_border_pixels: HashSet<DocumentPoint>,
     pub(crate) source_text: Option<String>,
-}
-
-impl DocumentCommandApplyable for Document
-{
-    fn apply_command(
-        &self,
-        cmd: impl crate::commands::DocumentCommand,
-    ) -> Document
-    {
-        cmd.transform_document(self)
-    }
 }
 
 #[cfg(test)]

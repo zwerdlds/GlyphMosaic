@@ -31,6 +31,9 @@ pub struct DocumentWindow
     pub model: Rc<RefCell<Model>>,
 
     #[template_child]
+    pub preview_opacity: TemplateChild<Adjustment>,
+
+    #[template_child]
     pub zoom: TemplateChild<Adjustment>,
 
     #[template_child]

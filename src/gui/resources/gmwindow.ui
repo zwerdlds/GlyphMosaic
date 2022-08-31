@@ -29,12 +29,15 @@
             <child>
               <object class="GtkBox">
                 <property name="halign">end</property>
+                <property name="hexpand-set">True</property>
                 <property name="orientation">vertical</property>
+                <property name="vexpand-set">True</property>
                 <child>
                   <object class="GtkBox">
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkBox">
+                        <property name="valign">start</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="halign">start</property>
@@ -44,8 +47,29 @@
                         <child>
                           <object class="GtkSpinButton">
                             <property name="adjustment">zoom</property>
-                            <property name="digits">4</property>
-                            <property name="value">1.0</property>
+                            <property name="digits">1</property>
+                            <property name="numeric">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="valign">start</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="halign">start</property>
+                            <property name="label">Preview Opacity</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScale">
+                            <property name="adjustment">preview_opacity</property>
+                            <property name="digits">2</property>
+                            <property name="hexpand">True</property>
+                            <property name="hexpand-set">True</property>
+                            <property name="round-digits">2</property>
+                            <property name="value-pos">right</property>
                           </object>
                         </child>
                       </object>
@@ -77,7 +101,7 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="sources-tab-label">
+                      <object class="GtkLabel" id="source_tab_label">
                         <property name="halign">start</property>
                         <property name="label">Sources</property>
                       </object>
@@ -86,7 +110,7 @@
                       <object class="GtkBox"/>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="regions-tab-button">
+                      <object class="GtkLabel" id="regions_tab_label">
                         <property name="halign">start</property>
                         <property name="label">Regions</property>
                       </object>
@@ -95,7 +119,7 @@
                       <object class="GtkBox"/>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="lines-tab-button">
+                      <object class="GtkLabel" id="lines_tab_label">
                         <property name="halign">start</property>
                         <property name="label">Lines</property>
                       </object>
@@ -104,7 +128,7 @@
                       <object class="GtkBox"/>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="points-tab-button">
+                      <object class="GtkLabel" id="points_tab_label">
                         <property name="halign">start</property>
                         <property name="label">Points</property>
                       </object>
@@ -113,7 +137,7 @@
                       <object class="GtkBox"/>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="glyph-tab-button">
+                      <object class="GtkLabel" id="glyph_tab_label">
                         <property name="halign">start</property>
                         <property name="label">Glyphs</property>
                       </object>
@@ -122,7 +146,7 @@
                       <object class="GtkBox"/>
                     </child>
                     <child type="tab">
-                      <object class="GtkLabel" id="export-tab-button">
+                      <object class="GtkLabel" id="export_tab_label">
                         <property name="halign">start</property>
                         <property name="label">Export</property>
                       </object>
@@ -143,12 +167,22 @@
     </child>
     <child>
       <object class="GtkAdjustment" id="zoom">
-        <property name="lower">0.5</property>
+        <property name="lower">0.05</property>
         <property name="page-increment">1.0</property>
         <property name="page-size">1.0</property>
         <property name="step-increment">0.1</property>
         <property name="upper">10.0</property>
         <property name="value">1.0</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkAdjustment" id="preview_opacity">
+        <property name="lower">0.01</property>
+        <property name="page-increment">0.1</property>
+        <property name="page-size">0.1</property>
+        <property name="step-increment">0.05</property>
+        <property name="upper">1.1</property>
+        <property name="value">0.75</property>
       </object>
     </child>
   </template>
