@@ -1,8 +1,5 @@
 use super::DocumentWindow;
-use crate::commands::{
-    redraw_preview::RedrawPreview,
-    WindowCommand,
-};
+use crate::commands::redraw_preview::RedrawPreview;
 use gtk4::{
     self,
     glib::clone,
