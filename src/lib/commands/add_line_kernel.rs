@@ -1,16 +1,21 @@
-use super::DocumentCommand;
+use super::DocumentTransformable;
 use crate::{
     document::DocumentPoint,
     prelude::Document,
 };
+use serde::{
+    Deserialize,
+    Serialize,
+};
 use std::collections::HashSet;
 
+#[derive(Serialize, Deserialize)]
 pub struct AddLineKernel
 {
     pub points: HashSet<DocumentPoint>,
 }
 
-impl DocumentCommand for AddLineKernel
+impl DocumentTransformable for AddLineKernel
 {
     fn transform_document(
         self,

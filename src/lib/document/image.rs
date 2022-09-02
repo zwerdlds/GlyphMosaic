@@ -11,7 +11,7 @@ use serde::{
 };
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
-pub(crate) struct DocumentImage
+pub struct DocumentImage
 {
     #[serde(with = "PixbufDef")]
     pub pixbuf: Pixbuf,

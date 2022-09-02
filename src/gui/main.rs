@@ -2,6 +2,8 @@
 mod document_window;
 mod model;
 use document_window::DocumentWindow;
+mod commands;
+mod util;
 use gtk4::{
     gio,
     prelude::*,

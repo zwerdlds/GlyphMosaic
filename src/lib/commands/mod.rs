@@ -2,6 +2,10 @@
 // pub use set_region_map_image::*;
 
 mod set_source_image;
+use serde::{
+    Deserialize,
+    Serialize,
+};
 pub use set_source_image::*;
 
 mod set_source_text;
@@ -15,26 +19,27 @@ pub use add_line_kernel::*;
 
 use crate::prelude::Document;
 
-pub enum DocumentCommands
+#[derive(Serialize, Deserialize)]
+pub enum DocumentCommand
 {
     AddLineKernel(AddLineKernel),
-    DrawRegionBorder(AddRegionBorder),
+    AddRegionBorder(AddRegionBorder),
     SetSourceImage(SetSourceImage),
     SetSourceText(SetSourceText),
 }
 
-impl DocumentCommand for DocumentCommands
+impl DocumentTransformable for DocumentCommand
 {
     fn transform_document(
         self,
         doc: &Document,
     ) -> Document
     {
-        use DocumentCommands::*;
+        use DocumentCommand::*;
 
         match self
         {
-            DrawRegionBorder(c) => td(c, doc),
+            AddRegionBorder(c) => td(c, doc),
             SetSourceImage(c) => td(c, doc),
             SetSourceText(c) => td(c, doc),
             AddLineKernel(c) => td(c, doc),
@@ -43,14 +48,14 @@ impl DocumentCommand for DocumentCommands
 }
 
 fn td(
-    c: impl DocumentCommand,
+    c: impl DocumentTransformable,
     doc: &Document,
 ) -> Document
 {
     c.transform_document(doc)
 }
 
-pub trait DocumentCommand
+pub trait DocumentTransformable
 {
     fn transform_document(
         self,

@@ -1,9 +1,24 @@
 use glyph_mosaic::{
     self,
+    commands::{
+        DocumentCommand,
+        DocumentTransformable,
+    },
     document::DocumentPoint,
     prelude::Document,
 };
 use gtk4::gdk_pixbuf::Pixbuf;
+
+#[derive(Debug, PartialEq)]
+pub enum SettingsTab
+{
+    Sources,
+    Regions,
+    Lines,
+    Points,
+    Glyphs,
+    Export,
+}
 
 pub struct Model
 {
@@ -28,22 +43,20 @@ impl Default for Model
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub enum SettingsTab
-{
-    Sources,
-    Regions,
-    Lines,
-    Points,
-    Glyphs,
-    Export,
-}
-
 impl Model
 {
     pub(crate) fn settings_tab(&self) -> &SettingsTab
     {
         &self.settings_tab
+    }
+
+    pub(crate) fn apply_command(
+        &mut self,
+        cmd: DocumentCommand,
+    )
+    {
+        let doc = cmd.transform_document(&self.document);
+        self.document = doc;
     }
 
     pub(crate) fn set_last_drag_pos(
@@ -58,7 +71,7 @@ impl Model
         &self
     ) -> Option<DocumentPoint>
     {
-        self.last_drag_pos.clone()
+        self.last_drag_pos
     }
 
     pub(crate) fn set_settings_tab(
@@ -94,15 +107,6 @@ impl Model
                 ))
             },
         }
-    }
-
-    pub(crate) fn apply_command(
-        &mut self,
-        cmd: impl glyph_mosaic::commands::DocumentCommand,
-    )
-    {
-        self.document =
-            cmd.transform_document(&self.document);
     }
 }
 

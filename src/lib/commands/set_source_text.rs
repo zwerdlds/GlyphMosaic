@@ -1,12 +1,41 @@
-use super::DocumentCommand;
+use super::DocumentTransformable;
 use crate::prelude::Document;
+use serde::{
+    Deserialize,
+    Serialize,
+};
 
+#[derive(Serialize, Deserialize)]
 pub struct SetSourceText
 {
-    pub source_text: Option<String>,
+    source_text: Option<String>,
 }
 
-impl DocumentCommand for SetSourceText
+impl SetSourceText
+{
+    pub fn new(source_text: Option<String>) -> Self
+    {
+        SetSourceText { source_text }
+    }
+}
+
+impl From<Option<String>> for SetSourceText
+{
+    fn from(text: Option<String>) -> Self
+    {
+        SetSourceText::new(text)
+    }
+}
+
+impl From<String> for SetSourceText
+{
+    fn from(text: String) -> Self
+    {
+        Some(text).into()
+    }
+}
+
+impl DocumentTransformable for SetSourceText
 {
     fn transform_document(
         self,
@@ -26,7 +55,7 @@ pub mod tests
 {
     use crate::{
         commands::{
-            DocumentCommand,
+            DocumentTransformable,
             SetSourceText,
         },
         document::tests::generate_test_doc,

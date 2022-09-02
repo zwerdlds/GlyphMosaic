@@ -1,42 +1,34 @@
+use crate::point::GenericPoint;
+use delegate::delegate;
 use serde::{
     Deserialize,
     Serialize,
 };
 
 #[derive(
-    Serialize,
-    Deserialize,
     Debug,
-    PartialEq,
     Clone,
-    Eq,
     Hash,
     Copy,
+    PartialEq,
+    Serialize,
+    Eq,
+    Deserialize,
 )]
-pub struct DocumentPoint
-{
-    x: u32,
-    y: u32,
-}
+pub struct DocumentPoint(GenericPoint<usize>);
 
 impl DocumentPoint
 {
-    pub fn new(
-        x: u32,
-        y: u32,
-    ) -> DocumentPoint
-    {
-        DocumentPoint { x, y }
+    delegate! {
+        to self.0 {
+            pub fn x(&self) -> usize;
+            pub fn y(&self) -> usize;
+        }
     }
 
-    pub fn x(&self) -> u32
+    pub fn new(pt: (usize, usize)) -> DocumentPoint
     {
-        self.x
-    }
-
-    pub fn y(&self) -> u32
-    {
-        self.y
+        DocumentPoint(GenericPoint::new(pt))
     }
 
     pub fn raster_line_to(
@@ -71,49 +63,25 @@ impl DocumentPoint
             .map(|(x_o, y_o)| (x_o.round(), y_o.round()))
             .map(|(x_o, y_o)| ((x_o as i32), (y_o as i32)))
             .map(|(x_o, y_o)| ((f_x + x_o), (f_y + y_o)))
-            .map(|(x, y)| (x as u32, y as u32))
+            .map(|(x, y)| (x as usize, y as usize))
             .map(From::from)
             .collect()
     }
 }
 
-impl From<(u32, u32)> for DocumentPoint
+impl From<(usize, usize)> for DocumentPoint
 {
-    fn from(pt: (u32, u32)) -> DocumentPoint
+    fn from(pt: (usize, usize)) -> DocumentPoint
     {
-        DocumentPoint::new(pt.0, pt.1)
+        DocumentPoint::new(pt)
     }
 }
 
-impl From<&(u32, u32)> for DocumentPoint
+impl From<DocumentPoint> for Vec<DocumentPoint>
 {
-    fn from(pt: &(u32, u32)) -> DocumentPoint
+    fn from(pt: DocumentPoint) -> Vec<DocumentPoint>
     {
-        DocumentPoint::new(pt.0, pt.1)
-    }
-}
-
-impl From<(&u32, &u32)> for DocumentPoint
-{
-    fn from(pt: (&u32, &u32)) -> DocumentPoint
-    {
-        DocumentPoint::new(*pt.0, *pt.1)
-    }
-}
-
-impl From<(u32, &u32)> for DocumentPoint
-{
-    fn from(pt: (u32, &u32)) -> DocumentPoint
-    {
-        DocumentPoint::new(pt.0, *pt.1)
-    }
-}
-
-impl From<(&u32, u32)> for DocumentPoint
-{
-    fn from(pt: (&u32, u32)) -> DocumentPoint
-    {
-        DocumentPoint::new(*pt.0, pt.1)
+        vec![pt]
     }
 }
 
@@ -137,9 +105,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_simple_point_interpolation()
+    fn simple_point_interpolation()
     {
-        let res = DocumentPoint::new(0, 0)
+        let res = DocumentPoint::new((0, 0))
             .raster_line_to((1, 1).into());
 
         assert_eq!(2, res.len());
@@ -148,9 +116,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_eq_vert_point_interpolation()
+    fn eq_vert_point_interpolation()
     {
-        let res = DocumentPoint::new(0, 0)
+        let res = DocumentPoint::new((0, 0))
             .raster_line_to((0, 10).into());
 
         assert_eq!(11, res.len());
@@ -160,9 +128,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_eq_horiz_point_interpolation()
+    fn eq_horiz_point_interpolation()
     {
-        let res = DocumentPoint::new(0, 0)
+        let res = DocumentPoint::new((0, 0))
             .raster_line_to((10, 0).into());
 
         assert_eq!(11, res.len());
@@ -172,9 +140,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_eq_dr_diagonal_point_interpolation()
+    fn eq_dr_diagonal_point_interpolation()
     {
-        let res = DocumentPoint::new(0, 0)
+        let res = DocumentPoint::new((0, 0))
             .raster_line_to((10, 10).into());
 
         assert_eq!(11, res.len());
@@ -183,9 +151,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_eq_dl_diagonal_point_interpolation()
+    fn eq_dl_diagonal_point_interpolation()
     {
-        let res = DocumentPoint::new(10, 0)
+        let res = DocumentPoint::new((10, 0))
             .raster_line_to((0, 10).into());
 
         assert_eq!(11, res.len());
@@ -195,9 +163,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_eq_ul_diagonal_point_interpolation()
+    fn eq_ul_diagonal_point_interpolation()
     {
-        let res = DocumentPoint::new(10, 10)
+        let res = DocumentPoint::new((10, 10))
             .raster_line_to((0, 0).into());
 
         assert_eq!(11, res.len());
@@ -207,9 +175,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_eq_ur_diagonal_point_interpolation()
+    fn eq_ur_diagonal_point_interpolation()
     {
-        let res = DocumentPoint::new(0, 10)
+        let res = DocumentPoint::new((0, 10))
             .raster_line_to((10, 0).into());
 
         assert_eq!(11, res.len());
@@ -219,10 +187,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_right_inflection_for_downward_point_interpolation(
-    )
+    fn right_inflection_for_downward_point_interpolation()
     {
-        let res = DocumentPoint::new(0, 0)
+        let res = DocumentPoint::new((0, 0))
             .raster_line_to((1, 10).into());
 
         assert_eq!(11, res.len());
@@ -233,10 +200,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_down_inflection_for_rightward_point_interpolation(
-    )
+    fn down_inflection_for_rightward_point_interpolation()
     {
-        let res = DocumentPoint::new(0, 0)
+        let res = DocumentPoint::new((0, 0))
             .raster_line_to((10, 1).into());
 
         assert_eq!(11, res.len());
@@ -247,10 +213,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_down_inflection_for_leftward_point_interpolation(
-    )
+    fn down_inflection_for_leftward_point_interpolation()
     {
-        let res = DocumentPoint::new(10, 0)
+        let res = DocumentPoint::new((10, 0))
             .raster_line_to((0, 1).into());
 
         assert_eq!(11, res.len());
@@ -261,10 +226,9 @@ pub mod tests
     }
 
     #[test]
-    fn validate_right_inflection_for_upward_point_interpolation(
-    )
+    fn right_inflection_for_upward_point_interpolation()
     {
-        let res = DocumentPoint::new(0, 10)
+        let res = DocumentPoint::new((0, 10))
             .raster_line_to((1, 0).into());
 
         assert_eq!(11, res.len());

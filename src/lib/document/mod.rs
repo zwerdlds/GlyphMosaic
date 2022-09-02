@@ -1,5 +1,5 @@
-mod image;
-mod point;
+mod document_point;
+pub mod image;
 mod region;
 pub mod render;
 mod serialization;
@@ -7,7 +7,7 @@ use self::{
     image::DocumentImage,
     region::DocumentRegion,
 };
-pub use point::DocumentPoint;
+pub use document_point::DocumentPoint;
 use serde::{
     Deserialize,
     Serialize,

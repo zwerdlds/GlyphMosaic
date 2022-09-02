@@ -1,13 +1,31 @@
-use super::DocumentCommand;
-use crate::prelude::Document;
+use super::DocumentTransformable;
+use crate::prelude::{
+    Document,
+    DocumentImage,
+};
 use gtk4::gdk_pixbuf::Pixbuf;
+use serde::{
+    Deserialize,
+    Serialize,
+};
 
+#[derive(Serialize, Deserialize)]
 pub struct SetSourceImage
 {
-    pub source_image: Option<Pixbuf>,
+    source_image: Option<DocumentImage>,
 }
 
-impl DocumentCommand for SetSourceImage
+impl SetSourceImage
+{
+    pub fn new(
+        source_image: Option<DocumentImage>
+    ) -> SetSourceImage
+    {
+        SetSourceImage { source_image }
+    }
+}
+
+impl DocumentTransformable for SetSourceImage
 {
     fn transform_document(
         self,
@@ -16,11 +34,32 @@ impl DocumentCommand for SetSourceImage
     {
         let mut doc = doc.clone();
 
-        let source_image =
-            self.source_image.map(|i| i.into());
-
-        doc.source_image = source_image;
+        doc.source_image = self.source_image;
 
         doc
+    }
+}
+
+impl From<Option<DocumentImage>> for SetSourceImage
+{
+    fn from(i: Option<DocumentImage>) -> Self
+    {
+        SetSourceImage::new(i)
+    }
+}
+
+impl From<DocumentImage> for SetSourceImage
+{
+    fn from(i: DocumentImage) -> Self
+    {
+        Some(i).into()
+    }
+}
+
+impl From<Pixbuf> for SetSourceImage
+{
+    fn from(i: Pixbuf) -> Self
+    {
+        Some(i.into()).into()
     }
 }

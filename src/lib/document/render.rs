@@ -4,6 +4,8 @@ use gtk4::gdk_pixbuf::{
     Pixbuf,
 };
 
+use super::region::DocumentRegion;
+
 impl Document
 {
     pub fn render_source_image(
@@ -36,7 +38,7 @@ impl Document
                      pixbuf.",
                 )?;
 
-        let (w, h) = (w as u32, h as u32);
+        let (w, h) = (w as usize, h as usize);
 
         for pix in self
             .region_border_pixels
@@ -45,14 +47,40 @@ impl Document
             .filter(|p| ((p.y() > 0) && (p.y() < h)))
         {
             into_pixbuf.put_pixel(
-                pix.x(),
-                pix.y(),
+                pix.x() as u32,
+                pix.y() as u32,
                 255,
                 255,
                 255,
                 255,
             )
         }
+
+        DocumentRegion::calculate_regions(
+            source_pixbuf.width() as usize,
+            source_pixbuf.height() as usize,
+            self.region_border_pixels.clone(),
+        )
+        .into_iter()
+        .for_each(|region| {
+            let (r, g, b) = (
+                rand::random::<u8>(),
+                rand::random::<u8>(),
+                rand::random::<u8>(),
+            );
+
+            for pix in region.into_iter()
+            {
+                into_pixbuf.put_pixel(
+                    pix.x() as u32,
+                    pix.y() as u32,
+                    r,
+                    g,
+                    b,
+                    255,
+                )
+            }
+        });
 
         Ok(into_pixbuf)
     }
@@ -77,7 +105,7 @@ impl Document
                      pixbuf.",
                 )?;
 
-        let (w, h) = (w as u32, h as u32);
+        let (w, h) = (w as usize, h as usize);
 
         for pix in self
             .region_border_pixels
@@ -86,8 +114,8 @@ impl Document
             .filter(|p| ((p.y() > 0) && (p.y() < h)))
         {
             into_pixbuf.put_pixel(
-                pix.x(),
-                pix.y(),
+                pix.x() as u32,
+                pix.y() as u32,
                 255,
                 255,
                 255,

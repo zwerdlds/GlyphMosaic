@@ -1,16 +1,22 @@
-use super::DocumentCommand;
+use serde::{
+    Deserialize,
+    Serialize,
+};
+
+use super::DocumentTransformable;
 use crate::{
     document::DocumentPoint,
     prelude::Document,
 };
 use std::collections::HashSet;
 
+#[derive(Serialize, Deserialize)]
 pub struct AddRegionBorder
 {
     pub points: HashSet<DocumentPoint>,
 }
 
-impl DocumentCommand for AddRegionBorder
+impl DocumentTransformable for AddRegionBorder
 {
     fn transform_document(
         self,
