@@ -8,10 +8,7 @@ use crate::document_window::{
     DocumentWindow,
 };
 
-use super::{
-    PaintCoords,
-    WindowCommand,
-};
+use super::PaintCoords;
 
 pub struct Click
 {
@@ -28,11 +25,8 @@ impl Click
     {
         Click { pt, win }
     }
-}
 
-impl WindowCommand for Click
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         let zoom: f64 = self.win.imp().zoom.value();
 

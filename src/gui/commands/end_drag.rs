@@ -1,8 +1,5 @@
-use gtk4::subclass::prelude::ObjectSubclassIsExt;
-
 use crate::document_window::DocumentWindow;
-
-use super::WindowCommand;
+use gtk4::subclass::prelude::ObjectSubclassIsExt;
 
 pub struct EndDrag
 {
@@ -15,11 +12,8 @@ impl EndDrag
     {
         EndDrag { win }
     }
-}
 
-impl WindowCommand for EndDrag
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         self.win
             .imp()

@@ -1,4 +1,3 @@
-use super::WindowCommand;
 use crate::document_window::DocumentWindow;
 use gtk4::{
     subclass::prelude::ObjectSubclassIsExt,
@@ -16,11 +15,8 @@ impl QueuePreviewRefresh
     {
         QueuePreviewRefresh { win }
     }
-}
 
-impl WindowCommand for QueuePreviewRefresh
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         self.win.imp().preview_area.queue_draw();
     }

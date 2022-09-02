@@ -8,10 +8,7 @@ use crate::document_window::{
     DocumentWindow,
 };
 
-use super::{
-    PaintCoords,
-    WindowCommand,
-};
+use super::PaintCoords;
 
 pub struct StartDrag
 {
@@ -28,11 +25,8 @@ impl StartDrag
     {
         StartDrag { win, pt }
     }
-}
 
-impl WindowCommand for StartDrag
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         let dp = self
             .pt

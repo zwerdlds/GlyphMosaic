@@ -1,10 +1,13 @@
+use super::{
+    image::PixbufDef,
+    region::DocumentRegion,
+};
 use crate::document::Document;
 use gtk4::gdk_pixbuf::{
     Colorspace,
     Pixbuf,
 };
-
-use super::region::DocumentRegion;
+use tokio;
 
 impl Document
 {
@@ -18,71 +21,80 @@ impl Document
             .ok_or("No source image specified.".to_string())
     }
 
-    pub fn render_regions_image(
+    pub async fn render_regions_image(
         &self
     ) -> Result<Pixbuf, String>
     {
-        let source_pixbuf: Pixbuf = self
+        let source_pixbuf: PixbufDef = self
             .source_image
             .clone()
             .ok_or("No source image specified.")?
             .into();
 
-        let (w, h) =
-            (source_pixbuf.width(), source_pixbuf.height());
+        let region_border_pixels =
+            self.region_border_pixels.to_owned();
 
-        let into_pixbuf =
-            Pixbuf::new(Colorspace::Rgb, true, 8, w, h)
-                .ok_or(
-                    "Could not build regions preview \
-                     pixbuf.",
-                )?;
+        tokio::spawn(async move {
+            let (w, h) =
+                (source_pixbuf.width, source_pixbuf.height);
 
-        let (w, h) = (w as usize, h as usize);
+            let draw_on_img =
+                Pixbuf::new(Colorspace::Rgb, true, 8, w, h)
+                    .ok_or(
+                        "Could not build regions preview \
+                         pixbuf.",
+                    )?;
 
-        for pix in self
-            .region_border_pixels
-            .iter()
-            .filter(|p| ((p.x() > 0) && (p.x() < w)))
-            .filter(|p| ((p.y() > 0) && (p.y() < h)))
-        {
-            into_pixbuf.put_pixel(
-                pix.x() as u32,
-                pix.y() as u32,
-                255,
-                255,
-                255,
-                255,
-            )
-        }
+            let (w, h) = (w as usize, h as usize);
 
-        DocumentRegion::calculate_regions(
-            source_pixbuf.width() as usize,
-            source_pixbuf.height() as usize,
-            self.region_border_pixels.clone(),
-        )
-        .into_iter()
-        .for_each(|region| {
-            let (r, g, b) = (
-                rand::random::<u8>(),
-                rand::random::<u8>(),
-                rand::random::<u8>(),
-            );
-
-            for pix in region.into_iter()
+            for pix in region_border_pixels
+                .iter()
+                .filter(|p| (p.x() > 0) && (p.x() < w))
+                .filter(|p| (p.y() > 0) && (p.y() < h))
             {
-                into_pixbuf.put_pixel(
+                draw_on_img.put_pixel(
                     pix.x() as u32,
                     pix.y() as u32,
-                    r,
-                    g,
-                    b,
+                    255,
+                    255,
+                    255,
                     255,
                 )
             }
-        });
 
-        Ok(into_pixbuf)
+            DocumentRegion::calculate_regions(
+                source_pixbuf.width as usize,
+                source_pixbuf.height as usize,
+                region_border_pixels,
+            )
+            .into_iter()
+            .for_each(|region| {
+                let (r, g, b) = (
+                    rand::random::<u8>(),
+                    rand::random::<u8>(),
+                    rand::random::<u8>(),
+                );
+
+                for pix in region.into_iter()
+                {
+                    draw_on_img.put_pixel(
+                        pix.x() as u32,
+                        pix.y() as u32,
+                        r,
+                        g,
+                        b,
+                        255,
+                    )
+                }
+            });
+
+            let draw_on_img = PixbufDef::from(draw_on_img);
+
+            Ok(draw_on_img)
+        })
+        .await
+        .unwrap()
+        .map(From::from)
     }
 
     pub fn render_lines_image(

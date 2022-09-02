@@ -1,4 +1,3 @@
-use super::WindowCommand;
 use crate::{
     commands::HandleLoadSourceImageResponse,
     document_window::DocumentWindow,
@@ -26,11 +25,8 @@ impl PromptLoadSourceImage
     {
         PromptLoadSourceImage { win }
     }
-}
 
-impl WindowCommand for PromptLoadSourceImage
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         let load_source_dialog = FileChooserDialog::new(
             Some("Select Source Image"),

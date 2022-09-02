@@ -1,7 +1,4 @@
-use super::{
-    SetStatus,
-    WindowCommand,
-};
+use super::SetStatus;
 use crate::document_window::DocumentWindow;
 use gtk4::{
     cairo::Context,
@@ -32,11 +29,8 @@ impl RedrawPreview
     {
         RedrawPreview { area, win, ctx }
     }
-}
 
-impl WindowCommand for RedrawPreview
-{
-    fn invoke(self)
+    pub async fn invoke(self)
     {
         let res: Result<(), String> = try {
             let unproc_preview = self
@@ -44,7 +38,8 @@ impl WindowCommand for RedrawPreview
                 .imp()
                 .model
                 .borrow()
-                .create_preview()?;
+                .create_preview()
+                .await?;
 
             let zoom = self.win.imp().zoom.value();
             let w = (unproc_preview.width() as f64 * zoom)
@@ -74,7 +69,8 @@ impl WindowCommand for RedrawPreview
                     .imp()
                     .model
                     .borrow()
-                    .create_source_preview_base()?
+                    .create_source_preview_base()
+                    .await?
                     .scale_simple(
                         w,
                         h,
@@ -114,7 +110,9 @@ impl WindowCommand for RedrawPreview
             format!("Getting preview failed: {e}")
         });
 
-        SetStatus::maybe_new_from_res(res, self.win)
-            .invoke();
+        if let Err(e) = res
+        {
+            SetStatus::new_error(e, self.win).invoke();
+        }
     }
 }

@@ -27,8 +27,3 @@ pub use start_drag::StartDrag;
 pub use update_drag::UpdateDrag;
 pub use update_settings_tab::UpdateSettingsTab;
 pub use window_document_command::WindowDocumentCommand;
-
-pub trait WindowCommand
-{
-    fn invoke(self);
-}

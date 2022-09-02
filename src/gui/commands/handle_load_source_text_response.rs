@@ -1,7 +1,6 @@
 use super::{
     QueuePreviewRefresh,
     SetStatus,
-    WindowCommand,
 };
 use crate::{
     commands::WindowDocumentCommand,
@@ -37,11 +36,8 @@ impl HandleLoadSourceTextResponse
             win,
         }
     }
-}
 
-impl WindowCommand for HandleLoadSourceTextResponse
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         self.dialog.close();
 

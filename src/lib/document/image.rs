@@ -74,7 +74,7 @@ impl PartialEq for DocumentImage
 
 #[derive(Serialize, Deserialize)]
 #[serde(remote = "gtk4::gdk_pixbuf::Pixbuf")]
-pub(super) struct PixbufDef
+pub(crate) struct PixbufDef
 {
     #[serde(getter = "get_pixbuf_data")]
     pub(super) data: Vec<u8>,
@@ -101,7 +101,7 @@ pub(super) enum ColorspaceDef
 
 impl From<ColorspaceDef> for Colorspace
 {
-    fn from(def: ColorspaceDef) -> Colorspace
+    fn from(def: ColorspaceDef) -> Self
     {
         match def
         {
@@ -111,6 +111,61 @@ impl From<ColorspaceDef> for Colorspace
                 Colorspace::__Unknown(i)
             },
         }
+    }
+}
+
+impl From<Colorspace> for ColorspaceDef
+{
+    fn from(c: Colorspace) -> Self
+    {
+        match c
+        {
+            Colorspace::Rgb => ColorspaceDef::Rgb,
+            Colorspace::__Unknown(i) =>
+            {
+                ColorspaceDef::Unk(i)
+            },
+            e =>
+            {
+                panic!(
+                    "Not sure how to encode color space \
+                     {e}"
+                )
+            },
+        }
+    }
+}
+
+impl From<DocumentImage> for PixbufDef
+{
+    fn from(i: DocumentImage) -> Self
+    {
+        let i: Pixbuf = i.into();
+        i.into()
+    }
+}
+
+impl From<Pixbuf> for PixbufDef
+{
+    fn from(i: Pixbuf) -> Self
+    {
+        Self {
+            data: get_pixbuf_data(&i),
+            has_alpha: i.has_alpha(),
+            bits_per_sample: i.bits_per_sample(),
+            width: i.width(),
+            height: i.height(),
+            rowstride: i.rowstride(),
+            colorspace: i.colorspace().into(),
+        }
+    }
+}
+
+impl From<PixbufDef> for DocumentImage
+{
+    fn from(i: PixbufDef) -> Self
+    {
+        Self { pixbuf: i.into() }
     }
 }
 

@@ -1,4 +1,3 @@
-use super::WindowCommand;
 use crate::document_window::DocumentWindow;
 use gtk4::subclass::prelude::ObjectSubclassIsExt;
 
@@ -30,18 +29,6 @@ impl SetStatus
         }
     }
 
-    pub fn maybe_new_from_res(
-        res: Result<(), String>,
-        win: DocumentWindow,
-    ) -> Option<SetStatus>
-    {
-        match res
-        {
-            Err(msg) => Some(Self::new_error(msg, win)),
-            Ok(()) => None,
-        }
-    }
-
     pub fn new_error(
         e: String,
         win: DocumentWindow,
@@ -49,26 +36,12 @@ impl SetStatus
     {
         Self::new(format!("Error: {e}"), win)
     }
-}
 
-impl WindowCommand for SetStatus
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         self.win
             .imp()
             .status_label
             .set_label(&self.message);
-    }
-}
-
-impl WindowCommand for Option<SetStatus>
-{
-    fn invoke(self)
-    {
-        if let Some(cmd) = self
-        {
-            cmd.invoke();
-        }
     }
 }

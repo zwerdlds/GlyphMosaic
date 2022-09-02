@@ -1,4 +1,3 @@
-use super::WindowCommand;
 use crate::document_window::DocumentWindow;
 use glyph_mosaic::commands::DocumentCommand;
 use gtk4::subclass::prelude::ObjectSubclassIsExt;
@@ -18,11 +17,8 @@ impl WindowDocumentCommand
     {
         WindowDocumentCommand { command, win }
     }
-}
 
-impl WindowCommand for WindowDocumentCommand
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         self.win
             .imp()

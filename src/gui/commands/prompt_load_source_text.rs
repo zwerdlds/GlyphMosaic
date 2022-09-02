@@ -13,8 +13,6 @@ use gtk4::{
     ResponseType,
 };
 
-use super::WindowCommand;
-
 pub struct PromptLoadSourceText
 {
     win: DocumentWindow,
@@ -27,11 +25,8 @@ impl PromptLoadSourceText
     {
         PromptLoadSourceText { win }
     }
-}
 
-impl WindowCommand for PromptLoadSourceText
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         let load_source_dialog = FileChooserDialog::new(
             Some("Select Source Text"),

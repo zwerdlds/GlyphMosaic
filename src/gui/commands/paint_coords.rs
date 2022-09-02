@@ -1,3 +1,4 @@
+use super::WindowDocumentCommand;
 use crate::{
     commands::{
         QueuePreviewRefresh,
@@ -11,11 +12,6 @@ use glyph_mosaic::{
     document::DocumentPoint,
 };
 use gtk4::subclass::prelude::ObjectSubclassIsExt;
-
-use super::{
-    WindowCommand,
-    WindowDocumentCommand,
-};
 
 pub struct PaintCoords
 {
@@ -31,11 +27,8 @@ impl PaintCoords
     {
         PaintCoords { win, pts }
     }
-}
 
-impl WindowCommand for PaintCoords
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         let res: Result<DocumentCommand, String> = try {
             if self.pts.len() == 0

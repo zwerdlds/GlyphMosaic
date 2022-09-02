@@ -82,14 +82,14 @@ impl Model
         self.settings_tab = tab;
     }
 
-    pub(crate) fn create_source_preview_base(
+    pub(crate) async fn create_source_preview_base(
         &self
     ) -> Result<Pixbuf, String>
     {
         self.document.render_source_image()
     }
 
-    pub(crate) fn create_preview(
+    pub(crate) async fn create_preview(
         &self
     ) -> Result<Pixbuf, String>
     {
@@ -97,8 +97,14 @@ impl Model
 
         match &self.settings_tab
         {
-            Sources => self.create_source_preview_base(),
-            Regions => self.document.render_regions_image(),
+            Sources =>
+            {
+                self.create_source_preview_base().await
+            },
+            Regions =>
+            {
+                self.document.render_regions_image().await
+            },
             Lines | Points | Glyphs | Export =>
             {
                 Err(format!(

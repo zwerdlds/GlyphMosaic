@@ -1,6 +1,3 @@
-use gtk4::subclass::prelude::ObjectSubclassIsExt;
-
-use super::WindowCommand;
 use crate::{
     commands::{
         QueuePreviewRefresh,
@@ -9,6 +6,7 @@ use crate::{
     document_window::DocumentWindow,
     model::SettingsTab,
 };
+use gtk4::subclass::prelude::ObjectSubclassIsExt;
 
 pub struct UpdateSettingsTab
 {
@@ -25,11 +23,8 @@ impl UpdateSettingsTab
     {
         UpdateSettingsTab { win, page_index }
     }
-}
 
-impl WindowCommand for UpdateSettingsTab
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         use SettingsTab::*;
 

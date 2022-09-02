@@ -1,7 +1,6 @@
 use super::{
     PaintCoords,
     SetStatus,
-    WindowCommand,
 };
 use crate::document_window::{
     drawing_area_point::DrawingAreaPoint,
@@ -73,11 +72,8 @@ impl UpdateDrag
     {
         UpdateDrag { win, dg, pt }
     }
-}
 
-impl WindowCommand for UpdateDrag
-{
-    fn invoke(self)
+    pub fn invoke(self)
     {
         let res = try {
             let from = self
@@ -117,7 +113,9 @@ impl WindowCommand for UpdateDrag
                 .invoke();
         };
 
-        SetStatus::maybe_new_from_res(res, self.win)
-            .invoke();
+        if let Err(e) = res
+        {
+            SetStatus::new_error(e, self.win).invoke();
+        }
     }
 }
