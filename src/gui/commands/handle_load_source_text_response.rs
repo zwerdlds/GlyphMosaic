@@ -15,28 +15,16 @@ use gtk4::{
 };
 use std::fs;
 
-pub struct HandleLoadSourceTextResponse
+#[must_use]
+pub struct HandleLoadSourceTextResponse<'a>
 {
-    dialog: FileChooserDialog,
-    response: ResponseType,
-    win: DocumentWindow,
+    pub dialog: &'a FileChooserDialog,
+    pub response: ResponseType,
+    pub win: &'a DocumentWindow,
 }
 
-impl HandleLoadSourceTextResponse
+impl HandleLoadSourceTextResponse<'_>
 {
-    pub fn new(
-        dialog: FileChooserDialog,
-        response: ResponseType,
-        win: DocumentWindow,
-    ) -> HandleLoadSourceTextResponse
-    {
-        HandleLoadSourceTextResponse {
-            dialog,
-            response,
-            win,
-        }
-    }
-
     pub fn invoke(self)
     {
         self.dialog.close();
@@ -52,24 +40,31 @@ impl HandleLoadSourceTextResponse
             let txt = fs::read_to_string(file_path.clone())
                 .map_err(|e| e.to_string())?;
 
-            WindowDocumentCommand::new(
-                DocumentCommand::SetSourceText(txt.into()),
-                self.win.clone(),
-            )
+            WindowDocumentCommand {
+                command: DocumentCommand::SetSourceText(
+                    txt.into(),
+                ),
+                win: self.win,
+            }
             .invoke();
 
             format!("Loaded source text from {file_path}")
         };
 
-        let result = result.map_err(|e| {
-            format!("Loading source text failed: {e}")
-        });
+        let message = match result
+        {
+            Ok(m) => m,
+            Err(e) =>
+            {
+                format!("Error loading source text: {e}")
+            },
+        };
 
-        SetStatus::new_from_result(
-            result,
-            self.win.clone(),
-        )
+        SetStatus {
+            message,
+            win: self.win,
+        }
         .invoke();
-        QueuePreviewRefresh::new(self.win).invoke();
+        QueuePreviewRefresh { win: self.win }.invoke();
     }
 }

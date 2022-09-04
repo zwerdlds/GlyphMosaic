@@ -20,8 +20,12 @@ impl DocumentWindow
 {
     pub fn new(app: &Application) -> Self
     {
-        // Create new window
-        Object::new(&[("application", app)])
-            .expect("Failed to create Window")
+        let win: Self =
+            Object::new(&[("application", app)])
+                .expect("Failed to create Window");
+
+        win.setup_events();
+
+        win
     }
 }

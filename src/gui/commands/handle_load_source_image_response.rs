@@ -15,28 +15,16 @@ use gtk4::{
     ResponseType,
 };
 
-pub struct HandleLoadSourceImageResponse
+#[must_use]
+pub struct HandleLoadSourceImageResponse<'a>
 {
-    dialog: FileChooserDialog,
-    response: ResponseType,
-    win: DocumentWindow,
+    pub dialog: &'a FileChooserDialog,
+    pub response: ResponseType,
+    pub win: &'a DocumentWindow,
 }
 
-impl HandleLoadSourceImageResponse
+impl HandleLoadSourceImageResponse<'_>
 {
-    pub fn new(
-        dialog: FileChooserDialog,
-        response: ResponseType,
-        win: DocumentWindow,
-    ) -> HandleLoadSourceImageResponse
-    {
-        HandleLoadSourceImageResponse {
-            dialog,
-            response,
-            win,
-        }
-    }
-
     pub fn invoke(self)
     {
         self.dialog.close();
@@ -57,25 +45,32 @@ impl HandleLoadSourceImageResponse
                     )
                 })?;
 
-            WindowDocumentCommand::new(
-                DocumentCommand::SetSourceImage(img.into()),
-                self.win.clone(),
-            )
+            WindowDocumentCommand {
+                command: DocumentCommand::SetSourceImage(
+                    img.into(),
+                ),
+                win: self.win,
+            }
             .invoke();
 
             format!("Loaded source image from {file_path}")
         };
 
-        let result = result.map_err(|e| {
-            format!("Loading source image failed: {e}")
-        });
+        let message = match result
+        {
+            Ok(m) => m,
+            Err(e) =>
+            {
+                format!("Error loading source image: {e}")
+            },
+        };
 
-        SetStatus::new_from_result(
-            result,
-            self.win.clone(),
-        )
+        SetStatus {
+            message,
+            win: self.win,
+        }
         .invoke();
-        QueuePreviewRefresh::new(self.win).invoke();
+        QueuePreviewRefresh { win: self.win }.invoke();
     }
 }
 

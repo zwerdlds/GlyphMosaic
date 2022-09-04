@@ -16,27 +16,31 @@ impl DocumentWindow
         y: f64,
     )
     {
-        Click::new((x, y).into(), self.clone()).invoke();
+        Click {
+            pt: (x, y).into(),
+            win: self,
+        }
+        .invoke();
     }
 
     pub fn end_drag(&self)
     {
-        EndDrag::new(self.clone()).invoke();
+        EndDrag { win: self }.invoke();
     }
 
     pub fn prompt_load_source_image(&self)
     {
-        PromptLoadSourceImage::new(self.clone()).invoke();
+        PromptLoadSourceImage { win: self }.invoke();
     }
 
     pub fn prompt_load_source_text(&self)
     {
-        PromptLoadSourceText::new(self.clone()).invoke();
+        PromptLoadSourceText { win: self }.invoke();
     }
 
     pub fn queue_preview_refresh(&self)
     {
-        QueuePreviewRefresh::new(self.clone()).invoke();
+        QueuePreviewRefresh { win: self }.invoke();
     }
 
     pub fn start_drag(
@@ -44,16 +48,21 @@ impl DocumentWindow
         pt: DrawingAreaPoint,
     )
     {
-        StartDrag::new(self.clone(), pt).invoke();
+        StartDrag { win: self, pt }.invoke();
     }
 
     pub fn update_drag(
         &self,
-        dg: GestureDrag,
+        dg: &GestureDrag,
         rel_pt: DragRelativePoint,
     )
     {
-        UpdateDrag::new(self.clone(), dg, rel_pt).invoke();
+        UpdateDrag {
+            win: self,
+            dg,
+            pt: rel_pt,
+        }
+        .invoke();
     }
 
     pub fn update_settings_tab(
@@ -61,6 +70,10 @@ impl DocumentWindow
         pg: u32,
     )
     {
-        UpdateSettingsTab::new(self.clone(), pg).invoke();
+        UpdateSettingsTab {
+            win: self,
+            page_index: pg,
+        }
+        .invoke();
     }
 }

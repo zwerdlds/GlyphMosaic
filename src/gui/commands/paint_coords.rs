@@ -13,21 +13,15 @@ use glyph_mosaic::{
 };
 use gtk4::subclass::prelude::ObjectSubclassIsExt;
 
-pub struct PaintCoords
+#[must_use]
+pub struct PaintCoords<'a>
 {
-    win: DocumentWindow,
-    pts: Vec<DocumentPoint>,
+    pub win: &'a DocumentWindow,
+    pub pts: Vec<DocumentPoint>,
 }
-impl PaintCoords
-{
-    pub fn new(
-        win: DocumentWindow,
-        pts: Vec<DocumentPoint>,
-    ) -> PaintCoords
-    {
-        PaintCoords { win, pts }
-    }
 
+impl PaintCoords<'_>
+{
     pub fn invoke(self)
     {
         let res: Result<DocumentCommand, String> = try {
@@ -86,19 +80,22 @@ impl PaintCoords
         {
             Ok(cmd) =>
             {
-                WindowDocumentCommand::new(
-                    cmd,
-                    self.win.clone(),
-                )
+                WindowDocumentCommand {
+                    command: cmd,
+                    win: self.win,
+                }
                 .invoke()
             },
             Err(msg) =>
             {
-                SetStatus::new_error(msg, self.win.clone())
-                    .invoke()
+                SetStatus {
+                    message: format!("Error:{msg}"),
+                    win: self.win,
+                }
+                .invoke()
             },
         };
 
-        QueuePreviewRefresh::new(self.win).invoke();
+        QueuePreviewRefresh { win: self.win }.invoke();
     }
 }

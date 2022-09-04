@@ -1,7 +1,6 @@
 mod document_point;
 pub mod image;
-mod region;
-pub mod render;
+pub mod region;
 mod serialization;
 use self::{
     image::DocumentImage,
@@ -27,6 +26,21 @@ pub struct Document
     pub(crate) regions:
         HashMap<DocumentPoint, DocumentRegion>,
     pub(crate) source_text: Option<String>,
+}
+
+impl Document
+{
+    pub fn region_border_pixels(
+        &self
+    ) -> &HashSet<DocumentPoint>
+    {
+        &self.region_border_pixels
+    }
+
+    pub fn source_image(&self) -> &Option<DocumentImage>
+    {
+        &self.source_image
+    }
 }
 
 #[cfg(test)]

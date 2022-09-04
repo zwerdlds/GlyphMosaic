@@ -1,3 +1,4 @@
+use glyph_mosaic::document::DocumentPoint;
 use gtk4::{
     subclass::prelude::ObjectSubclassIsExt,
     traits::AdjustmentExt,
@@ -10,28 +11,21 @@ use crate::document_window::{
 
 use super::PaintCoords;
 
-pub struct Click
+#[must_use]
+pub struct Click<'a>
 {
-    pt: DrawingAreaPoint,
-    win: DocumentWindow,
+    pub pt: DrawingAreaPoint,
+    pub win: &'a DocumentWindow,
 }
 
-impl Click
+impl Click<'_>
 {
-    pub fn new(
-        pt: DrawingAreaPoint,
-        win: DocumentWindow,
-    ) -> Click
-    {
-        Click { pt, win }
-    }
-
     pub fn invoke(self)
     {
         let zoom: f64 = self.win.imp().zoom.value();
+        let pts: Vec<DocumentPoint> =
+            self.pt.as_document_point(zoom).into();
 
-        let p = self.pt.as_document_point(zoom);
-
-        PaintCoords::new(self.win, p.into()).invoke();
+        PaintCoords { win: self.win, pts }.invoke();
     }
 }

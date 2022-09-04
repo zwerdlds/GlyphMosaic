@@ -10,22 +10,15 @@ use crate::document_window::{
 
 use super::PaintCoords;
 
-pub struct StartDrag
+#[must_use]
+pub struct StartDrag<'a>
 {
-    win: DocumentWindow,
-    pt: DrawingAreaPoint,
+    pub win: &'a DocumentWindow,
+    pub pt: DrawingAreaPoint,
 }
 
-impl StartDrag
+impl StartDrag<'_>
 {
-    pub fn new(
-        win: DocumentWindow,
-        pt: DrawingAreaPoint,
-    ) -> StartDrag
-    {
-        StartDrag { win, pt }
-    }
-
     pub fn invoke(self)
     {
         let dp = self
@@ -43,6 +36,6 @@ impl StartDrag
             .as_document_point(self.win.imp().zoom.value())
             .into();
 
-        PaintCoords::new(self.win, pts).invoke();
+        PaintCoords { win: self.win, pts }.invoke();
     }
 }

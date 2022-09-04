@@ -74,7 +74,7 @@ impl PartialEq for DocumentImage
 
 #[derive(Serialize, Deserialize)]
 #[serde(remote = "gtk4::gdk_pixbuf::Pixbuf")]
-pub(crate) struct PixbufDef
+pub struct PixbufDef
 {
     #[serde(getter = "get_pixbuf_data")]
     pub(super) data: Vec<u8>,

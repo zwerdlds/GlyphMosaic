@@ -1,3 +1,5 @@
+mod render;
+use self::render::RenderJoinHandle;
 use glyph_mosaic::{
     self,
     commands::{
@@ -7,9 +9,9 @@ use glyph_mosaic::{
     document::DocumentPoint,
     prelude::Document,
 };
-use gtk4::gdk_pixbuf::Pixbuf;
+pub use render::RenderHandle;
 
-#[derive(Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum SettingsTab
 {
     Sources,
@@ -20,11 +22,14 @@ pub enum SettingsTab
     Export,
 }
 
-pub struct Model
+pub(crate) struct Model
 {
     document: Document,
     settings_tab: SettingsTab,
     last_drag_pos: Option<DocumentPoint>,
+    tokio_runtime: tokio::runtime::Runtime,
+    current_render: Option<RenderJoinHandle>,
+    current_render_handle: Option<RenderHandle>,
 }
 
 impl Default for Model
@@ -34,9 +39,16 @@ impl Default for Model
         let document = Document::default();
         let settings_tab = SettingsTab::Sources;
         let last_drag_pos = None;
+        let tokio_runtime =
+            tokio::runtime::Runtime::new().unwrap();
+        let current_render = None;
+        let current_render_handle = None;
 
         Model {
+            current_render,
+            tokio_runtime,
             document,
+            current_render_handle,
             settings_tab,
             last_drag_pos,
         }
@@ -82,37 +94,9 @@ impl Model
         self.settings_tab = tab;
     }
 
-    pub(crate) async fn create_source_preview_base(
-        &self
-    ) -> Result<Pixbuf, String>
+    pub(crate) fn document(&self) -> &Document
     {
-        self.document.render_source_image()
-    }
-
-    pub(crate) async fn create_preview(
-        &self
-    ) -> Result<Pixbuf, String>
-    {
-        use SettingsTab::*;
-
-        match &self.settings_tab
-        {
-            Sources =>
-            {
-                self.create_source_preview_base().await
-            },
-            Regions =>
-            {
-                self.document.render_regions_image().await
-            },
-            Lines | Points | Glyphs | Export =>
-            {
-                Err(format!(
-                    "Preview does not currently \
-                     supporting this tab."
-                ))
-            },
-        }
+        &self.document
     }
 }
 

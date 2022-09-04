@@ -13,24 +13,19 @@ use gtk4::{
     ResponseType,
 };
 
-pub struct PromptLoadSourceText
+#[must_use]
+pub struct PromptLoadSourceText<'a>
 {
-    win: DocumentWindow,
+    pub win: &'a DocumentWindow,
 }
 
-impl PromptLoadSourceText
+impl PromptLoadSourceText<'_>
 {
-    pub fn new(win: DocumentWindow)
-        -> PromptLoadSourceText
-    {
-        PromptLoadSourceText { win }
-    }
-
     pub fn invoke(self)
     {
         let load_source_dialog = FileChooserDialog::new(
             Some("Select Source Text"),
-            Some(&self.win),
+            Some(self.win),
             FileChooserAction::Open,
             &[
                 ("Open", ResponseType::Ok),
@@ -42,7 +37,11 @@ impl PromptLoadSourceText
             clone!(@strong self.win as win =>
             move |d: &FileChooserDialog,
               response: ResponseType| {
-                HandleLoadSourceTextResponse::new(d.to_owned(),response,win.clone()).invoke();
+                HandleLoadSourceTextResponse{
+                    dialog: d,
+                    response,
+                    win: &win
+                }.invoke();
               }),
         );
 

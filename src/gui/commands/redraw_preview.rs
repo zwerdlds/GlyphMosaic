@@ -1,118 +1,54 @@
-use super::SetStatus;
-use crate::document_window::DocumentWindow;
+use super::PreviewSource;
+use crate::{
+    commands::PreviewRegions,
+    document_window::DocumentWindow,
+    model::SettingsTab,
+};
 use gtk4::{
+    self,
     cairo::Context,
-    gdk_pixbuf::InterpType,
-    prelude::GdkCairoContextExt,
     subclass::prelude::ObjectSubclassIsExt,
-    traits::{
-        AdjustmentExt,
-        WidgetExt,
-    },
     DrawingArea,
 };
 
-pub struct RedrawPreview
+#[must_use]
+pub struct RedrawPreview<'a>
 {
-    area: DrawingArea,
-    win: DocumentWindow,
-    ctx: Context,
+    pub area: &'a DrawingArea,
+    pub win: &'a DocumentWindow,
+    pub ctx: &'a Context,
 }
 
-impl RedrawPreview
+impl RedrawPreview<'_>
 {
-    pub fn new(
-        area: DrawingArea,
-        win: DocumentWindow,
-        ctx: Context,
-    ) -> RedrawPreview
+    fn get_tab(&self) -> SettingsTab
     {
-        RedrawPreview { area, win, ctx }
+        self.win.imp().model.borrow().settings_tab().clone()
     }
 
-    pub async fn invoke(self)
+    pub fn invoke(self)
     {
-        let res: Result<(), String> = try {
-            let unproc_preview = self
-                .win
-                .imp()
-                .model
-                .borrow()
-                .create_preview()
-                .await?;
+        let area = self.area;
+        let win = self.win;
+        let ctx = self.ctx;
 
-            let zoom = self.win.imp().zoom.value();
-            let w = (unproc_preview.width() as f64 * zoom)
-                as i32;
-            let h = (unproc_preview.height() as f64 * zoom)
-                as i32;
-
-            self.area.set_width_request(w);
-            self.area.set_height_request(h);
-
-            let preview = {
-                let p = unproc_preview
-                    .scale_simple(
-                        w,
-                        h,
-                        InterpType::Bilinear,
-                    )
-                    .ok_or(format!(
-                        "Scaling preview result failed."
-                    ))?
-                    .clone();
-
-                let preview_opacity =
-                    self.win.imp().preview_opacity.value();
-
-                self.win
-                    .imp()
-                    .model
-                    .borrow()
-                    .create_source_preview_base()
-                    .await?
-                    .scale_simple(
-                        w,
-                        h,
-                        InterpType::Bilinear,
-                    )
-                    .ok_or(format!(
-                        "Scaling source for underlay \
-                         failed."
-                    ))?
-                    .composite(
-                        &p,
-                        0,
-                        0,
-                        w,
-                        h,
-                        0f64,
-                        0f64,
-                        1f64,
-                        1f64,
-                        InterpType::Bilinear,
-                        255 - (255 as f64 * preview_opacity)
-                            as i32,
-                    );
-
-                p
-            };
-
-            self.ctx
-                .set_source_pixbuf(&preview, 0f64, 0f64);
-
-            self.ctx.paint().map_err(|_| {
-                "Invalid cairo surface state."
-            })?;
-        };
-
-        let res = res.map_err(|e| {
-            format!("Getting preview failed: {e}")
-        });
-
-        if let Err(e) = res
+        use crate::model::SettingsTab::*;
+        match self.get_tab()
         {
-            SetStatus::new_error(e, self.win).invoke();
+            Sources =>
+            {
+                PreviewSource { area, win, ctx }.invoke();
+            },
+            Regions =>
+            {
+                PreviewRegions { area, win, ctx }.invoke();
+            },
+            Lines | Points | Glyphs | Export =>
+            {
+                println!(
+                    "This tab not currently supported."
+                )
+            },
         }
     }
 }

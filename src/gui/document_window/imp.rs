@@ -28,7 +28,7 @@ use crate::model::Model;
 )]
 pub struct DocumentWindow
 {
-    pub model: Rc<RefCell<Model>>,
+    pub(crate) model: Rc<RefCell<Model>>,
 
     #[template_child]
     pub preview_opacity: TemplateChild<Adjustment>,

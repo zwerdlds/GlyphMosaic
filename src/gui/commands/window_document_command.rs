@@ -1,23 +1,15 @@
 use crate::document_window::DocumentWindow;
-use glyph_mosaic::commands::DocumentCommand;
 use gtk4::subclass::prelude::ObjectSubclassIsExt;
 
-pub struct WindowDocumentCommand
+#[must_use]
+pub struct WindowDocumentCommand<'a>
 {
-    command: glyph_mosaic::commands::DocumentCommand,
-    win: DocumentWindow,
+    pub command: glyph_mosaic::commands::DocumentCommand,
+    pub win: &'a DocumentWindow,
 }
 
-impl WindowDocumentCommand
+impl WindowDocumentCommand<'_>
 {
-    pub fn new(
-        command: DocumentCommand,
-        win: DocumentWindow,
-    ) -> WindowDocumentCommand
-    {
-        WindowDocumentCommand { command, win }
-    }
-
     pub fn invoke(self)
     {
         self.win

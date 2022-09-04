@@ -4,18 +4,14 @@ use gtk4::{
     traits::WidgetExt,
 };
 
-pub struct QueuePreviewRefresh
+#[must_use]
+pub struct QueuePreviewRefresh<'a>
 {
-    win: DocumentWindow,
+    pub win: &'a DocumentWindow,
 }
 
-impl QueuePreviewRefresh
+impl QueuePreviewRefresh<'_>
 {
-    pub fn new(win: DocumentWindow) -> QueuePreviewRefresh
-    {
-        QueuePreviewRefresh { win }
-    }
-
     pub fn invoke(self)
     {
         self.win.imp().preview_area.queue_draw();

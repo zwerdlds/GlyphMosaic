@@ -162,7 +162,7 @@ impl DocumentRegionGenerator
         self.reg_map[pt.x()][pt.y()] == MatMarker::Claimed
     }
 
-    pub(super)   fn claim_point(
+    pub(super) fn claim_point(
         &mut self,
         pt: &DocumentPoint,
     )
@@ -170,7 +170,7 @@ impl DocumentRegionGenerator
         self.reg_map[pt.x()][pt.y()] = MatMarker::Claimed;
     }
 
-    pub(super)   fn find_and_mark_region_from_unclaimed_point(
+    pub(super) fn find_and_mark_region_from_unclaimed_point(
         &mut self,
         from: DocumentPoint,
     ) -> Vec<DocumentPoint>

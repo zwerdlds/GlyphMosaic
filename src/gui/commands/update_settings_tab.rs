@@ -8,22 +8,15 @@ use crate::{
 };
 use gtk4::subclass::prelude::ObjectSubclassIsExt;
 
-pub struct UpdateSettingsTab
+#[must_use]
+pub struct UpdateSettingsTab<'a>
 {
-    win: DocumentWindow,
-    page_index: u32,
+    pub win: &'a DocumentWindow,
+    pub page_index: u32,
 }
 
-impl UpdateSettingsTab
+impl UpdateSettingsTab<'_>
 {
-    pub fn new(
-        win: DocumentWindow,
-        page_index: u32,
-    ) -> UpdateSettingsTab
-    {
-        UpdateSettingsTab { win, page_index }
-    }
-
     pub fn invoke(self)
     {
         use SettingsTab::*;
@@ -55,14 +48,16 @@ impl UpdateSettingsTab
                     .borrow_mut()
                     .set_settings_tab(p);
 
-                QueuePreviewRefresh::new(self.win).invoke();
+                QueuePreviewRefresh { win: self.win }
+                    .invoke();
             },
             Err(e) =>
             {
-                SetStatus::new_error(
-                    format!("Switching tab: {e}"),
-                    self.win,
-                )
+                SetStatus {
+                    message: format!("Switching tab: {e}")
+                        .to_string(),
+                    win: self.win,
+                }
                 .invoke()
             },
         }

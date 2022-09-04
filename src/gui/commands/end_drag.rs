@@ -1,18 +1,14 @@
 use crate::document_window::DocumentWindow;
 use gtk4::subclass::prelude::ObjectSubclassIsExt;
 
-pub struct EndDrag
+#[must_use]
+pub struct EndDrag<'a>
 {
-    win: DocumentWindow,
+    pub win: &'a DocumentWindow,
 }
 
-impl EndDrag
+impl EndDrag<'_>
 {
-    pub fn new(win: DocumentWindow) -> EndDrag
-    {
-        EndDrag { win }
-    }
-
     pub fn invoke(self)
     {
         self.win

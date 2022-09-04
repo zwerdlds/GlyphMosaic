@@ -55,39 +55,31 @@ impl From<(f64, f64)> for DragRelativePoint
     }
 }
 
-pub struct UpdateDrag
+#[must_use]
+pub struct UpdateDrag<'a>
 {
-    win: DocumentWindow,
-    dg: GestureDrag,
-    pt: DragRelativePoint,
+    pub win: &'a DocumentWindow,
+    pub dg: &'a GestureDrag,
+    pub pt: DragRelativePoint,
 }
 
-impl UpdateDrag
+impl UpdateDrag<'_>
 {
-    pub fn new(
-        win: DocumentWindow,
-        dg: GestureDrag,
-        pt: DragRelativePoint,
-    ) -> UpdateDrag
-    {
-        UpdateDrag { win, dg, pt }
-    }
-
     pub fn invoke(self)
     {
-        let res = try {
+        let res: Result<(), String> = try {
             let from = self
                 .win
                 .imp()
                 .model
                 .borrow()
                 .last_drag_pos()
-                .ok_or("Dragged with no start point.")?;
+                .ok_or("No from point.")?;
 
             let drag_relative_pt: DrawingAreaPoint = self
                 .dg
                 .start_point()
-                .ok_or("Drag start point not specified")?
+                .ok_or("No relative point.")?
                 .into();
 
             let new_drag_location = self
@@ -109,13 +101,18 @@ impl UpdateDrag
             let start: DocumentPoint = from.into();
             let pts = start.raster_line_to(end);
 
-            PaintCoords::new(self.win.clone(), pts)
-                .invoke();
+            PaintCoords { win: self.win, pts }.invoke();
         };
 
         if let Err(e) = res
         {
-            SetStatus::new_error(e, self.win).invoke();
+            SetStatus {
+                message: format!(
+                    "Drag encountered error: {e}"
+                ),
+                win: self.win,
+            }
+            .invoke();
         }
     }
 }
