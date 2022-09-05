@@ -21,7 +21,7 @@ impl DocumentWindow
         self.setup_preview_opacity_value_change();
         self.setup_zoom_value_changed();
         self.setup_preview_redraw_request();
-        self.setup_drawing();
+        self.setup_mouse();
     }
 
     fn setup_preview_opacity_value_change(&self)
@@ -52,7 +52,7 @@ impl DocumentWindow
         );
     }
 
-    fn setup_drawing(&self)
+    fn setup_mouse(&self)
     {
         self.setup_drag();
         self.setup_click();

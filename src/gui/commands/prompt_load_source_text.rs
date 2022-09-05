@@ -1,11 +1,18 @@
-use crate::{
-    util::get_dialog_path,
-    document_window::DocumentWindow,
+use super::{
+    SetStatus,
+    UpdatePreview,
 };
+use crate::{
+    commands::WindowDocumentCommand,
+    document_window::DocumentWindow,
+    util::get_dialog_path,
+};
+use glyph_mosaic::commands::DocumentCommand;
 use gtk4::{
     glib::clone,
     traits::{
         DialogExt,
+        GtkWindowExt,
         WidgetExt,
     },
     FileChooserAction,
@@ -13,17 +20,6 @@ use gtk4::{
     ResponseType,
 };
 use std::fs;
-use gtk4::{
-    traits::GtkWindowExt,
-};
-use super::{
-    SetStatus,
-    UpdatePreview
-};
-use glyph_mosaic::commands::DocumentCommand;
-use crate::{
-    commands::WindowDocumentCommand,};
-
 
 #[must_use]
 pub struct PromptLoadSourceText<'a>
@@ -48,50 +44,54 @@ impl PromptLoadSourceText<'_>
         load_source_dialog.connect_response(
             clone!(@strong self.win as win =>
             move |dialog: &FileChooserDialog,
-              response: ResponseType| {
-                dialog.close();
-
-                if response != ResponseType::Ok
-                {
-                    return;
-                }
-        
-                let result: Result<String, String> = try {
-                    let file_path = get_dialog_path(dialog)?;
-        
-                    let txt = fs::read_to_string(file_path.clone())
-                        .map_err(|e| e.to_string())?;
-        
-                    WindowDocumentCommand {
-                        command: DocumentCommand::SetSourceText(
-                            txt.into(),
-                        ),
-                        win: &win,
-                    }
-                    .invoke();
-        
-                    format!("Loaded source text from {file_path}")
-                };
-        
-                let message = match result
-                {
-                    Ok(m) => m,
-                    Err(e) =>
-                    {
-                        format!("Error loading source text: {e}")
-                    },
-                };
-        
-                SetStatus {
-                    message,
-                    win: &win,
-                }
-                .invoke();
-        
-                UpdatePreview{win:&win}.invoke();
-              }),
+                response: ResponseType| {
+                    handle_load_source_text_dialog_response(&win,dialog, response);
+                }),
         );
 
         load_source_dialog.show();
     }
+}
+
+fn handle_load_source_text_dialog_response(
+    win: &DocumentWindow,
+    dialog: &FileChooserDialog,
+    response: ResponseType,
+)
+{
+    dialog.close();
+
+    if response != ResponseType::Ok
+    {
+        return;
+    }
+
+    let result: Result<String, String> = try {
+        let file_path = get_dialog_path(dialog)?;
+
+        let txt = fs::read_to_string(file_path.clone())
+            .map_err(|e| e.to_string())?;
+
+        WindowDocumentCommand {
+            command: DocumentCommand::SetSourceText(
+                txt.into(),
+            ),
+            win,
+        }
+        .invoke();
+
+        format!("Loaded source text from {file_path}")
+    };
+
+    let message = match result
+    {
+        Ok(m) => m,
+        Err(e) =>
+        {
+            format!("Error loading source text: {e}")
+        },
+    };
+
+    SetStatus { message, win }.invoke();
+    UpdatePreview { win }.invoke();
 }
