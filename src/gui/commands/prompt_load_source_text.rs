@@ -43,7 +43,7 @@ impl PromptLoadSourceText<'_>
 
         load_source_dialog.connect_response(
             clone!(@strong self.win as win =>
-                move |dialog: &FileChooserDialog, response: ResponseType| {
+                move |dialog, response| {
                     handle_load_source_text_dialog_response(&win,dialog, response);
                 }
             ),

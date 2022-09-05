@@ -43,7 +43,7 @@ impl PromptLoadSourceImage<'_>
 
         load_source_dialog.connect_response(
             clone!(@strong self.win as win =>
-                move |dialog: &FileChooserDialog, response: ResponseType| {
+                move |dialog, response| {
                     handle_load_source_image_dialog_response(&win, dialog, response);
                 }
             ),
