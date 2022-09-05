@@ -18,10 +18,25 @@ impl DocumentWindow
         self.setup_load_regions_map_image_button_click();
         self.setup_load_source_image_button_click();
         self.setup_load_source_text_button_click();
+        self.setup_regions_buttons_click();
         self.setup_preview_opacity_value_change();
         self.setup_zoom_value_changed();
         self.setup_preview_redraw_request();
         self.setup_mouse();
+    }
+
+    fn setup_regions_buttons_click(&self)
+    {
+        self.imp().add_region.connect_clicked(
+            clone!(@strong self as win => move |_| {
+                AddRegion{win:&win}.invoke();
+            }),
+        );
+        self.imp().remove_region.connect_clicked(
+            clone!(@strong self as win => move |_| {
+                RemoveRegion{win:&win}.invoke();
+            }),
+        );
     }
 
     fn setup_preview_opacity_value_change(&self)
@@ -46,8 +61,8 @@ impl DocumentWindow
     {
         self.imp().preview_area.set_draw_func(
             clone!(@strong self as win => move |area, ctx, _width, _height| {
-                RedrawPreview{area: area,
-                    win:&win,ctx}.invoke();
+                    RedrawPreview{area: area,
+                        win:&win,ctx}.invoke();
             })
         );
     }
@@ -92,11 +107,7 @@ impl DocumentWindow
 
     fn setup_load_source_text_button_click(&self)
     {
-        self.imp().select_source_text.connect_clicked(
-            clone!(@strong self as win => move |_| {
-                PromptLoadSourceText{win:&win}.invoke();
-            }),
-        );
+        self.setup_regions_buttons_click();
     }
 
     fn setup_load_source_image_button_click(&self)
