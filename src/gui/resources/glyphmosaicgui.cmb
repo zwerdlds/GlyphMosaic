@@ -40,7 +40,11 @@
 	(13,30,"GtkBox",None,8,None,None,None,None),
 	(13,32,"GtkLabel",None,30,None,None,None,None),
 	(13,33,"GtkScale",None,30,None,None,None,None),
-	(13,34,"GtkButton","select_regions_map_image",13,None,None,None,None)
+	(13,34,"GtkButton","select_regions_map_image",13,None,None,None,None),
+	(13,36,"GtkBox","regions_list",16,None,None,None,1),
+	(13,40,"GtkButton","add_region",36,None,None,None,None),
+	(13,41,"GtkButton","remove_region",36,None,None,None,None),
+	(13,42,"GtkListBox",None,16,None,None,None,None)
   </object>
   <object_property>
 	(13,2,"GtkOrientable","orientation","vertical",None,None,None,None),
@@ -70,6 +74,7 @@
 	(13,14,"GtkWidget","valign","start",None,None,None,None),
 	(13,15,"GtkLabel","label","Sources",None,None,None,None),
 	(13,15,"GtkWidget","halign","start",None,None,None,None),
+	(13,16,"GtkOrientable","orientation","vertical",None,None,None,None),
 	(13,17,"GtkLabel","label","Regions",None,None,None,None),
 	(13,17,"GtkWidget","halign","start",None,None,None,None),
 	(13,19,"GtkLabel","label","Lines",None,None,None,None),
@@ -106,6 +111,9 @@
 	(13,33,"GtkWidget","hexpand","True",None,None,None,None),
 	(13,33,"GtkWidget","hexpand-set","True",None,None,None,None),
 	(13,34,"GtkButton","label","Select Regions Map Image",None,None,None,None),
-	(13,34,"GtkWidget","valign","start",None,None,None,None)
+	(13,34,"GtkWidget","valign","start",None,None,None,None),
+	(13,40,"GtkWidget","hexpand","True",None,None,None,None),
+	(13,41,"GtkWidget","hexpand","True",None,None,None,None),
+	(13,42,"GtkWidget","hexpand","True",None,None,None,None)
   </object_property>
 </cambalache-project>

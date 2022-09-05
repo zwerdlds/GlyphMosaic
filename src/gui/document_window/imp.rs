@@ -11,6 +11,7 @@ use gtk4::{
     CompositeTemplate,
     DrawingArea,
     Label,
+    ListBox,
     Notebook,
     ScrolledWindow,
 };
@@ -50,6 +51,15 @@ pub struct DocumentWindow
 
     #[template_child]
     pub select_source_text: TemplateChild<Button>,
+
+    #[template_child]
+    pub add_region: TemplateChild<Button>,
+
+    #[template_child]
+    pub remove_region: TemplateChild<Button>,
+
+    #[template_child]
+    pub regions_list: TemplateChild<ListBox>,
 
     #[template_child]
     pub status_label: TemplateChild<Label>,
