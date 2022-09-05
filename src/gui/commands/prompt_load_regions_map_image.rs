@@ -51,10 +51,10 @@ impl PromptLoadRegionsMapImage<'_>
 
         load_regions_map_dialog.connect_response(
             clone!(@strong self.win as win =>
-            move |dialog: &FileChooserDialog,
-              response: ResponseType| {
-                handle_load_regions_map_dialog_response(&win,dialog,response);
-              }),
+                move |dialog: &FileChooserDialog, response: ResponseType| {
+                    handle_load_regions_map_dialog_response(&win,dialog,response);
+                }
+            ),
         );
 
         load_regions_map_dialog.show();
