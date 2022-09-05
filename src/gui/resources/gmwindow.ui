@@ -98,6 +98,12 @@
                             <property name="valign">start</property>
                           </object>
                         </child>
+                        <child>
+                          <object class="GtkButton" id="select_regions_map_image">
+                            <property name="label">Select Regions Map Image</property>
+                            <property name="valign">start</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                     <child type="tab">

@@ -43,6 +43,9 @@ pub struct DocumentWindow
     pub settings_notebook: TemplateChild<Notebook>,
 
     #[template_child]
+    pub select_regions_map_image: TemplateChild<Button>,
+
+    #[template_child]
     pub select_source_image: TemplateChild<Button>,
 
     #[template_child]

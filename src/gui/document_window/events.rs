@@ -15,6 +15,7 @@ impl DocumentWindow
     pub fn setup_events(&self)
     {
         self.setup_settings_notebook_tab_switch();
+        self.setup_load_regions_map_image_button_click();
         self.setup_load_source_image_button_click();
         self.setup_load_source_text_button_click();
         self.setup_preview_opacity_value_change();
@@ -103,6 +104,15 @@ impl DocumentWindow
         self.imp().select_source_image.connect_clicked(
             clone!(@strong self as win => move |_| {
                 PromptLoadSourceImage{win:&win}.invoke();
+            }),
+        );
+    }
+
+    fn setup_load_regions_map_image_button_click(&self)
+    {
+        self.imp().select_regions_map_image.connect_clicked(
+            clone!(@strong self as win => move |_| {
+                PromptLoadRegionsMapImage{win:&win}.invoke();
             }),
         );
     }

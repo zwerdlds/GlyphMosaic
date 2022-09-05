@@ -1,6 +1,7 @@
 // Public Functions
 pub(crate) mod click;
 pub(crate) mod end_drag;
+pub(crate) mod prompt_load_regions_map_image;
 pub(crate) mod prompt_load_source_image;
 pub(crate) mod prompt_load_source_text;
 pub(crate) mod start_drag;
@@ -10,6 +11,7 @@ pub(crate) mod update_settings_tab;
 
 pub use click::Click;
 pub use end_drag::EndDrag;
+pub use prompt_load_regions_map_image::PromptLoadRegionsMapImage;
 pub use prompt_load_source_image::PromptLoadSourceImage;
 pub use prompt_load_source_text::PromptLoadSourceText;
 pub use start_drag::StartDrag;
