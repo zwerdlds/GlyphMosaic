@@ -92,6 +92,12 @@ impl DocumentRegionGenerator
     {
         borders
             .into_iter()
+            .filter(|p| p.x() > 0)
+            .filter(|p| p.x() < self.reg_map.len())
+            .filter(|p| p.y() > 0)
+            .filter(|p| p.y() < self.reg_map[0].len())
+            .collect::<Vec<_>>()
+            .iter()
             .map(|p| (p.x() as usize, p.y() as usize))
             .for_each(|(x, y)| {
                 self.reg_map[x][y] = MatMarker::Claimed

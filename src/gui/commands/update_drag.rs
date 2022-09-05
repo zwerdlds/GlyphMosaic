@@ -86,20 +86,18 @@ impl UpdateDrag<'_>
                 .pt
                 .as_non_relative_point(drag_relative_pt);
 
-            self.win
-                .imp()
-                .model
-                .borrow_mut()
-                .set_last_drag_pos(Some(
-                    new_drag_location.into(),
-                ));
-
             let end = new_drag_location.as_document_point(
                 self.win.imp().zoom.value(),
             );
 
             let start: DocumentPoint = from.into();
             let pts = start.raster_line_to(end);
+
+            self.win
+                .imp()
+                .model
+                .borrow_mut()
+                .set_last_drag_pos(Some(end));
 
             PaintCoords { win: self.win, pts }.invoke();
         };

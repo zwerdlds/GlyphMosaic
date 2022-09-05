@@ -3,6 +3,7 @@ use glyph_mosaic::{
     self,
     document::image::PixbufDef,
 };
+use gtk4::gdk_pixbuf::Pixbuf;
 use std::future::Future;
 use tokio::task::JoinHandle;
 use uuid::Uuid;
@@ -28,7 +29,10 @@ impl Model
     {
         if let Some(r) = &self.current_render
         {
-            r.abort();
+            if !r.is_finished()
+            {
+                r.abort();
+            }
         }
 
         let new_render = RenderHandle(Uuid::new_v4());
@@ -81,5 +85,19 @@ impl Model
         self.current_render
             .as_ref()
             .map(|r| r.is_finished())
+    }
+
+    pub(crate) fn current_preview(&self)
+        -> &Option<Pixbuf>
+    {
+        &self.current_preview
+    }
+
+    pub(crate) fn set_current_preview(
+        &mut self,
+        preview: Option<Pixbuf>,
+    )
+    {
+        self.current_preview = preview;
     }
 }

@@ -187,7 +187,7 @@ fn get_pixbuf_colorspace(pb: &Pixbuf) -> ColorspaceDef
 
 fn get_pixbuf_data(pb: &Pixbuf) -> Vec<u8>
 {
-    pb.pixel_bytes().unwrap().to_vec()
+    pb.read_pixel_bytes().unwrap().to_vec()
 }
 
 impl From<PixbufDef> for Pixbuf
@@ -195,7 +195,7 @@ impl From<PixbufDef> for Pixbuf
     fn from(def: PixbufDef) -> Pixbuf
     {
         Pixbuf::from_bytes(
-            &Bytes::from(&def.data),
+            &Bytes::from_owned(def.data),
             def.colorspace.into(),
             def.has_alpha,
             def.bits_per_sample,
@@ -233,6 +233,8 @@ impl DocumentImage
 #[cfg(test)]
 pub mod tests
 {
+    use gtk4::gdk_pixbuf::Pixbuf;
+
     use super::{
         ColorspaceDef,
         PixbufDef,
@@ -266,5 +268,21 @@ pub mod tests
         .unwrap();
 
         assert_eq!(img, desr_ser_res);
+    }
+
+    #[test]
+    fn pbd_leak()
+    {
+        let img =
+            Pixbuf::from_file("./Resources/Demo Image.png")
+                .unwrap();
+
+        for _ in 0..10000
+        {
+            let bytes =
+                img.clone().read_pixel_bytes().unwrap();
+
+            assert!(1000 < bytes.len());
+        }
     }
 }

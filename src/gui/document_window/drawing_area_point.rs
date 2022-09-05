@@ -34,9 +34,10 @@ impl DrawingAreaPoint
         scale: f64,
     ) -> DrawingAreaPoint
     {
-        DrawingAreaPoint::new(
-            ((self.x() * scale), (self.y() * scale)).into(),
-        )
+        DrawingAreaPoint::new((
+            (self.x() * scale),
+            (self.y() * scale),
+        ))
     }
 }
 

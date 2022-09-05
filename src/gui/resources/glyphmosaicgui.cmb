@@ -39,7 +39,8 @@
 	(13,29,"GtkAdjustment","preview_opacity",1,None,None,None,None),
 	(13,30,"GtkBox",None,8,None,None,None,None),
 	(13,32,"GtkLabel",None,30,None,None,None,None),
-	(13,33,"GtkScale",None,30,None,None,None,None)
+	(13,33,"GtkScale",None,30,None,None,None,None),
+	(13,34,"GtkButton","select_regions_map_image",13,None,None,None,None)
   </object>
   <object_property>
 	(13,2,"GtkOrientable","orientation","vertical",None,None,None,None),
@@ -103,6 +104,8 @@
 	(13,33,"GtkScale","digits","2",None,None,None,None),
 	(13,33,"GtkScale","value-pos","right",None,None,None,None),
 	(13,33,"GtkWidget","hexpand","True",None,None,None,None),
-	(13,33,"GtkWidget","hexpand-set","True",None,None,None,None)
+	(13,33,"GtkWidget","hexpand-set","True",None,None,None,None),
+	(13,34,"GtkButton","label","Select Regions Map Image",None,None,None,None),
+	(13,34,"GtkWidget","valign","start",None,None,None,None)
   </object_property>
 </cambalache-project>

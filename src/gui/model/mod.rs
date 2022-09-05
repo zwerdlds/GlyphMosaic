@@ -9,6 +9,7 @@ use glyph_mosaic::{
     document::DocumentPoint,
     prelude::Document,
 };
+use gtk4::gdk_pixbuf::Pixbuf;
 pub use render::RenderHandle;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -30,6 +31,7 @@ pub(crate) struct Model
     tokio_runtime: tokio::runtime::Runtime,
     current_render: Option<RenderJoinHandle>,
     current_render_handle: Option<RenderHandle>,
+    current_preview: Option<Pixbuf>,
 }
 
 impl Default for Model
@@ -43,8 +45,10 @@ impl Default for Model
             tokio::runtime::Runtime::new().unwrap();
         let current_render = None;
         let current_render_handle = None;
+        let current_preview = None;
 
         Model {
+            current_preview,
             current_render,
             tokio_runtime,
             document,

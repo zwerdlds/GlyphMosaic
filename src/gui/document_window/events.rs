@@ -1,5 +1,8 @@
 use super::DocumentWindow;
-use crate::commands::redraw_preview::RedrawPreview;
+use crate::commands::{
+    RedrawPreview,
+    *,
+};
 use gtk4::{
     self,
     glib::clone,
@@ -24,7 +27,7 @@ impl DocumentWindow
     {
         self.imp().preview_opacity.connect_value_changed(
             clone!(@strong self as win => move |_| {
-               win.queue_preview_refresh();
+                UpdatePreview { win:&win }.invoke();
             }),
         );
     }
@@ -33,7 +36,7 @@ impl DocumentWindow
     {
         self.imp().zoom.connect_value_changed(
             clone!(@strong self as win => move |_| {
-               win.queue_preview_refresh();
+                UpdatePreview { win:&win }.invoke();
             }),
         );
     }
@@ -59,7 +62,7 @@ impl DocumentWindow
         let gesture = gtk4::GestureClick::new();
         gesture.connect_released(
             clone!(@strong self as win => move |_,_,x,y|{
-               win.click(x,y);
+                Click{win:&win,pt:(x,y).into()}.invoke();
             }),
         );
         self.imp().preview_area.add_controller(&gesture);
@@ -70,17 +73,17 @@ impl DocumentWindow
         let gesture = gtk4::GestureDrag::new();
         gesture.connect_drag_begin(
             clone!(@strong self as win => move |_,x,y|{
-               win.start_drag((x,y).into());
+                StartDrag{win:&win,pt:(x,y).into()}.invoke();
             }),
         );
         gesture.connect_drag_end(
             clone!(@strong self as win => move |_,_,_|{
-               win.end_drag();
+                EndDrag{win:&win}.invoke();
             }),
         );
         gesture.connect_drag_update(
             clone!(@strong self as win => move |dg,x,y|{
-               win.update_drag(dg, (x,y).into());
+                UpdateDrag{win:&win,dg,pt:(x,y).into()}.invoke();
             }),
         );
         self.imp().preview_area.add_controller(&gesture);
@@ -90,7 +93,7 @@ impl DocumentWindow
     {
         self.imp().select_source_text.connect_clicked(
             clone!(@strong self as win => move |_| {
-               win.prompt_load_source_text();
+                PromptLoadSourceText{win:&win}.invoke();
             }),
         );
     }
@@ -99,7 +102,7 @@ impl DocumentWindow
     {
         self.imp().select_source_image.connect_clicked(
             clone!(@strong self as win => move |_| {
-               win.prompt_load_source_image()
+                PromptLoadSourceImage{win:&win}.invoke();
             }),
         );
     }
@@ -107,8 +110,8 @@ impl DocumentWindow
     fn setup_settings_notebook_tab_switch(&self)
     {
         self.imp().settings_notebook.connect_switch_page(
-            clone!(@strong self as win => move |_,_,pg|{
-               win.update_settings_tab(pg);
+            clone!(@strong self as win => move |_,_,page_index|{
+                UpdateSettingsTab{win:&win, page_index}.invoke();
             }),
         );
     }

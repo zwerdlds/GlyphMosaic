@@ -29,12 +29,9 @@ impl StartDrag<'_>
             .imp()
             .model
             .borrow_mut()
-            .set_last_drag_pos(dp.into());
+            .set_last_drag_pos(Some(dp));
 
-        let pts = self
-            .pt
-            .as_document_point(self.win.imp().zoom.value())
-            .into();
+        let pts = dp.into();
 
         PaintCoords { win: self.win, pts }.invoke();
     }

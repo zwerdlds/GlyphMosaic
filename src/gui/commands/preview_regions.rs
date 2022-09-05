@@ -1,3 +1,7 @@
+use super::{
+    SetStatus,
+    WaitForPreviewResult,
+};
 use crate::{
     document_window::DocumentWindow,
     model::RenderHandle,
@@ -9,37 +13,20 @@ use glyph_mosaic::document::{
 };
 use gtk4::{
     self,
-    cairo::Context,
     gdk_pixbuf::{
         Colorspace,
         InterpType,
         Pixbuf,
     },
-    glib::{self,},
-    prelude::{
-        Continue,
-        GdkCairoContextExt,
-    },
     subclass::prelude::ObjectSubclassIsExt,
-    traits::{
-        AdjustmentExt,
-        WidgetExt,
-    },
-    DrawingArea,
+    traits::AdjustmentExt,
 };
-use std::{
-    collections::HashSet,
-    time::Duration,
-};
-
-use super::SetStatus;
+use std::collections::HashSet;
 
 #[must_use]
 pub struct PreviewRegions<'a>
 {
-    pub area: &'a DrawingArea,
     pub win: &'a DocumentWindow,
-    pub ctx: &'a Context,
 }
 
 impl PreviewRegions<'_>
@@ -59,7 +46,7 @@ impl PreviewRegions<'_>
         }
     }
 
-    pub fn start_compute(
+    pub fn start_background_render(
         &self,
         zoom: f64,
         preview_opacity: f64,
@@ -77,10 +64,10 @@ impl PreviewRegions<'_>
             .ok_or(
                 "No source image specified.".to_string(),
             )?
-            .clone()
+            .to_owned()
             .into();
 
-        Ok(self
+        let render_handle = self
             .win
             .imp()
             .model
@@ -128,9 +115,11 @@ impl PreviewRegions<'_>
                 .into_iter()
                 .for_each(|region| {
                     let (r, g, b) = (
-                        rand::random::<u8>(),
-                        rand::random::<u8>(),
-                        rand::random::<u8>(),
+                        (region[0].x() % 255) as u8,
+                        (region[0].y() % 255) as u8,
+                        ((region[0].x() + region[0].y())
+                            % 255)
+                            as u8,
                     );
 
                     for pix in region.into_iter()
@@ -175,8 +164,9 @@ impl PreviewRegions<'_>
                     ))?;
 
                 Ok(dest_img.into())
-            })
-            .clone())
+            });
+
+        Ok(render_handle)
     }
 
     fn setup_update_preview_image(
@@ -195,93 +185,18 @@ impl PreviewRegions<'_>
             .region_border_pixels()
             .to_owned();
 
-        let rh = self.start_compute(
+        let rh = self.start_background_render(
             zoom,
             preview_opacity,
             region_border_pixels,
         )?;
-        wait_for_result(
-            rh,
-            self.win.clone(),
-            self.ctx.clone(),
-            self.area.clone(),
-        );
+
+        WaitForPreviewResult {
+            win: self.win.clone(),
+            render_handle: rh,
+        }
+        .invoke();
+
         Ok(())
     }
-}
-
-pub fn wait_for_result(
-    rh: RenderHandle,
-    win: DocumentWindow,
-    ctx: Context,
-    area: DrawingArea,
-)
-{
-    glib::timeout_add_local(
-        Duration::new(0, 1000000),
-        move || {
-            println!("Checking for results.");
-
-            if win
-                .imp()
-                .model
-                .borrow()
-                .is_current_render(&rh)
-            {
-                if Some(true)
-                    == win
-                        .imp()
-                        .model
-                        .borrow()
-                        .is_current_render_finished()
-                {
-                    let res: Result<(), String> = try {
-                        let img: Pixbuf = win
-                            .imp()
-                            .model
-                            .borrow_mut()
-                            .block_on_current_render()?
-                            .into();
-
-                        let w = img.width();
-                        let h = img.height();
-                        area.set_width_request(w);
-                        area.set_height_request(h);
-
-                        ctx.set_source_pixbuf(
-                            &img, 0f64, 0f64,
-                        );
-
-                        println!("Painting results.");
-
-                        ctx.paint().map_err(|_| {
-                            "Invalid cairo surface state."
-                        })?;
-                    };
-
-                    if let Err(e) = res
-                    {
-                        SetStatus {
-                            message: format!(
-                                "Error building preview: \
-                                 {e}"
-                            ),
-                            win: &win,
-                        }
-                        .invoke();
-                    }
-
-                    Continue(false)
-                }
-                else
-                {
-                    Continue(true)
-                }
-            }
-            else
-            {
-                Continue(false)
-            }
-        },
-    );
 }

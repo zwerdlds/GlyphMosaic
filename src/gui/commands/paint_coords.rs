@@ -1,9 +1,9 @@
-use super::WindowDocumentCommand;
+use super::{
+    UpdatePreview,
+    WindowDocumentCommand,
+};
 use crate::{
-    commands::{
-        QueuePreviewRefresh,
-        SetStatus,
-    },
+    commands::SetStatus,
     document_window::DocumentWindow,
     model::SettingsTab,
 };
@@ -96,6 +96,6 @@ impl PaintCoords<'_>
             },
         };
 
-        QueuePreviewRefresh { win: self.win }.invoke();
+        UpdatePreview { win: self.win }.invoke();
     }
 }

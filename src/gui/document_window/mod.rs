@@ -1,4 +1,4 @@
-pub mod commands;
+// pub mod commands;
 pub mod drawing_area_point;
 pub mod events;
 pub mod imp;

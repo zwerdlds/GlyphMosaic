@@ -1,7 +1,7 @@
 use crate::{
     commands::{
-        QueuePreviewRefresh,
         SetStatus,
+        UpdatePreview,
     },
     document_window::DocumentWindow,
     model::SettingsTab,
@@ -48,8 +48,7 @@ impl UpdateSettingsTab<'_>
                     .borrow_mut()
                     .set_settings_tab(p);
 
-                QueuePreviewRefresh { win: self.win }
-                    .invoke();
+                UpdatePreview { win: self.win }.invoke();
             },
             Err(e) =>
             {

@@ -1,50 +1,90 @@
-use std::time::Duration;
-
-use crate::{
-    document_window::DocumentWindow,
-    model::RenderHandle,
+use super::{
+    HandlePreviewResult,
+    SetStatus,
+    WaitForPreviewResult,
 };
+use crate::document_window::DocumentWindow;
 use glyph_mosaic::document::image::PixbufDef;
 use gtk4::{
     self,
-    cairo::Context,
     gdk_pixbuf::{
         InterpType,
         Pixbuf,
     },
-    glib::{self,},
-    prelude::{
-        Continue,
-        GdkCairoContextExt,
-    },
     subclass::prelude::ObjectSubclassIsExt,
-    traits::{
-        AdjustmentExt,
-        WidgetExt,
-    },
-    DrawingArea,
+    traits::AdjustmentExt,
 };
-
-use super::SetStatus;
 
 #[must_use]
 pub struct PreviewSource<'a>
 {
-    pub area: &'a DrawingArea,
     pub win: &'a DocumentWindow,
-    pub ctx: &'a Context,
+    pub run_background: bool,
 }
 
 impl PreviewSource<'_>
 {
     pub fn invoke(self)
     {
-        if let Err(msg) = self.setup_update_preview_image()
+        if self.run_background
+        {
+            self.render_background();
+        }
+        else
+        {
+            self.render_foreground();
+        }
+    }
+
+    pub fn render_background(&self)
+    {
+        let res: Result<(), String> = try {
+            let zoom = self.win.imp().zoom.value();
+
+            let src_img: PixbufDef = self
+                .win
+                .imp()
+                .model
+                .borrow()
+                .document()
+                .source_image()
+                .as_ref()
+                .ok_or(
+                    "No source image specified."
+                        .to_string(),
+                )?
+                .clone()
+                .into();
+
+            let render_handle = self
+                .win
+                .imp()
+                .model
+                .borrow_mut()
+                .checkout_render(async move {
+                    try {
+                        PreviewSource::render(
+                            src_img.into(),
+                            zoom,
+                        )?
+                        .into()
+                    }
+                })
+                .clone();
+
+            WaitForPreviewResult {
+                win: self.win.clone(),
+                render_handle,
+            }
+            .invoke();
+        };
+
+        if let Err(msg) = res
         {
             SetStatus {
                 message: format!(
-                    "Error setting up source preview: \
-                     {msg}"
+                    "Error setting up background source \
+                     preview: {msg}"
                 ),
                 win: self.win,
             }
@@ -52,139 +92,59 @@ impl PreviewSource<'_>
         }
     }
 
-    pub fn start_compute(
-        &self,
-        zoom: f64,
-    ) -> Result<RenderHandle, String>
+    pub fn render_foreground(&self)
     {
-        let src_img: PixbufDef = self
-            .win
-            .imp()
-            .model
-            .borrow()
-            .document()
-            .source_image()
-            .as_ref()
-            .ok_or(
-                "No source image specified.".to_string(),
-            )?
-            .clone()
-            .into();
+        let res: Result<(), String> = try {
+            let zoom = self.win.imp().zoom.value();
 
-        Ok(self
-            .win
-            .imp()
-            .model
-            .borrow_mut()
-            .checkout_render(async move {
-                let src_img: Pixbuf = src_img.into();
-
-                let w =
-                    (src_img.width() as f64 * zoom) as i32;
-                let h =
-                    (src_img.height() as f64 * zoom) as i32;
-
-                let src_img = src_img
-                    .scale_simple(w, h, InterpType::Nearest)
-                    .ok_or(format!(
-                        "Scaling preview result failed."
-                    ))?;
-
-                let ret: PixbufDef = src_img.into();
-                Ok(ret)
-            })
-            .clone())
-    }
-
-    fn setup_update_preview_image(
-        &self
-    ) -> Result<(), String>
-    {
-        let zoom = self.win.imp().zoom.value();
-
-        let rh = self.start_compute(zoom)?;
-        wait_for_result(
-            rh,
-            self.win.clone(),
-            self.ctx.clone(),
-            self.area.clone(),
-        );
-        Ok(())
-    }
-}
-
-pub fn wait_for_result(
-    rh: RenderHandle,
-    win: DocumentWindow,
-    ctx: Context,
-    area: DrawingArea,
-)
-{
-    glib::timeout_add_local(
-        Duration::new(0, 1000000),
-        move || {
-            println!("Checking for results.");
-
-            if win
+            let src_img: Pixbuf = self
+                .win
                 .imp()
                 .model
                 .borrow()
-                .is_current_render(&rh)
-            {
-                if Some(true)
-                    == win
-                        .imp()
-                        .model
-                        .borrow()
-                        .is_current_render_finished()
-                {
-                    let res: Result<(), String> = try {
-                        let img: Pixbuf = win
-                            .imp()
-                            .model
-                            .borrow_mut()
-                            .block_on_current_render()?
-                            .into();
+                .document()
+                .source_image()
+                .as_ref()
+                .ok_or(
+                    "No source image specified."
+                        .to_string(),
+                )?
+                .clone()
+                .into();
 
-                        let w = img.width();
-                        let h = img.height();
-                        area.set_width_request(w);
-                        area.set_height_request(h);
+            let img = PreviewSource::render(src_img, zoom)?;
 
-                        ctx.set_source_pixbuf(
-                            &img, 0f64, 0f64,
-                        );
+            HandlePreviewResult { win: self.win, img }
+                .invoke();
+        };
 
-                        println!("Painting results.");
-
-                        ctx.paint().map_err(|_| {
-                            "Invalid cairo surface state."
-                        })?;
-                    };
-
-                    if let Err(e) = res
-                    {
-                        SetStatus {
-                            message: format!(
-                                "Error building preview: \
-                                 {e}"
-                            ),
-                            win: &win,
-                        }
-                        .invoke();
-                    }
-
-                    Continue(false)
-                }
-                else
-                {
-                    Continue(true)
-                }
+        if let Err(msg) = res
+        {
+            SetStatus {
+                message: format!(
+                    "Error setting up background source \
+                     preview: {msg}"
+                ),
+                win: self.win,
             }
-            else
-            {
-                Continue(false)
-            }
-        },
-    );
+            .invoke();
+        }
+    }
+
+    pub fn render(
+        src_img: Pixbuf,
+        zoom: f64,
+    ) -> Result<Pixbuf, String>
+    {
+        try {
+            let w = (src_img.width() as f64 * zoom) as i32;
+            let h = (src_img.height() as f64 * zoom) as i32;
+
+            src_img
+                .scale_simple(w, h, InterpType::Nearest)
+                .ok_or(format!(
+                    "Scaling preview result failed."
+                ))?
+        }
+    }
 }
