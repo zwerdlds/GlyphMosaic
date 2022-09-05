@@ -1,7 +1,7 @@
 mod document_point;
 pub mod image;
 pub mod region;
-mod serialization;
+pub mod serialization;
 use self::{
     image::DocumentImage,
     region::DocumentRegion,

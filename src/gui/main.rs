@@ -25,7 +25,6 @@ fn main()
     app.connect_activate(|app| {
         let window = DocumentWindow::new(app);
         window.present();
-        print!("ran app!");
     });
 
     app.run();

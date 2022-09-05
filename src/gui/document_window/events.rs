@@ -1,13 +1,11 @@
 use super::DocumentWindow;
-use crate::commands::{
-    RedrawPreview,
-    *,
-};
+use crate::commands::*;
 use gtk4::{
-    self,
     glib::clone,
     prelude::*,
     subclass::prelude::ObjectSubclassIsExt,
+    GestureClick,
+    GestureDrag,
 };
 
 impl DocumentWindow
@@ -15,6 +13,8 @@ impl DocumentWindow
     pub fn setup_events(&self)
     {
         self.setup_settings_notebook_tab_switch();
+        self.setup_load_click();
+        self.setup_save_click();
         self.setup_load_regions_map_image_button_click();
         self.setup_load_source_image_button_click();
         self.setup_load_source_text_button_click();
@@ -22,17 +22,36 @@ impl DocumentWindow
         self.setup_preview_opacity_value_change();
         self.setup_zoom_value_changed();
         self.setup_preview_redraw_request();
-        self.setup_mouse();
+        self.setup_drag();
+        self.setup_click();
+    }
+
+    fn setup_save_click(&self)
+    {
+        self.imp().save_button.connect_clicked(
+            clone!(@strong self as win => move |_| {
+                SaveDocument{win:&win}.invoke();
+            }),
+        );
+    }
+
+    fn setup_load_click(&self)
+    {
+        self.imp().load_button.connect_clicked(
+            clone!(@strong self as win => move |_| {
+                PromptLoadDocument{win:&win}.invoke();
+            }),
+        );
     }
 
     fn setup_regions_buttons_click(&self)
     {
-        self.imp().add_region.connect_clicked(
+        self.imp().add_region_button.connect_clicked(
             clone!(@strong self as win => move |_| {
                 AddRegion{win:&win}.invoke();
             }),
         );
-        self.imp().remove_region.connect_clicked(
+        self.imp().remove_region_button.connect_clicked(
             clone!(@strong self as win => move |_| {
                 RemoveRegion{win:&win}.invoke();
             }),
@@ -67,15 +86,9 @@ impl DocumentWindow
         );
     }
 
-    fn setup_mouse(&self)
-    {
-        self.setup_drag();
-        self.setup_click();
-    }
-
     fn setup_click(&self)
     {
-        let gesture = gtk4::GestureClick::new();
+        let gesture = GestureClick::new();
         gesture.connect_released(
             clone!(@strong self as win => move |_,_,x,y|{
                 Click{win:&win,pt:(x,y).into()}.invoke();
@@ -86,7 +99,7 @@ impl DocumentWindow
 
     fn setup_drag(&self)
     {
-        let gesture = gtk4::GestureDrag::new();
+        let gesture = GestureDrag::new();
         gesture.connect_drag_begin(
             clone!(@strong self as win => move |_,x,y|{
                 StartDrag{win:&win,pt:(x,y).into()}.invoke();
@@ -107,12 +120,18 @@ impl DocumentWindow
 
     fn setup_load_source_text_button_click(&self)
     {
-        self.setup_regions_buttons_click();
+        self.imp()
+            .select_source_text_button
+            .connect_clicked(
+                clone!(@strong self as win => move |_| {
+                    PromptLoadSourceText{win:&win}.invoke();
+                }),
+            );
     }
 
     fn setup_load_source_image_button_click(&self)
     {
-        self.imp().select_source_image.connect_clicked(
+        self.imp().select_source_image_button.connect_clicked(
             clone!(@strong self as win => move |_| {
                 PromptLoadSourceImage{win:&win}.invoke();
             }),
@@ -121,7 +140,7 @@ impl DocumentWindow
 
     fn setup_load_regions_map_image_button_click(&self)
     {
-        self.imp().select_regions_map_image.connect_clicked(
+        self.imp().select_regions_map_image_button.connect_clicked(
             clone!(@strong self as win => move |_| {
                 PromptLoadRegionsMapImage{win:&win}.invoke();
             }),

@@ -233,8 +233,6 @@ impl DocumentImage
 #[cfg(test)]
 pub mod tests
 {
-    use gtk4::gdk_pixbuf::Pixbuf;
-
     use super::{
         ColorspaceDef,
         PixbufDef,
@@ -268,21 +266,5 @@ pub mod tests
         .unwrap();
 
         assert_eq!(img, desr_ser_res);
-    }
-
-    #[test]
-    fn pbd_leak()
-    {
-        let img =
-            Pixbuf::from_file("./Resources/Demo Image.png")
-                .unwrap();
-
-        for _ in 0..10000
-        {
-            let bytes =
-                img.clone().read_pixel_bytes().unwrap();
-
-            assert!(1000 < bytes.len());
-        }
     }
 }

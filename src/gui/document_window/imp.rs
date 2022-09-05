@@ -44,19 +44,26 @@ pub struct DocumentWindow
     pub settings_notebook: TemplateChild<Notebook>,
 
     #[template_child]
-    pub select_regions_map_image: TemplateChild<Button>,
+    pub select_regions_map_image_button:
+        TemplateChild<Button>,
 
     #[template_child]
-    pub select_source_image: TemplateChild<Button>,
+    pub select_source_image_button: TemplateChild<Button>,
 
     #[template_child]
-    pub select_source_text: TemplateChild<Button>,
+    pub select_source_text_button: TemplateChild<Button>,
 
     #[template_child]
-    pub add_region: TemplateChild<Button>,
+    pub save_button: TemplateChild<Button>,
 
     #[template_child]
-    pub remove_region: TemplateChild<Button>,
+    pub load_button: TemplateChild<Button>,
+
+    #[template_child]
+    pub add_region_button: TemplateChild<Button>,
+
+    #[template_child]
+    pub remove_region_button: TemplateChild<Button>,
 
     #[template_child]
     pub regions_list: TemplateChild<ListBox>,

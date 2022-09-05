@@ -1,26 +1,35 @@
-// Public Functions
+// Public Commands
+pub(crate) mod add_region;
 pub(crate) mod click;
 pub(crate) mod end_drag;
+pub(crate) mod prompt_load_document;
 pub(crate) mod prompt_load_regions_map_image;
 pub(crate) mod prompt_load_source_image;
 pub(crate) mod prompt_load_source_text;
+pub(crate) mod remove_region;
+pub(crate) mod save_document;
 pub(crate) mod start_drag;
 pub(crate) mod update_drag;
 pub(crate) mod update_preview;
 pub(crate) mod update_settings_tab;
 
+pub use add_region::AddRegion;
 pub use click::Click;
 pub use end_drag::EndDrag;
+pub use prompt_load_document::PromptLoadDocument;
 pub use prompt_load_regions_map_image::PromptLoadRegionsMapImage;
 pub use prompt_load_source_image::PromptLoadSourceImage;
 pub use prompt_load_source_text::PromptLoadSourceText;
+pub use remove_region::RemoveRegion;
+pub use save_document::SaveDocument;
 pub use start_drag::StartDrag;
 pub use update_drag::UpdateDrag;
 pub use update_preview::UpdatePreview;
 pub use update_settings_tab::UpdateSettingsTab;
 
-// Command-Internal Functions
+// Internal Commands
 pub(super) mod handle_preview_result;
+pub(super) mod load_document;
 pub(super) mod paint_coords;
 pub(super) mod preview_regions;
 pub(super) mod preview_source;
@@ -31,6 +40,7 @@ pub(super) mod wait_for_preview_result;
 pub(super) mod window_document_command;
 
 pub(super) use handle_preview_result::HandlePreviewResult;
+pub(super) use load_document::LoadDocument;
 pub(super) use paint_coords::PaintCoords;
 pub(super) use preview_regions::PreviewRegions;
 pub(super) use preview_source::PreviewSource;

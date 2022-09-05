@@ -8,6 +8,7 @@ pub mod prelude
     pub use crate::{
         document::{
             image::DocumentImage,
+            serialization::*,
             Document,
         },
         point::GenericPoint,

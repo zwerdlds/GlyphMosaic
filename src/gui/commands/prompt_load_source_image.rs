@@ -97,6 +97,5 @@ fn handle_load_source_image_dialog_response(
     };
 
     SetStatus { message, win }.invoke();
-
     UpdatePreview { win }.invoke();
 }

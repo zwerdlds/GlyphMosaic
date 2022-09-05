@@ -1,15 +1,13 @@
+use super::PaintCoords;
+use crate::document_window::{
+    drawing_area_point::DrawingAreaPoint,
+    DocumentWindow,
+};
 use glyph_mosaic::document::DocumentPoint;
 use gtk4::{
     subclass::prelude::ObjectSubclassIsExt,
     traits::AdjustmentExt,
 };
-
-use crate::document_window::{
-    drawing_area_point::DrawingAreaPoint,
-    DocumentWindow,
-};
-
-use super::PaintCoords;
 
 #[must_use]
 pub struct Click<'a>

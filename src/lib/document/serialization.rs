@@ -1,10 +1,5 @@
-use super::image::DocumentImage;
-use serde::{
-    Deserialize,
-    Serialize,
-};
+use super::Document;
 use std::{
-    collections::HashSet,
     fs::{
         self,
         File,
@@ -12,19 +7,8 @@ use std::{
     io::Write,
 };
 
-#[derive(
-    Serialize, Deserialize, Debug, Default, PartialEq,
-)]
-pub struct Document
-{
-    pub(crate) source_image: Option<DocumentImage>,
-    pub(crate) region_border_pixels: HashSet<(i32, i32)>,
-    pub(crate) source_text: Option<String>,
-}
-
 impl Document
 {
-    #[allow(dead_code)]
     pub fn load_from_location(
         path: &str
     ) -> Result<Document, String>
@@ -37,7 +21,6 @@ impl Document
         Document::load_from_json(&data)
     }
 
-    #[allow(dead_code)]
     pub fn write_to_location(
         &self,
         path: &str,
@@ -75,9 +58,14 @@ impl Document
 #[cfg(test)]
 pub mod tests
 {
-    use super::Document;
-    use crate::document::image::tests::generate_test_img;
-    use std::collections::HashSet;
+    use crate::{
+        document::image::tests::generate_test_img,
+        prelude::Document,
+    };
+    use std::collections::{
+        HashMap,
+        HashSet,
+    };
 
     pub fn generate_test_doc() -> Document
     {
@@ -85,6 +73,7 @@ pub mod tests
             source_image: Some(generate_test_img()),
             region_border_pixels: HashSet::new(),
             source_text: Some("Hello world!".to_string()),
+            regions: HashMap::default(),
         }
     }
 

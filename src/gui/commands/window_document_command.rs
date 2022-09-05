@@ -1,4 +1,5 @@
 use crate::document_window::DocumentWindow;
+use glyph_mosaic::commands::DocumentTransformable;
 use gtk4::subclass::prelude::ObjectSubclassIsExt;
 
 #[must_use]
@@ -12,10 +13,10 @@ impl WindowDocumentCommand<'_>
 {
     pub fn invoke(self)
     {
-        self.win
-            .imp()
-            .model
-            .borrow_mut()
-            .apply_command(self.command);
+        let doc = self.command.transform_document(
+            self.win.imp().model.borrow().document(),
+        );
+
+        self.win.imp().model.borrow_mut().set_document(doc);
     }
 }

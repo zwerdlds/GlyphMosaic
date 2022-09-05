@@ -74,7 +74,7 @@ fn handle_load_regions_map_dialog_response(
         return;
     }
 
-    let result: Result<String, String> = try {
+    let result: Result<(), String> = try {
         let file_path = get_dialog_path(dialog)?;
 
         let img = Pixbuf::from_file(file_path.clone())
@@ -123,19 +123,18 @@ fn handle_load_regions_map_dialog_response(
         }
         .invoke();
 
-        format!("Loaded regions map image from {file_path}")
+        let message = format!(
+            "Loaded regions map image from {file_path}"
+        );
+        SetStatus { message, win }.invoke();
     };
 
-    let message = match result
+    if let Err(e) = result
     {
-        Ok(m) => m,
-        Err(e) =>
-        {
-            format!("Error loading regions map image: {e}")
-        },
+        let message =
+            format!("Error loading regions map image: {e}");
+        SetStatus { message, win }.invoke();
     };
-
-    SetStatus { message, win }.invoke();
 
     UpdatePreview { win }.invoke();
 }

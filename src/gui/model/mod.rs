@@ -2,10 +2,6 @@ mod render;
 use self::render::RenderJoinHandle;
 use glyph_mosaic::{
     self,
-    commands::{
-        DocumentCommand,
-        DocumentTransformable,
-    },
     document::DocumentPoint,
     prelude::Document,
 };
@@ -32,6 +28,7 @@ pub(crate) struct Model
     current_render: Option<RenderJoinHandle>,
     current_render_handle: Option<RenderHandle>,
     current_preview: Option<Pixbuf>,
+    path_to_document: Option<String>,
 }
 
 impl Default for Model
@@ -46,8 +43,10 @@ impl Default for Model
         let current_render = None;
         let current_render_handle = None;
         let current_preview = None;
+        let path_to_document = None;
 
         Model {
+            path_to_document,
             current_preview,
             current_render,
             tokio_runtime,
@@ -61,18 +60,24 @@ impl Default for Model
 
 impl Model
 {
-    pub(crate) fn settings_tab(&self) -> &SettingsTab
+    pub(crate) fn document_path(&self) -> &Option<String>
     {
-        &self.settings_tab
+        &self.path_to_document
     }
 
-    pub(crate) fn apply_command(
+    pub(crate) fn set_document_path(
         &mut self,
-        cmd: DocumentCommand,
+        document_path: Option<String>,
     )
     {
-        let doc = cmd.transform_document(&self.document);
-        self.document = doc;
+        self.path_to_document = document_path;
+    }
+
+    pub(crate) fn last_drag_pos(
+        &self
+    ) -> &Option<DocumentPoint>
+    {
+        &self.last_drag_pos
     }
 
     pub(crate) fn set_last_drag_pos(
@@ -83,11 +88,9 @@ impl Model
         self.last_drag_pos = pos;
     }
 
-    pub(crate) fn last_drag_pos(
-        &self
-    ) -> Option<DocumentPoint>
+    pub(crate) fn settings_tab(&self) -> &SettingsTab
     {
-        self.last_drag_pos
+        &self.settings_tab
     }
 
     pub(crate) fn set_settings_tab(
@@ -101,6 +104,14 @@ impl Model
     pub(crate) fn document(&self) -> &Document
     {
         &self.document
+    }
+
+    pub(crate) fn set_document(
+        &mut self,
+        document: Document,
+    )
+    {
+        self.document = document;
     }
 }
 

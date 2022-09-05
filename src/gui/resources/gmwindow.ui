@@ -39,16 +39,16 @@
                       <object class="GtkBox">
                         <property name="valign">start</property>
                         <child>
-                          <object class="GtkLabel">
-                            <property name="halign">start</property>
-                            <property name="label">Zoom</property>
+                          <object class="GtkButton" id="save_button">
+                            <property name="label">Save</property>
+                            <property name="valign">start</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkSpinButton">
-                            <property name="adjustment">zoom</property>
-                            <property name="digits">1</property>
-                            <property name="numeric">True</property>
+                          <object class="GtkButton" id="load_button">
+                            <property name="halign">end</property>
+                            <property name="label">Load</property>
+                            <property name="valign">start</property>
                           </object>
                         </child>
                       </object>
@@ -74,6 +74,24 @@
                         </child>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="valign">start</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="halign">start</property>
+                            <property name="label">Zoom</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkSpinButton">
+                            <property name="adjustment">zoom</property>
+                            <property name="digits">1</property>
+                            <property name="numeric">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
@@ -87,19 +105,19 @@
                         <property name="orientation">vertical</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkButton" id="select_source_image">
+                          <object class="GtkButton" id="select_source_image_button">
                             <property name="label">Select Source Image</property>
                             <property name="valign">start</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="select_source_text">
+                          <object class="GtkButton" id="select_source_text_button">
                             <property name="label">Select Source Text</property>
                             <property name="valign">start</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="select_regions_map_image">
+                          <object class="GtkButton" id="select_regions_map_image_button">
                             <property name="label">Select Regions Map Image</property>
                             <property name="valign">start</property>
                           </object>
@@ -113,7 +131,42 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox"/>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="valign">start</property>
+                            <child>
+                              <object class="GtkButton" id="add_region_button">
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label">Add</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="remove_region_button">
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
+                                <property name="label">Remove</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <property name="hscrollbar-policy">never</property>
+                            <property name="vexpand">True</property>
+                            <property name="vscrollbar-policy">always</property>
+                            <child>
+                              <object class="GtkListBox" id="regions_list">
+                                <property name="show-separators">True</property>
+                                <property name="valign">end</property>
+                                <property name="vexpand">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
                     </child>
                     <child type="tab">
                       <object class="GtkLabel" id="regions_tab_label">

@@ -25,7 +25,8 @@ use std::{
 )]
 pub struct DocumentRegion
 {
-    marker_point: DocumentPoint,
+    title: String,
+    marker_points: Vec<DocumentPoint>,
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -312,28 +313,11 @@ impl DocumentRegion
         .regions()
         .clone()
     }
-
-    pub fn new(
-        marker_point: DocumentPoint
-    ) -> DocumentRegion
-    {
-        DocumentRegion { marker_point }
-    }
 }
 
-impl From<DocumentPoint> for DocumentRegion
-{
-    fn from(pt: DocumentPoint) -> DocumentRegion
-    {
-        DocumentRegion::new(pt)
-    }
-}
-
-impl From<&DocumentPoint> for DocumentRegion
-{
-    fn from(pt: &DocumentPoint) -> DocumentRegion
-    {
-        pt.to_owned().into()
+impl Default for DocumentRegion {
+    fn default() -> Self {
+        Self { title: "Untitled Region".to_string(), marker_points: Default::default() }
     }
 }
 
