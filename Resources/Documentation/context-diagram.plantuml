@@ -1,0 +1,11 @@
+@startuml context diagram
+left to right direction
+skinparam componentStyle uml1
+
+person "User" as usr
+
+agent "GlyphMosaic" as gm
+
+usr -r-> gm
+
+@enduml

@@ -1,32 +1,37 @@
-{ pkgs ? import <nixpkgs> { }, ... }:
-pkgs.mkShell {
-  nativeBuildInputs = with pkgs; [
-    gcc
-    pkg-config
-    lldb
-    rustup
-    gsettings-desktop-schemas
-    kde-gtk-config
-    glib
-    gtk4
-    wrapGAppsHook
-  ];
-  buildInputs = with pkgs; [
-    clippy
-    pango
-    gtk4
-    glib
-    cairo
-    graphene
-    gdk-pixbuf
-    gir-rs
-    gtk3
-  ];
+{ stable ? import <nixpkgs> { }, ... }:
+stable.mkShell rec {
+  developmentInputs = (with stable; [ ]);
+  buildInputs =
+    (with stable; [
+      # Enable rust
+      rustup
 
-  RUSTC_VERSION = "nightly-2022-08-24";
-  NIX_ENFORCE_PURITY = 0;
-  RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+      # Used for building and debugging rust elements
+      gcc
+      pkg-config
+      lldb
+      cargo
+      rustc
+      clippy
+      openssl
+      freetype
+      git-lfs
+      rust-analyzer
+      cargo-watch
+      cargo-llvm-cov
+      llvmPackages_16.bintools-unwrapped
+      just
+      rustfmt
+      trunk
+      moreutils
+      expect
+      tmux
+    ]);
+
+  RUST_SRC_PATH = "${stable.rust.packages.stable.rustPlatform.rustLibSrc}";
   shellHook = ''
-    XDG_DATA_DIRS=$GSETTINGS_SCHEMAS_PATH
+    export RUSTUP_TOOLCHAIN="nightly";
+    export PATH="$CARGO_HOME:$PATH";
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${stable.lib.makeLibraryPath buildInputs}";
   '';
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg401"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="Logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview403"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="3.7522727"
+     inkscape:cx="133.91884"
+     inkscape:cy="206.27499"
+     inkscape:window-width="3840"
+     inkscape:window-height="2003"
+     inkscape:window-x="1080"
+     inkscape:window-y="112"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs398">
+    <rect
+       x="11.256199"
+       y="14.433082"
+       width="358.37837"
+       height="355.67702"
+       id="rect650" />
+    <rect
+       x="18.823553"
+       y="20.979375"
+       width="126.6541"
+       height="119.39455"
+       id="rect524" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text522"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px;white-space:pre;shape-inside:url(#rect524);display:inline" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.52145178,0,0,0.52145178,-1.1939291,-9.20155)"
+       id="text648"
+       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px;white-space:pre;shape-inside:url(#rect650);display:inline"><tspan
+         x="11.255859"
+         y="61.621066"
+         id="tspan939"><tspan
+           style="font-size:53.3333px;-inkscape-font-specification:'sans-serif, Normal'"
+           id="tspan937">Place-
+</tspan></tspan><tspan
+         x="11.255859"
+         y="128.28769"
+         id="tspan943"><tspan
+           style="font-size:53.3333px;-inkscape-font-specification:'sans-serif, Normal'"
+           id="tspan941">holder
+</tspan></tspan><tspan
+         x="11.255859"
+         y="194.95432"
+         id="tspan947"><tspan
+           style="font-size:53.3333px;-inkscape-font-specification:'sans-serif, Normal'"
+           id="tspan945">Logo</tspan></tspan></text>
+  </g>
+</svg>

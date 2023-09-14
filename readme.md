@@ -2,9 +2,11 @@
 ## What is GlyphMosaic?
 GlyphMosaic is a graphic design program which re-creates images using glyphs.  In essence, it is supplied a bitmap (source image) and a body of text.  With additional parameters, it uses the color values in the source image to place glyphs from the text.
 
-# TODO
-    - Set window's selected pane enum in default document when loaded
-    - Limit specified region map image to source image size
-    - Implement COW for document properties
-    - Move preview rendering to gui
-    - Sub-image preview rendering
+For additional information on the technical system layout, please read the [design documentation](Documentation).
+
+## Todo:
+- Context diagram
+- Finish scrubbing the arch doc
+- Build process for documentation
+- Logo
+- Diagram fixups

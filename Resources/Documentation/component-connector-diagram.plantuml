@@ -1,0 +1,14 @@
+@startuml component-connector-diagram
+skinparam nodesep 20
+skinparam ranksep 1
+left to right direction
+skinparam componentStyle uml1
+
+node "Host System" {
+    [GlyphMosaic] as gm
+    [File System] as fs
+}
+
+gm -l-> fs
+
+@enduml

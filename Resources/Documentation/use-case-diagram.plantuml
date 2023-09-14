@@ -1,0 +1,28 @@
+@startuml use-case-diagram
+left to right direction
+
+
+:Systems Administrator: as sa
+
+:Graphic Designer: as gd
+
+
+
+rectangle "Systems" as sys {
+    usecase "Install locally" as il
+    sa-u-> il
+}
+
+rectangle "Content" as cms {
+    usecase "Load existing mosaic" as lms
+    gd --> lms
+
+
+    usecase "Modify mosaic properties" as mmsp
+    gd --> mmsp
+
+    usecase "Render mosaic" as rms
+    gd --> rms
+}
+
+@enduml

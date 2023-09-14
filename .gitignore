@@ -1,3 +1,13 @@
 target
 GlyphMosaic.code-workspace
 .vscode
+Resources/Documentation/**/main.aux
+Resources/Documentation/**/main.bbl
+Resources/Documentation/**/main.fdb_latexmk
+Resources/Documentation/**/main.fls
+Resources/Documentation/**/main.log
+Resources/Documentation/**/main.out
+Resources/Documentation/**/main.pdf
+Resources/Documentation/**/main.run.xml
+Resources/Documentation/**/main.synctex.gz
+Resources/Documentation/**/main.toc

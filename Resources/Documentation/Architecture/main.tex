@@ -1,0 +1,494 @@
+\documentclass{article}
+\usepackage{wrapfig}
+\usepackage{multicol}
+\usepackage{dirtytalk}
+\usepackage{blindtext}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage[headings]{fancyhdr}
+\usepackage{lastpage}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{pifont}
+\usepackage{prettyref}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage[titletoc]{appendix}
+\usepackage[letterpaper, bottom=1in, top=1in, left=1.25in, right=1.25in ]{geometry}
+\newrefformat{apx}{Appendix \ref{#1}}
+\newrefformat{fig}{Figure \ref{#1}}
+\raggedbottom
+\def\footnoterule{\vfill\vspace{1em}\kern-3pt \hrule width 15em \kern 2.6pt}
+\setlist[itemize]{leftmargin=1.5em}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=black,
+  citecolor=black,
+}
+
+\newcommand{\pdiagram}[3]{
+  \begin{figure}
+    \centering
+    \adjustbox{max width=\textwidth}{
+        \includegraphics[height=.9\textheight]{
+          #1
+        }
+      }
+    \caption{#2}
+    \label{#3}
+  \end{figure}
+}
+
+\newcommand{\idiagram}[5]{
+  \begin{figure}[H]
+    \centering
+    \adjustbox{max width=#4\textwidth, max height=#5\textheight}{
+        \includegraphics{
+          {#1}
+        }}
+    \caption{{#2}}
+    \label{{#3}}
+  \end{figure}
+}
+
+\newcommand{\sidiagram}[4]{
+  \begin{figure}[H]
+    \centering
+    \adjustbox{scale=#4}{
+    \includegraphics{
+          {#1}
+        }}
+    \caption{{#2}}
+    \label{{#3}}
+  \end{figure}
+}
+
+\newcommand{\lidiagram}[3]{
+  \begin{figure}[H]
+    \centering
+    \adjustbox{width=\textwidth}{
+    \includegraphics{
+          {#1}
+        }}
+    \caption{{#2}}
+    \label{{#3}}
+  \end{figure}
+}
+
+
+\renewcommand{\labelitemi}{\fontsize{5pt}{0pt}\selectfont\raisebox{0.17 em}{\ding{108}}}
+\renewcommand{\labelitemii}{\small \ding{70}}
+\renewcommand{\labelitemiii}{\small \ding{86}}
+
+\pagestyle{fancy}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{.1pt}
+\newcommand{\indentsize}{1.25em}
+
+\fancyhead{} 
+\fancyfoot{} 
+\fancyfoot[L]{GlyphMosaic}
+\fancyfoot[C]{Zwerdling}
+\fancyfoot[R]{\thepage /\pageref{LastPage}}
+\fancyfootoffset{.5in}
+
+\newcommand{\nosplit}[1]{
+  \begin{samepage}
+#1
+  \end{samepage}
+}
+
+\newcommand{\docauth}[2]{
+  \raggedright
+  \Large
+  {#1} \newline
+  \small
+  {#2}
+  \vspace{1.5em}
+  \newline
+  \normalsize
+}
+
+\newcommand{\lbodyitem}[2]{
+    \item \textbf{{#1}} {
+    \begin{itemize}
+    #2
+    \end{itemize}
+  }
+}
+
+\newcommand{\pbodyitem}[2]{
+    \item \textbf{{#1}} {
+    \parindent \indentsize \newline {#2}
+}
+}
+
+\setlength\parindent{\indentsize}
+
+\begin{document}
+\newgeometry{left=1in, right=1in, top=2in, bottom=2in}
+\begin{titlepage}
+  \begin{center}
+    \includegraphics[width=\textwidth]{../../Logo.svg}
+    \includegraphics[width=\textwidth]{../../Wordmark.svg}
+    \LARGE
+    Architectural Description and Diagrams
+  \end{center}
+
+  \vfill
+
+  \docauth{David Zwerdling}{zwerdlds@gmail.com}
+
+  \vspace{1em}
+
+  \large
+  Version 1 \newline
+  \today
+  \normalsize
+\end{titlepage}
+\restoregeometry
+
+\newpage
+
+\section{Version History}
+\begin{adjustbox}{width=\textwidth}
+  \begin{tabular}{ |c|c|c|c| }
+    \hline
+    Version & Date   & Author      & Comments          \\
+    \hline
+    \hline
+    1       & \today & {Zwerdling} & {Initial version} \\
+    \hline
+  \end{tabular}
+\end{adjustbox}
+\newpage
+
+\tableofcontents \newpage
+
+% START CONTENT
+\section{Introduction}
+GlyphMosaic is a graphic design program.
+The application facilitates a specialized graphic design workflow, in which a user supplies a source image, text, and other parameters.
+The application then produces a reproduction of the source image using a mosaic of textual elements from a user-supplied source.
+
+
+\section{System Overview}
+\subsection{Scope}
+GlyphMosaic is a specialized graphic design application.
+It comprises the following functionality:
+\begin{itemize}
+  \item Enable the user to finely specify the parameters with which the output image is generated.
+  \item Produce the output image.
+\end{itemize}
+
+
+\subsection{Context}
+The application is installed on a host system.
+Users interact with the system via a specialized graphical user interface (
+
+
+\sidiagram
+{../context diagram}
+{A hypothetical local install of GlyphMosaic and related components.}
+{fig:contextDiagram}
+{.45}
+
+
+\subsection{Audience}
+This document is intended for developers, open-source contributors, project managers, and consumers involved in the continuous development, maintenance, and use of a GlyphMosaic installation.
+It will provide the audience with a detailed understanding of the underlying architecture of the GlyphMosaic software application to gain better insight into how all components interact to deliver functional and robust productivity.
+By reading this document developers and open-source contributors can make informed decisions about how to design and implement various functionalities that will deliver an optimal user experience.
+This document aims to provide the audience knowledge to support decisions about identifying potential issues or areas of improvement in the system architecture.
+The purpose is to be a comprehensive overview of the GlyphMosaic software architecture to support all audience members involved in the development, maintenance, or usage of a GlyphMosaic application.
+
+
+\subsection{Statement of Purpose}
+GlyphMosaic is thoroughly described in this architectural document.
+Diagrams are also supplied to make it easier to comprehend the internal workings of the system.
+Various aspects of the GlyphMosaic architecture, including its core elements, modules, and code structure, are described.
+Functionality and quality attributes are described.
+The investigation has shown that the GlyphMosaic architecture offers several advantages, including a modular design, flexibility, and usability that have helped it become so popular.
+Nevertheless, the investigation has also pointed out other flaws that may be strengthened to improve the application's overall performance, such as its heavy reliance on plugins and the possible security risks they provide.
+This document should act as a reference for any person interested in better understanding the GlyphMosaic architecture.
+
+This report attempts to accomplish the following goals:
+\begin{itemize}
+  \item Describe the complete architecture of the system.
+  \item Describe available process alternative methods and their trade-offs.
+\end{itemize}
+
+
+
+\section{Glossary}
+\begin{itemize}
+  \pbodyitem{Glyph}{ }
+  \pbodyitem{Graphical User Interface}{ }
+  \pbodyitem{Bitmap}{ }
+  \pbodyitem{Output Image}{ }
+  \pbodyitem{Source Image}{ }
+  \pbodyitem{Source Text}{ }
+\end{itemize}
+
+
+\section{Requirements and Stakeholders}
+
+\subsection{Stakeholders}
+\begin{itemize}
+  \pbodyitem{Output Image consumers}{Individuals who view or request graphic design produced by the system.}
+  \pbodyitem{Developers}{Individuals responsible for producing the system as described in this document.}
+  \pbodyitem{Graphic Designers}{Individuals who produce graphic designs using the system.}
+\end{itemize}
+
+
+\subsection{Overview of Requirements}
+Requirements for GlyphMosaic aim to create a responsive and productive environment for its users.
+The GlyphMosaic System provides a specialized method to build unique graphic mosaic designs.
+
+
+\subsubsection{Functionality}
+GlyphMosaic’s main built-in functionality is focused entirely on the workflow of developing mosaics.
+In the most common workflow, an artist will load source image and source text into the program, adjust various settings and bitmaps to their needs, render a high-resolution version of the output mosaic, and then save that file for use outside the application.
+
+
+\subsubsection{Use Cases}
+\label{sec:usecases}
+The system models the CMS workflow\cite{WpAbtFeat}.  Essentially all functions are related to supporting an organization's capability of writing, editing, and publishing content.
+
+\begin{itemize}
+  \lbodyitem{System Installation}{
+  \item Users should be able to download, install, and run the system on their own devices.
+        }
+\end{itemize}
+
+\subsubsection{Additional Requirements}
+
+\sidiagram
+{../use-case-diagram}
+{GlyphMosaic supports a specialized graphic design workflow.}
+{fig:useCaseDiagram}
+{.95}
+
+\section{System Qualities}{
+  \label{sec:qualityattributes}
+  \subsection{Performance}
+Users should rapidly receive feedback representing the current state of the project.
+  \begin{itemize}
+    \pbodyitem{Tactics}{
+      
+      % \begin{itemize}
+      %   \pbodyitem{Module Cohesion}{
+      %     Internally, the structure of the system follows a highly module design.
+      %     Each module is broken up into fewer than approximately 15 internal components, with more complex modules being subdivided further.  See \prettyref{sec:decomp}.
+      %   }
+      %   \pbodyitem{Binding Deference}{
+      %     The plug-in subsystem categorizes bindings in twain: actions and filters\footnote{This division of event types can also be viewed as a form of encapsulation.}.
+      %     Plug-ins can dynamically register for each based on strings at runtime.
+      %     In this way, events are bound at-will by plug-ins, allowing them to have as much complexity as necessary, while also preserving system speed at a reasonable level.
+      %   }
+      %   \pbodyitem{Encapsulation}{
+      %     The system encapsulates extensible behavior into three categories:
+      %     \begin{itemize}
+      %       \pbodyitem{Templates}{
+      %         Strictly speaking, GlyphMosaic templates represent the per-page formatting using HTML\footnote{Colloquially, themes and templates are conflated, with the term ``theme'' essentially encapsulating both.}.
+      %         Because they control the root file for the page a user is viewing in their browser, this gives nearly limitless control to template developers to modify content.
+      %         Templates can be attached by types, tags, taxonomies, categories, and authors.
+      %         Modifying a template does not necessitate modifying the actual content presented in the page.
+
+      %         Templates are further composed of template blocks.  See \cite{wpBlocks}.
+      %       }
+      %       \pbodyitem{Themes}{
+      %         Themes are, effectively, groups of template files, and can modify the style of an entire site.
+      %         This enables users to modify their entire site with a single add-on.
+      %         E.g.: a theme developer could package a number of templates, images, CSS files, and audio into a single theme and distribute it for use by site administrators.
+
+      %         The default installation of GlyphMosaic includes a number of themes, named by year of development.  See \cite {wpThemes}.
+      %       }
+      %       \pbodyitem{Plug-Ins}{
+      %         Plug-ins represent the ultimate extension of the system.
+      %         Using plug-ins, a developer can hook into arbitrary actions and events, and alter the incoming data (through filters) or execute arbitrary code based on events (actions) the system fires.  Writing plug-ins requires knowledge of PHP, but installing existing plug-ins does not.
+      %       }
+      %     \end{itemize}
+      %   }
+      % \end{itemize}
+    }
+    \pbodyitem{Scenario}{
+      % To make a previously built theme easier for GlyphMosaic users to use, a GlyphMosaic plug-in developer updates it, the modification is done successfully and available for use less than two hours after the update with no downtime.
+
+      % \lidiagram{modifiability-qas/modifiability-qas}
+      % {GlyphMosaic has a streamlined process to adding plug-ins.}
+      % {fig:modqas}
+
+      % \begin{itemize}
+      %   \item Source of stimulus: Plug-in Developer
+      %   \item Stimulus: Updates a theme
+      %   \item Artifact: GlyphMosaic theme
+      %   \item Environment: Normal operation (after deployment)
+      %   \item Response: Modification is done successfully
+      %   \item Response measure: Less than two hours with no downtime
+      % \end{itemize}
+    }
+  \end{itemize}
+ }
+
+
+\section{Architectural Views}{
+  \nosplit{
+    \subsection{Components \& Connectors}
+    The system interacts with one aspects of the host system:
+    \begin{itemize}
+      \pbodyitem{Filesystem}{The system retrieves source images and text from the local filesystem.}
+    \end{itemize}
+
+    \lidiagram
+    {component-connector-diagram}
+    {The GlyphMosaic system is fairly limited in responsibility from an application/systems administrator perspective.}
+    {fig:cnc}
+  }
+  \nosplit{
+    \subsection{Modules}
+    \label{sec:decomp}
+
+    \sidiagram{../main-modules-diagram}
+    {The top-level organization of the system.}
+    {fig:modules-top}
+    {\compDiagScale}
+  }
+ }
+
+\break
+
+\section{Architecture}
+\subsection{Drivers}
+\begin{itemize}
+  \lbodyitem{Design Purposes}{
+    \pbodyitem{Modeling a Specialized Workflow}{
+      The system is designed to facilitate a specific graphic design workflow.
+    }
+  }
+  \pbodyitem{Use Cases}{See \prettyref{sec:usecases}}
+  \pbodyitem{Quality Attributes}{See \prettyref{sec:qualityattributes}}
+  \lbodyitem{Constraints}{
+    \pbodyitem{Resource Use Limitations}{
+      Devices serving GlyphMosaic may be constrained by processing power and memory.
+    }
+  }
+\end{itemize}
+
+
+\subsection{Styles and Patterns}
+GlyphMosaic communicates with clients using standardized web technologies.
+
+\textbf{Monolithic}
+
+\textbf{Layered}
+The system builds functionality in layers.
+
+
+\textbf{Pipe/Filter}
+
+
+\textbf{Model-View-Controller}
+
+
+\textbf{Event Bus}
+
+
+
+
+\subsection{Rationales}
+A few of the most enabled qualities include:
+
+\begin{itemize}
+  \pbodyitem{Maintainability}{}
+\end{itemize}
+
+\subsection{Alternative Architectures}
+
+\begin{itemize}
+  \pbodyitem{Distributed Computing}{
+    Breaking up components of GlyphMosaic into services could enable more computational resources to be added to the system.
+    % However, it is still the case in this implementation that updates must be done all at once: the system is still unitary.
+
+    % The typical use of load-balancers and in-memory caches which large-scale deployments employ may be interpreted as an application of this approach.
+
+    % Narrowing the focus to the GlyphMosaic system, there are two main reasons why it may not be preferential to implement this approach:
+    % \begin{itemize}
+    %   \pbodyitem{Complexity}{
+    %     Breaking up the monolithic internal structure of the system into components would require substantial refactoring.
+    %     Plug-Ins, represent a substantial barrier: Hooks must be registered centrally, so would need to be resolved somehow.
+    %     Without involving complex voting protocols, this alone would still represent a single point of communication.
+    %     Additionally, the state of the system can be queried at the time that a hook is activated, demanding complete synchronization between all nodes.
+
+    %     It may be possible for templates to be distributed since their outputs should be idempotent.
+    %     In practice, however, since they are capable of executing arbitrary PHP, they would probably encounter similar issues to plug-ins.
+    %   }
+
+    %   \pbodyitem{Diminishing Returns of Scale}{
+    %     While performance on GlyphMosaic may not be superior to other platforms, most users do not encounter traffic sufficient to demand the scalability provided by SOA or microservice architectures.
+    %   }
+    % \end{itemize}
+
+    % In conclusion, the monolithic model is ``good enough'' compared to a service-oriented architecture.
+    % The main reason this approach is unlikely to have advantages for system stakeholders is the diminishing returns to scale those stakeholders will perceive.
+  }
+\end{itemize}
+
+
+\subsection{Challenges and Limitations}
+% A three-tier architecture provides several benefits to the GlyphMosaic system, but it also comes with some limitations that can affect certain quality attributes.
+% Developers and organizations need to consider these limitations when designing and implementing their systems to ensure they meet their requirements and objectives.
+% Proper planning, design, and testing can help mitigate these limitations and ensure a successful implementation.
+% A few drawbacks to consider include:
+% \begin{itemize}
+  % \pbodyitem{Performance}{
+  %   Performance limitations can occur due to the communication overhead between the layers.
+  %   Network latency and message passing can add to the overall response time of the system, leading to slower performance.
+  % }
+% \end{itemize}
+
+
+\newpage
+\begin{appendices}
+  % \section{User Roles}
+  % \label{apx:userroles}
+  % GlyphMosaic implements an hierarchical RBAC modeling a CMS workflow.
+  % The user-accessible functions of a GlyphMosaic system are broken down into roles\cite{WpDocRolesCapabilities}, with each mostly having one essential function.
+  % Single users are given a role by an administrator or super-admin.
+  % The architecture's capabilities are broken out by permission level.
+  % \begin{itemize}
+  %   \pbodyitem{Super-Admin} {
+  %     Manage site networks.  Super-admins can create sites and also have the ability to manage plugins, themes, and users across all sites in the site network installation.  Super-Admin abilities are a superset of Admins.
+  %   }
+
+  %   \pbodyitem{Admin} {
+  %     Admins are site-level users responsible for managing plugins, themes, and other users at the site level.  Admin abilities are a superset of Editors.
+  %   }
+
+  %   \pbodyitem{Editor} {
+  %     Editors are responsible for managing pages or comments written by other users.  Editor abilities are a superset of Authors.
+  %   }
+
+  %   \pbodyitem{Author} {
+  %     Authors can create and manage their own posts.  Author abilities are a superset of Contributors.
+  %   }
+
+  %   \pbodyitem{Contributor} {
+  %     Contributors are capable of creating content but are not allowed to publish it directly, necessitating interaction with an editor or author-enabled user.  Contributor abilities are a superset of Subscribers.
+  %   }
+
+  %   \pbodyitem{Subscriber} {
+  %     Subscribers can edit a profile which is used when leaving comments.
+  %   }
+
+  %   \pbodyitem{Web User} {
+  %     Unauthenticated users can access content which has been published by Authors.  This role is not explicitly enumerated by the default configuration.
+  %   }
+  % \end{itemize}
+
+\end{appendices}
+
+\end{document}
+\endinputj
