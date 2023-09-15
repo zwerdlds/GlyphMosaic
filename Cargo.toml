@@ -1,22 +1,19 @@
 [package]
 name = "glyph_mosaic"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 [build-dependencies]
-gtk4 = { version = "0.4.8" }
 
 [dependencies]
-gtk4 = "0.4.8"
 serde = { version = "1.0.143", features = ["derive"] }
 serde_json = "1.0.83"
-delegate = "0.7.0"
 rand = "0.8.5"
 tokio = { version = "1", features = ["full"] }
 uuid = { version = "1.1.2", features = ["v4", "fast-rng", "macro-diagnostics"] }
 
 [lib]
-path = "src/lib/mod.rs"
+path = "src/lib.rs"
 
 [[bin]]
 name = "cli"

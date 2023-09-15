@@ -25,7 +25,8 @@ parallel-iter:
         test \
         verify \
         update-coverage \
-        build-diagrams
+        build-diagrams \
+        build-pdfs
 
 watch watchtarget:
     cargo watch \
@@ -87,6 +88,9 @@ format:
 
 build-diagrams:
     make svg
+
+build-pdfs:
+    make pdf
 
 update-coverage:
     CARGO_TERM_COLOR="always" \
