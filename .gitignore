@@ -11,3 +11,4 @@ GlyphMosaic.code-workspace
 *.run.xml
 *.synctex.gz
 *.toc
+documentation/diagrams/**/*.svg
