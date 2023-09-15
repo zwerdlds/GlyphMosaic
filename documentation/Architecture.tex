@@ -132,10 +132,10 @@
 \newgeometry{left=1in, right=1in, top=2in, bottom=2in}
 \begin{titlepage}
   \begin{center}
-    \includegraphics[width=\textwidth]{../../Logo.svg}
-    \includegraphics[width=\textwidth]{../../Wordmark.svg}
+    \includesvg[width=\textwidth]{Logo}
+    \includesvg[width=\textwidth]{Wordmark}
     \LARGE
-    Architectural Description and Diagrams
+    System Specification
   \end{center}
 
   \vfill
@@ -153,6 +153,9 @@
 
 \newpage
 
+
+
+% Version History
 \section{Version History}
 \begin{adjustbox}{width=\textwidth}
   \begin{tabular}{ |c|c|c|c| }
@@ -166,9 +169,14 @@
 \end{adjustbox}
 \newpage
 
+
+
+% Table of contents
 \tableofcontents \newpage
 
-% START CONTENT
+
+
+% Introduction
 \section{Introduction}
 GlyphMosaic is a graphic design program.
 The application facilitates a specialized graphic design workflow, in which a user supplies a source image, text, and other parameters.
@@ -187,11 +195,10 @@ It comprises the following functionality:
 
 \subsection{Context}
 The application is installed on a host system.
-Users interact with the system via a specialized graphical user interface (
-
+Users interact with the system's GUI to create, load, and modify graphical mosaics.
 
 \sidiagram
-{../context diagram}
+{../context-diagram}
 {A hypothetical local install of GlyphMosaic and related components.}
 {fig:contextDiagram}
 {.45}
@@ -203,6 +210,7 @@ It will provide the audience with a detailed understanding of the underlying arc
 By reading this document developers and open-source contributors can make informed decisions about how to design and implement various functionalities that will deliver an optimal user experience.
 This document aims to provide the audience knowledge to support decisions about identifying potential issues or areas of improvement in the system architecture.
 The purpose is to be a comprehensive overview of the GlyphMosaic software architecture to support all audience members involved in the development, maintenance, or usage of a GlyphMosaic application.
+
 
 
 \subsection{Statement of Purpose}
@@ -233,8 +241,8 @@ This report attempts to accomplish the following goals:
 \end{itemize}
 
 
-\section{Requirements and Stakeholders}
 
+\section{Requirements and Stakeholders}
 \subsection{Stakeholders}
 \begin{itemize}
   \pbodyitem{Output Image consumers}{Individuals who view or request graphic design produced by the system.}
@@ -271,13 +279,15 @@ The system models the CMS workflow\cite{WpAbtFeat}.  Essentially all functions a
 {fig:useCaseDiagram}
 {.95}
 
+
+
 \section{System Qualities}{
   \label{sec:qualityattributes}
   \subsection{Performance}
-Users should rapidly receive feedback representing the current state of the project.
+  Users should rapidly receive feedback representing the current state of the project.
   \begin{itemize}
     \pbodyitem{Tactics}{
-      
+
       % \begin{itemize}
       %   \pbodyitem{Module Cohesion}{
       %     Internally, the structure of the system follows a highly module design.
@@ -334,6 +344,7 @@ Users should rapidly receive feedback representing the current state of the proj
  }
 
 
+
 \section{Architectural Views}{
   \nosplit{
     \subsection{Components \& Connectors}
@@ -359,6 +370,8 @@ Users should rapidly receive feedback representing the current state of the proj
  }
 
 \break
+
+
 
 \section{Architecture}
 \subsection{Drivers}
@@ -394,8 +407,6 @@ The system builds functionality in layers.
 
 
 \textbf{Event Bus}
-
-
 
 
 \subsection{Rationales}
@@ -443,14 +454,16 @@ A few of the most enabled qualities include:
 % Proper planning, design, and testing can help mitigate these limitations and ensure a successful implementation.
 % A few drawbacks to consider include:
 % \begin{itemize}
-  % \pbodyitem{Performance}{
-  %   Performance limitations can occur due to the communication overhead between the layers.
-  %   Network latency and message passing can add to the overall response time of the system, leading to slower performance.
-  % }
+% \pbodyitem{Performance}{
+%   Performance limitations can occur due to the communication overhead between the layers.
+%   Network latency and message passing can add to the overall response time of the system, leading to slower performance.
+% }
 % \end{itemize}
 
-
 \newpage
+
+
+
 \begin{appendices}
   % \section{User Roles}
   % \label{apx:userroles}
