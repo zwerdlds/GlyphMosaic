@@ -13,9 +13,9 @@
 \usepackage{prettyref}
 \usepackage{caption}
 \usepackage{hyperref}
+\usepackage{plantuml}
 \usepackage[titletoc]{appendix}
 \usepackage[letterpaper, bottom=1in, top=1in, left=1.25in, right=1.25in ]{geometry}
-\newrefformat{apx}{Appendix \ref{#1}}
 \newrefformat{fig}{Figure \ref{#1}}
 \raggedbottom
 \def\footnoterule{\vfill\vspace{1em}\kern-3pt \hrule width 15em \kern 2.6pt}
@@ -132,8 +132,8 @@
 \newgeometry{left=1in, right=1in, top=2in, bottom=2in}
 \begin{titlepage}
   \begin{center}
-    \includesvg[width=\textwidth]{Logo}
-    \includesvg[width=\textwidth]{Wordmark}
+    % \includesvg[width=\textwidth]{../resources/Logo.svg}
+    % \includesvg[width=\textwidth]{../resources/Wordmark.svg}
     \LARGE
     System Specification
   \end{center}
@@ -198,7 +198,7 @@ The application is installed on a host system.
 Users interact with the system's GUI to create, load, and modify graphical mosaics.
 
 \sidiagram
-{../context-diagram}
+{../diagrams/context-diagram.pdf}
 {A hypothetical local install of GlyphMosaic and related components.}
 {fig:contextDiagram}
 {.45}
@@ -216,7 +216,7 @@ The purpose is to be a comprehensive overview of the GlyphMosaic software archit
 \subsection{Statement of Purpose}
 GlyphMosaic is thoroughly described in this architectural document.
 Diagrams are also supplied to make it easier to comprehend the internal workings of the system.
-Various aspects of the GlyphMosaic architecture, including its core elements, modules, and code structure, are described.
+Various aspects of the GlyphMosaic architecture,  including its core elements, modules, and code structure, are described.
 Functionality and quality attributes are described.
 The investigation has shown that the GlyphMosaic architecture offers several advantages, including a modular design, flexibility, and usability that have helped it become so popular.
 Nevertheless, the investigation has also pointed out other flaws that may be strengthened to improve the application's overall performance, such as its heavy reliance on plugins and the possible security risks they provide.
@@ -257,13 +257,12 @@ The GlyphMosaic System provides a specialized method to build unique graphic mos
 
 
 \subsubsection{Functionality}
-GlyphMosaic’s main built-in functionality is focused entirely on the workflow of developing mosaics.
-In the most common workflow, an artist will load source image and source text into the program, adjust various settings and bitmaps to their needs, render a high-resolution version of the output mosaic, and then save that file for use outside the application.
+GlyphMosaic’s main built-in functionality is focused entirely on the workflow of creating mosaics.
+In the most common workflow, a user will load source image and source text into the program, adjust various settings and bitmaps to their needs, render a high-resolution version of the output mosaic, and then save that file for use outside the application.
 
 
 \subsubsection{Use Cases}
 \label{sec:usecases}
-The system models the CMS workflow\cite{WpAbtFeat}.  Essentially all functions are related to supporting an organization's capability of writing, editing, and publishing content.
 
 \begin{itemize}
   \lbodyitem{System Installation}{
@@ -273,11 +272,11 @@ The system models the CMS workflow\cite{WpAbtFeat}.  Essentially all functions a
 
 \subsubsection{Additional Requirements}
 
-\sidiagram
-{../use-case-diagram}
-{GlyphMosaic supports a specialized graphic design workflow.}
-{fig:useCaseDiagram}
-{.95}
+% \sidiagram
+% {documentation/src/diagrams/use-case-diagram}
+% {GlyphMosaic supports a specialized graphic design workflow.}
+% {fig:useCaseDiagram}
+% {.95}
 
 
 
@@ -353,20 +352,20 @@ The system models the CMS workflow\cite{WpAbtFeat}.  Essentially all functions a
       \pbodyitem{Filesystem}{The system retrieves source images and text from the local filesystem.}
     \end{itemize}
 
-    \lidiagram
-    {component-connector-diagram}
-    {The GlyphMosaic system is fairly limited in responsibility from an application/systems administrator perspective.}
-    {fig:cnc}
+    % \lidiagram
+    % {documentation/src/diagrams/component-connector-diagram}
+    % {The GlyphMosaic system is fairly limited in responsibility from an application/systems administrator perspective.}
+    % {fig:cnc}
   }
   \nosplit{
     \subsection{Modules}
     \label{sec:decomp}
 
-    \sidiagram{../main-modules-diagram}
-    {The top-level organization of the system.}
-    {fig:modules-top}
-    {\compDiagScale}
-  }
+    % \sidiagram{documentation/src/diagrams/main-modules-diagram}
+    % {The top-level organization of the system.}
+    % {fig:modules-top}
+    % {\compDiagScale}
+  % }
  }
 
 \break

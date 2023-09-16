@@ -38,11 +38,7 @@ watch watchtarget:
         --ignore 'dist/' \
         --ignore 'mutants.out*/**'
 
-serve:
-    trunk serve
-
 reinit-workspace:
-    rustup target add wasm32-unknown-unknown
     cargo install cargo-watch --force
     cargo install cargo-tarpaulin --force
     cargo install cargo-doc --force

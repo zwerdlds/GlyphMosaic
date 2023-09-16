@@ -26,6 +26,11 @@ stable.mkShell rec {
       moreutils
       expect
       tmux
+      
+      # Used to render SVG elements in the documentation
+      inkscape
+      rubber
+      svg2pdf
     ]);
 
   RUST_SRC_PATH = "${stable.rust.packages.stable.rustPlatform.rustLibSrc}";

@@ -1,20 +1,40 @@
-.PHONY: svg clean
+DOC_DIAG_SRC := $(shell find -wholename './documentation/src/diagrams/*.plantuml')
+DOC_DIAG_PDF := $(patsubst ./documentation/src/diagrams/%.plantuml, ./documentation/src/diagrams/%.pdf, $(DOC_DIAG_SRC))
 
-DIAGRAMS_SRC := $(shell find -name '*.plantuml')
-DIAGRAMS_SVG := $(addsuffix .svg, $(basename $(DIAGRAMS_SRC)))
+DOC_TEX_SRC := $(shell find -wholename './documentation/src/documents/*.tex')
+DOC_TEX_DIST_PDF := $(patsubst ./documentation/src/documents/%.tex, ./documentation/dist/%.pdf, $(DOC_TEX_SRC))
 
-MAIN_LATEX_SRC := $(shell find -name 'main.tex')
-MAIN_LATEX_PDF := $(addsuffix .pdf, $(basename $(MAIN_LATEX_SRC)))
 
-svg: $(DIAGRAMS_SVG)
-pdf: $(MAIN_LATEX_PDF)
+.PHONY: documentation
+documentation: documentation/dist/Architecture.pdf
 
-clean:
-	rm -f $(DIAGRAMS_SVG)
-	rm -f $(MAIN_LATEX_PDF)
 
-%.svg: %.plantuml
-	plantuml -tsvg $^
+.PHONY: diagrams
+diagrams : $(DOC_DIAG_PDF)
+	echo "PMLs: [$(DOC_DIAG_SRC)]"
+	echo "Dist PDFs: [$(DOC_DIAG_PDF)]"
 
-%.pdf: %.tex
-	latexmk -pdf $^
+
+.PHONY: tex
+tex : diagrams $(DOC_TEX_DIST_PDF)
+	echo "TEXs: [$(DOC_TEX_SRC)]"
+	echo "Dist PDFs: [$(DOC_TEX_DIST_PDF)]"
+
+
+.PHONY: clean
+clean : 
+	rm -rf "./documentation/dist"
+
+
+documentation/src/diagrams/%.pdf : documentation/src/diagrams/%.plantuml
+	plantuml -tpdf $^
+
+
+documentation/src/documents/%.pdf : documentation/src/documents/%.tex
+	cd $(@D) ; \
+	pdflatex $(patsubst documentation/src/documents/%, %, $^) --shell-escape
+
+
+documentation/dist/%.pdf : documentation/src/documents/%.pdf
+	@mkdir -p $(@D)
+	cp $^ $@
