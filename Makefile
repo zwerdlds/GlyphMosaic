@@ -30,9 +30,9 @@ documentation/src/diagrams/%.pdf : documentation/src/diagrams/%.plantuml
 	plantuml -tpdf $^
 
 
-documentation/src/documents/%.pdf : documentation/src/documents/%.tex
+documentation/src/documents/%.pdf : $(DOC_DIAG_PDF) documentation/src/documents/%.tex
 	cd $(@D) ; \
-	pdflatex $(patsubst documentation/src/documents/%, %, $^) --shell-escape
+	pdflatex $(patsubst documentation/src/documents/%.pdf, %.tex, $@) --shell-escape
 
 
 documentation/dist/%.pdf : documentation/src/documents/%.pdf
