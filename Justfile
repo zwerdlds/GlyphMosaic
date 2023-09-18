@@ -10,7 +10,7 @@ roopes-split-watch:
         split-window -p 50 'just watch-roopes' \; \
         select-pane -T "Roopes" \; \
         rename-session 'glyphmosaic' \; \
-        set -g pane-border-status top \; \
+        set -g pane-border-status top \;
 
 watch-roopes:
     cd ../roopes/ ; \
@@ -26,7 +26,7 @@ parallel-iter:
         verify \
         update-coverage \
         build-diagrams \
-        build-pdfs
+        build-tex
 
 watch watchtarget:
     cargo watch \
@@ -35,6 +35,9 @@ watch watchtarget:
         --ignore '**/*.svg' \
         --ignore 'lcov.info' \
         --ignore 'README.md' \
+        --ignore 'documentation/dist/*.pdf' \
+        --ignore 'documentation/src/documents/*.pdf' \
+        --ignore '**/*.pytxcode' \
         --ignore 'dist/' \
         --ignore 'mutants.out*/**'
 
@@ -83,10 +86,10 @@ format:
     cargo fmt
 
 build-diagrams:
-    make svg
+    make diagrams
 
-build-pdfs:
-    make pdf
+build-tex:
+    make tex
 
 update-coverage:
     CARGO_TERM_COLOR="always" \
