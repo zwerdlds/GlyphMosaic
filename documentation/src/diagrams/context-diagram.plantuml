@@ -6,6 +6,14 @@ person "User" as usr
 
 agent "GlyphMosaic" as gm
 
+package Filesystem as fs {
+  file "Source Image" as si
+  file "Source Text" as si
+  file "GM Document" as si
+  file "Output Image" as si
+}
+
+
 usr -r-> gm
 
 @enduml

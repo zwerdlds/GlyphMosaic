@@ -1,0 +1,44 @@
+@startuml region-drawing
+skinparam nodesep 50
+skinparam ranksep 5
+top to bottom direction
+skinparam PackageStyle rectangle
+skinparam ComponentStyle rectangle
+skinparam PackageBorderColor transparent
+
+package "<size:50><&target>\nSource" {
+    [User] as src
+}
+
+rectangle Stimulus {
+    [Clicks or drags] as stim
+}
+
+src -r- stim
+
+package Environment #dddddddd {
+    [Normal operation] as env
+
+package "<size:50><&folder>\nArtifact" #bbbbbbbb {
+    package [GlyphMosaic Region Preview Pane] as art
+}
+
+env -[hidden]u- art
+}
+
+stim -r-> art
+
+package Response {
+    package [Region preview pane is updated] as rspns
+}
+
+art -r- rspns
+
+package "<size:50><&clock>\nResponse Measure" {
+    package [less than 0.10 seconds] as msr
+}
+
+rspns -r-> msr
+
+
+@enduml

@@ -226,23 +226,27 @@ This report attempts to accomplish the following goals:
 \begin{itemize}
   \item Describe the complete architecture of the system.
   \item Describe available process alternative methods and their trade-offs.
+  \item Provide a broad statement of use for the system itself.
 \end{itemize}
 
 
 
 \section{Glossary}
 \begin{itemize}
+  \pbodyitem{Bitmap}{ }
+  \pbodyitem{Document}{ }
   \pbodyitem{Glyph}{ }
   \pbodyitem{Graphical User Interface}{ }
-  \pbodyitem{Bitmap}{ }
   \pbodyitem{Output Image}{ }
   \pbodyitem{Source Image}{ }
   \pbodyitem{Source Text}{ }
+  \pbodyitem{Region}{ }
+  \pbodyitem{Region Line Kernel}{ }
 \end{itemize}
 
 
 
-\section{Requirements and Stakeholders}
+\section{Stakeholders}
 \subsection{Stakeholders}
 \begin{itemize}
   \pbodyitem{Output Image consumers}{Individuals who view or request graphic design produced by the system.}
@@ -251,93 +255,81 @@ This report attempts to accomplish the following goals:
 \end{itemize}
 
 
-\subsection{Overview of Requirements}
+\section{Requirements}
 Requirements for GlyphMosaic aim to create a responsive and productive environment for its users.
 The GlyphMosaic System provides a specialized method to build unique graphic mosaic designs.
 
 
-\subsubsection{Functionality}
+\subsection{Functionality}
 GlyphMosaic’s main built-in functionality is focused entirely on the workflow of creating mosaics.
 In the most common workflow, a user will load source image and source text into the program, adjust various settings and bitmaps to their needs, render a high-resolution version of the output mosaic, and then save that file for use outside the application.
 
+\subsection{Differentiation}
+Existing systems perform a similar, but limited subset, of functionality of the system.
+Textaizer\cite{textaizer}, for example, has the ability to specify various line patterns, such as spirals.
+Many other examples exist that focus solely on LTR horizontal mosaics.
 
-\subsubsection{Use Cases}
+GlyphMosaic does not have these limitations.
+The creator is able to specify the glyph line pattern by specifying a region line kernel for each region.
+The system then determines a text path which encompasses the entire region, and develops a
+
+\subsection{Use Cases}
 \label{sec:usecases}
 
 \begin{itemize}
   \lbodyitem{System Installation}{
   \item Users should be able to download, install, and run the system on their own devices.
         }
+        \lbodyitem{Content Creation}{
+  \item Users should be able to create and modify GM documents.
+        }
 \end{itemize}
 
-\subsubsection{Additional Requirements}
-
-% \sidiagram
-% {documentation/src/diagrams/use-case-diagram}
-% {GlyphMosaic supports a specialized graphic design workflow.}
-% {fig:useCaseDiagram}
-% {.95}
+\sidiagram
+{../diagrams/use-case-diagram}
+{GlyphMosaic supports a specialized graphic design workflow.}
+{fig:useCaseDiagram}
+{.95}
 
 
 
 \section{System Qualities}{
   \label{sec:qualityattributes}
   \subsection{Performance}
-  Users should rapidly receive feedback representing the current state of the project.
+  Users should be able to rapidly receive feedback representing the current state of the project.
+  This includes a preview of the document they wish to create.
   \begin{itemize}
     \pbodyitem{Tactics}{
-
-      % \begin{itemize}
-      %   \pbodyitem{Module Cohesion}{
-      %     Internally, the structure of the system follows a highly module design.
-      %     Each module is broken up into fewer than approximately 15 internal components, with more complex modules being subdivided further.  See \prettyref{sec:decomp}.
-      %   }
-      %   \pbodyitem{Binding Deference}{
-      %     The plug-in subsystem categorizes bindings in twain: actions and filters\footnote{This division of event types can also be viewed as a form of encapsulation.}.
-      %     Plug-ins can dynamically register for each based on strings at runtime.
-      %     In this way, events are bound at-will by plug-ins, allowing them to have as much complexity as necessary, while also preserving system speed at a reasonable level.
-      %   }
-      %   \pbodyitem{Encapsulation}{
-      %     The system encapsulates extensible behavior into three categories:
-      %     \begin{itemize}
-      %       \pbodyitem{Templates}{
-      %         Strictly speaking, GlyphMosaic templates represent the per-page formatting using HTML\footnote{Colloquially, themes and templates are conflated, with the term ``theme'' essentially encapsulating both.}.
-      %         Because they control the root file for the page a user is viewing in their browser, this gives nearly limitless control to template developers to modify content.
-      %         Templates can be attached by types, tags, taxonomies, categories, and authors.
-      %         Modifying a template does not necessitate modifying the actual content presented in the page.
-
-      %         Templates are further composed of template blocks.  See \cite{wpBlocks}.
-      %       }
-      %       \pbodyitem{Themes}{
-      %         Themes are, effectively, groups of template files, and can modify the style of an entire site.
-      %         This enables users to modify their entire site with a single add-on.
-      %         E.g.: a theme developer could package a number of templates, images, CSS files, and audio into a single theme and distribute it for use by site administrators.
-
-      %         The default installation of GlyphMosaic includes a number of themes, named by year of development.  See \cite {wpThemes}.
-      %       }
-      %       \pbodyitem{Plug-Ins}{
-      %         Plug-ins represent the ultimate extension of the system.
-      %         Using plug-ins, a developer can hook into arbitrary actions and events, and alter the incoming data (through filters) or execute arbitrary code based on events (actions) the system fires.  Writing plug-ins requires knowledge of PHP, but installing existing plug-ins does not.
-      %       }
-      %     \end{itemize}
-      %   }
-      % \end{itemize}
+      \begin{itemize}
+        \pbodyitem{Cacheing}{
+          Throughout the image creation pipeline, certain modules may not necessarily produce different output, given a user's input.
+          Recomputing these results is wasteful, and avoided by implementing a cacheing layer available to other modules in the system.
+          This method involves trading future computational load for memory space.
+        }
+        \pbodyitem{Profiling}{
+          Architects of the system utilize system profiling on typified workloads to determine bottlenecks in performance.
+          These bottlenecks are then examined and the system is revised to eliminate it.
+        }
+      \end{itemize}
     }
-    \pbodyitem{Scenario}{
-      % To make a previously built theme easier for GlyphMosaic users to use, a GlyphMosaic plug-in developer updates it, the modification is done successfully and available for use less than two hours after the update with no downtime.
-
-      % \lidiagram{modifiability-qas/modifiability-qas}
-      % {GlyphMosaic has a streamlined process to adding plug-ins.}
-      % {fig:modqas}
-
-      % \begin{itemize}
-      %   \item Source of stimulus: Plug-in Developer
-      %   \item Stimulus: Updates a theme
-      %   \item Artifact: GlyphMosaic theme
-      %   \item Environment: Normal operation (after deployment)
-      %   \item Response: Modification is done successfully
-      %   \item Response measure: Less than two hours with no downtime
-      % \end{itemize}
+    \pbodyitem{Scenarios}{
+      \begin{itemize}
+        \pbodyitem{Region Drawing}{
+          When a user draws a region mask on the preview pane, the system should display a preview of the mask within one tenth of a second.
+          \lidiagram{../diagrams/scenarios/region-drawing}
+          {GlyphMosaic gives near-instantaneous feedback for region specification.}
+          {fig:sc-reg-draw}
+        }
+        \pbodyitem{Mosaic Preview "Cold" Response}{
+          When a user opens the preview pane, it should display a preview of the mosaic within one second.
+        }
+        \pbodyitem{Mosaic Preview "Warm" Response}{
+          When a user changes a parameter in the document while the preview pane is already open and viewing a result of that change, the user should see the result of that change within one quarter of one second.
+        }
+        \pbodyitem{Mosaic Full Render Response}{
+          When the user triggers a full render of the document, the system should write the result to the host filesystem within 20 seconds.
+        }
+      \end{itemize}
     }
   \end{itemize}
  }
@@ -345,28 +337,28 @@ In the most common workflow, a user will load source image and source text into 
 
 
 \section{Architectural Views}{
-  \nosplit{
-    \subsection{Components \& Connectors}
-    The system interacts with one aspects of the host system:
-    \begin{itemize}
-      \pbodyitem{Filesystem}{The system retrieves source images and text from the local filesystem.}
-    \end{itemize}
+\nosplit{
+  \subsection{Components \& Connectors}
+  The system interacts with one aspects of the host system:
+  \begin{itemize}
+    \pbodyitem{Filesystem}{The system retrieves source images and text from the local filesystem.}
+  \end{itemize}
 
-    % \lidiagram
-    % {documentation/src/diagrams/component-connector-diagram}
-    % {The GlyphMosaic system is fairly limited in responsibility from an application/systems administrator perspective.}
-    % {fig:cnc}
-  }
-  \nosplit{
-    \subsection{Modules}
-    \label{sec:decomp}
+  \lidiagram
+  {../diagrams/component-connector-diagram}
+  {The GlyphMosaic system is fairly limited in responsibility from an application/systems administrator perspective.}
+  {fig:cnc}
+}
+\nosplit{
+  \subsection{Modules}
+  \label{sec:decomp}
 
-    % \sidiagram{documentation/src/diagrams/main-modules-diagram}
-    % {The top-level organization of the system.}
-    % {fig:modules-top}
-    % {\compDiagScale}
+  % \sidiagram{documentation/src/diagrams/main-modules-diagram}
+  % {The top-level organization of the system.}
+  % {fig:modules-top}
+  % {\compDiagScale}
   % }
- }
+}
 
 \break
 
@@ -378,6 +370,12 @@ In the most common workflow, a user will load source image and source text into 
   \lbodyitem{Design Purposes}{
     \pbodyitem{Modeling a Specialized Workflow}{
       The system is designed to facilitate a specific graphic design workflow.
+      This workflow follows an interative approach, like most graphic design workflows, in which a document would be created and modified in successive phases until the designer is content with the result.
+      At this point, the designer indicates to the system that the image should be rendered at high-resolution for output and consumption by other systems.
+
+      \lidiagram{../diagrams/workflow.pdf}
+      {The system workflow includes specialized phases.}
+      {fig:workflow}
     }
   }
   \pbodyitem{Use Cases}{See \prettyref{sec:usecases}}
@@ -412,6 +410,7 @@ The system builds functionality in layers.
 A few of the most enabled qualities include:
 
 \begin{itemize}
+  \pbodyitem{Performance}{}
   \pbodyitem{Maintainability}{}
 \end{itemize}
 
@@ -458,6 +457,9 @@ A few of the most enabled qualities include:
 %   Network latency and message passing can add to the overall response time of the system, leading to slower performance.
 % }
 % \end{itemize}
+\subsubsection{Performance}
+
+
 
 \newpage
 

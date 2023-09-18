@@ -1,0 +1,20 @@
+@startuml workflow
+skinparam componentStyle uml1
+
+start
+
+:Load Source Image;
+
+split
+    :Modify SI Regions;
+split again
+    :Load Source Text;
+end split
+
+:Modify Regions Glyph Parameters;
+
+:Render Output;
+
+stop
+
+@enduml
