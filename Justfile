@@ -25,8 +25,7 @@ parallel-iter:
         test \
         verify \
         update-coverage \
-        build-diagrams \
-        build-tex
+        build-documentation
 
 watch watchtarget:
     cargo watch \
@@ -85,11 +84,8 @@ format:
     CARGO_TERM_COLOR="always" \
     cargo fmt
 
-build-diagrams:
-    make diagrams
-
-build-tex:
-    make tex
+build-documentation:
+    make documentation
 
 update-coverage:
     CARGO_TERM_COLOR="always" \

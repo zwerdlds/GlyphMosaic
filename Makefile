@@ -1,40 +1,45 @@
-DOC_DIAG_SRC := $(shell find -wholename './documentation/src/diagrams/*.plantuml')
-DOC_DIAG_PDF := $(patsubst ./documentation/src/diagrams/%.plantuml, ./documentation/src/diagrams/%.pdf, $(DOC_DIAG_SRC))
+.SUFFIXES:
 
-DOC_TEX_SRC := $(shell find -wholename './documentation/src/documents/*.tex')
-DOC_TEX_DIST_PDF := $(patsubst ./documentation/src/documents/%.tex, ./documentation/dist/%.pdf, $(DOC_TEX_SRC))
+DOC_DIAG_SRC := $(shell find -wholename './documentation/*.plantuml')
+DOC_DIAG_BLD_PDF := $(patsubst ./documentation/%.plantuml,.doc_build/pml/%.pdf,$(DOC_DIAG_SRC))
+
+DOC_TEX_SRC := $(shell find -wholename './documentation/*.tex')
+DOC_TEX_DIST_PDF := $(patsubst ./documentation/%/main.tex,documentation/%.pdf,$(DOC_TEX_SRC))
+
+PML_PDF_TO_LCL_PDF = $(patsubst .doc_build/pml/%.pdf,documentation/%.pdf,$@)
+PML_PDF_TO_LCL_PML = $(patsubst .doc_build/pml/%.pdf,documentation/%.plantuml,$@)
+
+TEX_BLD_PDF_TO_BLD_DIR = $(patsubst .doc_build/tex/%/main.pdf,.doc_build/tex/%,$@)
+TEX_BLD_PDF_TO_ABS_DIR = $(shell pwd)/$(TEX_BLD_PDF_TO_BLD_DIR)
+TEX_OUT_PDF_TO_BLD_DIR = $(patsubst documentation/%.pdf,.doc_build/tex/%,$@)
+TEX_BLD_PDF_TO_SRC_DIR = $(patsubst .doc_build/tex/%/main.pdf,documentation/%,$@)
+TEX_PDF_TO_DIAG_DIR = $(shell pwd)/$(patsubst .doc_build/tex/%/main.pdf,.doc_build/pml/%,$@)
+
 
 
 .PHONY: documentation
-documentation: documentation/dist/Architecture.pdf
-
-
-.PHONY: diagrams
-diagrams : $(DOC_DIAG_PDF)
-	echo "PMLs: [$(DOC_DIAG_SRC)]"
-	echo "Dist PDFs: [$(DOC_DIAG_PDF)]"
-
-
-.PHONY: tex
-tex : diagrams $(DOC_TEX_DIST_PDF)
-	echo "TEXs: [$(DOC_TEX_SRC)]"
-	echo "Dist PDFs: [$(DOC_TEX_DIST_PDF)]"
-
+documentation: documentation/*.pdf
+	
 
 .PHONY: clean
-clean : 
-	rm -rf "./documentation/dist"
+clean:
+	rm -rf .doc_build
+	
+
+.SECONDEXPANSION:
+.doc_build/tex/%/main.pdf : $$(wildcard documentation/%/*) $$(wildcard .doc_build/pml/%/**/*) $(DOC_DIAG_BLD_PDF)
+	echo $^
+	mkdir -p $(@D)
+	cd $(TEX_BLD_PDF_TO_SRC_DIR) ; \
+	TEXINPUTS=.:$(TEX_PDF_TO_DIAG_DIR)//: \
+	lualatex -output-directory=$(TEX_BLD_PDF_TO_ABS_DIR) main.tex
+
+documentation/%.pdf : .doc_build/tex/%/main.pdf
+	cp $(TEX_OUT_PDF_TO_BLD_DIR)/main.pdf $@
 
 
-documentation/src/diagrams/%.pdf : documentation/src/diagrams/%.plantuml
-	plantuml -tpdf $^
 
-
-documentation/src/documents/%.pdf : $(DOC_DIAG_PDF) documentation/src/documents/%.tex
-	cd $(@D) ; \
-	pdflatex $(patsubst documentation/src/documents/%.pdf, %.tex, $@) --shell-escape
-
-
-documentation/dist/%.pdf : documentation/src/documents/%.pdf
-	@mkdir -p $(@D)
-	cp $^ $@
+.doc_build/pml/%.pdf : documentation/%.plantuml
+	plantuml -tpdf $(PML_PDF_TO_LCL_PML)
+	mkdir -p $(@D)
+	mv $(PML_PDF_TO_LCL_PDF) $(@D)

@@ -1,14 +1,4 @@
 target
 GlyphMosaic.code-workspace
 .vscode
-*.aux
-*.bbl
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-/documentation/**/*.pdf
-*.run.xml
-*.synctex.gz
-*.toc
-documentation/diagrams/**/*.svg
+.doc_build
