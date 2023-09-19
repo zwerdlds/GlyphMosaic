@@ -1,0 +1,116 @@
+\section{Architecture}
+\subsection{Drivers}
+\begin{itemize}
+  \lbodyitem{Design Purposes}{
+    \pbodyitem{Modeling a Specialized Workflow}{
+      The system is designed to facilitate a specific graphic design workflow.
+      This workflow follows an interative approach, like most graphic design workflows, in which a document would be created and modified in successive phases until the designer is content with the result.
+      At this point, the designer indicates to the system that the image should be rendered at high-resolution for output and consumption by other systems.
+
+      \lidiagram{diagrams/workflow.pdf}
+      {The system workflow includes specialized phases.}
+      {fig:workflow}
+    }
+  }
+  \pbodyitem{Use Cases}{See \prettyref{sec:usecases}}
+  \pbodyitem{Quality Attributes}{See \prettyref{sec:qualityattributes}}
+  \lbodyitem{Constraints}{
+    \pbodyitem{Resource Use Limitations}{
+      Devices serving GlyphMosaic may be constrained by processing power and memory.
+    }
+  }
+\end{itemize}
+
+
+\subsection{Styles and Patterns}
+GlyphMosaic communicates with the host operating system using standard methods.
+
+\textbf{Monolithic}
+Within the host operating system, the process exists within a singular executable.
+This simplifies potential complexity 
+
+
+\textbf{Layered}
+Within the monolithic system, subsystems compose into macroscopic functionality as layers.
+This method of design is an attempt to mitigate complexity of the system.
+This approach is utilized in the following locations:
+\begin{itemize}
+  \pbodyitem{Test}{Desctiption.}
+\end{itemize}
+
+
+\textbf{Pipe/Filter}
+In many cases, systems are composed in series to build larger functionality.
+This approach is utilized in the following locations:
+\begin{itemize}
+  \pbodyitem{Test}{Desctiption.}
+\end{itemize}
+
+
+\textbf{Model-View-Controller}
+This approach is utilized in the following locations:
+\begin{itemize}
+  \pbodyitem{Test}{Desctiption.}
+\end{itemize}
+
+
+\textbf{Event Bus}
+
+This approach is utilized in the following locations:
+\begin{itemize}
+  \pbodyitem{Test}{Desctiption.}
+\end{itemize}
+
+
+\subsection{Rationales}
+A few of the most enabled qualities include:
+
+\begin{itemize}
+  \pbodyitem{Performance}{}
+  \pbodyitem{Maintainability}{}
+\end{itemize}
+
+\subsection{Alternative Architectures}
+
+\begin{itemize}
+  \pbodyitem{Distributed Computing}{
+    Breaking up components of GlyphMosaic into services could enable more computational resources to be added to the system.
+    % However, it is still the case in this implementation that updates must be done all at once: the system is still unitary.
+
+    % The typical use of load-balancers and in-memory caches which large-scale deployments employ may be interpreted as an application of this approach.
+
+    % Narrowing the focus to the GlyphMosaic system, there are two main reasons why it may not be preferential to implement this approach:
+    % \begin{itemize}
+    %   \pbodyitem{Complexity}{
+    %     Breaking up the monolithic internal structure of the system into components would require substantial refactoring.
+    %     Plug-Ins, represent a substantial barrier: Hooks must be registered centrally, so would need to be resolved somehow.
+    %     Without involving complex voting protocols, this alone would still represent a single point of communication.
+    %     Additionally, the state of the system can be queried at the time that a hook is activated, demanding complete synchronization between all nodes.
+
+    %     It may be possible for templates to be distributed since their outputs should be idempotent.
+    %     In practice, however, since they are capable of executing arbitrary PHP, they would probably encounter similar issues to plug-ins.
+    %   }
+
+    %   \pbodyitem{Diminishing Returns of Scale}{
+    %     While performance on GlyphMosaic may not be superior to other platforms, most users do not encounter traffic sufficient to demand the scalability provided by SOA or microservice architectures.
+    %   }
+    % \end{itemize}
+
+    % In conclusion, the monolithic model is ``good enough'' compared to a service-oriented architecture.
+    % The main reason this approach is unlikely to have advantages for system stakeholders is the diminishing returns to scale those stakeholders will perceive.
+  }
+\end{itemize}
+
+
+\subsection{Challenges and Limitations}
+% A three-tier architecture provides several benefits to the GlyphMosaic system, but it also comes with some limitations that can affect certain quality attributes.
+% Developers and organizations need to consider these limitations when designing and implementing their systems to ensure they meet their requirements and objectives.
+% Proper planning, design, and testing can help mitigate these limitations and ensure a successful implementation.
+% A few drawbacks to consider include:
+% \begin{itemize}
+% \pbodyitem{Performance}{
+%   Performance limitations can occur due to the communication overhead between the layers.
+%   Network latency and message passing can add to the overall response time of the system, leading to slower performance.
+% }
+% \end{itemize}
+\subsubsection{Performance}

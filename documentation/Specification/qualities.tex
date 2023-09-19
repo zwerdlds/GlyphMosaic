@@ -1,0 +1,41 @@
+\section{System Qualities}{
+  \label{sec:qualityattributes}
+  \subsection{Performance}
+  Users should be able to rapidly receive feedback representing the current state of the project.
+  This includes a preview of the document they wish to create.
+  \begin{itemize}
+    \pbodyitem{Tactics}{
+      \begin{itemize}
+        \pbodyitem{Cacheing}{
+          Throughout the image creation pipeline, certain modules may not necessarily produce different output, given a user's input.
+          Recomputing these results is wasteful, and avoided by implementing a cacheing layer available to other modules in the system.
+          This method involves trading future computational load for memory space.
+        }
+        \pbodyitem{Profiling}{
+          Architects of the system utilize system profiling on typified workloads to determine bottlenecks in performance.
+          These bottlenecks are then examined and the system is revised to eliminate it.
+        }
+      \end{itemize}
+    }
+    \pbodyitem{Scenarios}{
+      \begin{itemize}
+        \pbodyitem{Region Drawing}{
+          When a user draws a region mask on the preview pane, the system should display a preview of the mask within one tenth of a second.
+
+          \lidiagram{diagrams/scenarios/region-drawing}
+          {GlyphMosaic gives near-instantaneous feedback for region specification.}
+          {fig:sc-reg-draw}
+        }
+        \pbodyitem{Mosaic Preview ``Cold'' Response}{
+          When a user opens the preview pane, it should display a preview of the mosaic within one second.
+        }
+        \pbodyitem{Mosaic Preview ``Warm'' Response}{
+          When a user changes a parameter in the document while the preview pane is already open and viewing a result of that change, the user should see the result of that change within one quarter of one second.
+        }
+        \pbodyitem{Mosaic Full Render Response}{
+          When the user triggers a full render of the document, the system should write the result to the host filesystem within 20 seconds.
+        }
+      \end{itemize}
+    }
+  \end{itemize}
+ }

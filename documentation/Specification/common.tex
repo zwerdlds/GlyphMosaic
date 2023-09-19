@@ -1,0 +1,79 @@
+\newcommand{\pdiagram}[3]{
+  \begin{figure}
+    \centering
+    \adjustbox{max width=\textwidth}{
+      \includegraphics[height=.9\textheight]{
+        #1
+      }
+    }
+    \caption{#2}
+    \label{#3}
+  \end{figure}
+}
+
+\newcommand{\idiagram}[5]{
+  \begin{figure}[H]
+    \centering
+    \adjustbox{max width=#4\textwidth, max height=#5\textheight}{
+      \includegraphics{
+        {#1}
+      }}
+    \caption{{#2}}
+    \label{{#3}}
+  \end{figure}
+}
+
+\newcommand{\sidiagram}[4]{
+  \begin{figure}[H]
+    \centering
+    \adjustbox{scale=#4}{
+      \includegraphics{
+        {#1}
+      }}
+    \caption{{#2}}
+    \label{{#3}}
+  \end{figure}
+}
+
+\newcommand{\lidiagram}[3]{
+  \begin{figure}[H]
+    \centering
+    \adjustbox{width=\textwidth}{
+      \includegraphics{
+        {#1}
+      }}
+    \caption{{#2}}
+    \label{{#3}}
+  \end{figure}
+}
+
+\newcommand{\nosplit}[1]{
+  \begin{samepage}
+    #1
+  \end{samepage}
+}
+
+\newcommand{\docauth}[2]{
+  \raggedright
+  \Large
+  {#1} \newline
+  \small
+  {#2}
+  \vspace{1.5em}
+  \newline
+  \normalsize
+}
+
+\newcommand{\lbodyitem}[2]{
+  \item \textbf{{#1}} {
+    \begin{itemize}
+      #2
+    \end{itemize}
+  }
+}
+
+\newcommand{\pbodyitem}[2]{
+  \item \textbf{{#1}} {
+    \parindent \indentsize \newline {#2}
+  }
+}

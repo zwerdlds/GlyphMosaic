@@ -20,7 +20,7 @@ package Environment #dddddddd {
     [Normal operation] as env
 
 package "<size:50><&folder>\nArtifact" #bbbbbbbb {
-    package [GlyphMosaic Region Preview Pane] as art
+    package [GlyphMosaic Region Preview] as art
 }
 
 env -[hidden]u- art
@@ -29,7 +29,7 @@ env -[hidden]u- art
 stim -r-> art
 
 package Response {
-    package [Region preview pane is updated] as rspns
+    package [preview is updated] as rspns
 }
 
 art -r- rspns

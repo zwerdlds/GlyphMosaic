@@ -1,0 +1,35 @@
+\section{Requirements}
+Requirements for GlyphMosaic aim to create a responsive and productive environment for its users.
+The GlyphMosaic System provides a specialized method to build unique graphic mosaic designs.
+
+
+\subsection{Functionality}
+GlyphMosaic’s main built-in functionality is focused entirely on the workflow of creating mosaics.
+In the most common workflow, a user will load source image and source text into the program, adjust various settings and bitmaps to their needs, render a high-resolution version of the output mosaic, and then save that file for use outside the application.
+
+\subsection{Differentiation}
+Existing systems perform a similar, but limited subset, of functionality of the system.
+Textaizer\cite{textaizer}, for example, has the ability to specify various line patterns, such as spirals.
+Many other examples exist that focus solely on LTR horizontal mosaics.
+
+GlyphMosaic does not have these limitations.
+The creator is able to specify the glyph line pattern by specifying a region line kernel for each region.
+The system then determines a text path which encompasses the entire region, and develops a
+
+\subsection{Use Cases}
+\label{sec:usecases}
+
+\begin{itemize}
+  \lbodyitem{System Installation}{
+  \item Users should be able to download, install, and run the system on their own devices.
+        }
+        \lbodyitem{Content Creation}{
+  \item Users should be able to create and modify GM documents.
+        }
+\end{itemize}
+
+\sidiagram
+{diagrams/use-case-diagram}
+{GlyphMosaic supports a specialized graphic design workflow.}
+{fig:useCaseDiagram}
+{.95}

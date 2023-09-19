@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage{wrapfig}
+\usepackage{multicol}
+\usepackage{dirtytalk}
+\usepackage{blindtext}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage[headings]{fancyhdr}
+\usepackage{lastpage}
+\usepackage{enumitem}
+\usepackage{plantuml}
+\usepackage{float}
+\usepackage{pifont}
+\usepackage{prettyref}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{import}
+\usepackage{plantuml}
+\usepackage[titletoc]{appendix}
+\usepackage[letterpaper, bottom=1in, top=1in, left=1.25in, right=1.25in ]{geometry}
+\newrefformat{fig}{Figure \ref{#1}}
+\raggedbottom
+\def\footnoterule{\vfill\vspace{1em}\kern-3pt \hrule width 15em \kern 2.6pt}
+\setlist[itemize]{leftmargin=1.5em}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=black,
+  citecolor=black,
+}
+
+\include{common}
+
+\renewcommand{\labelitemi}{\fontsize{5pt}{0pt}\selectfont\raisebox{0.17 em}{\ding{108}}}
+\renewcommand{\labelitemii}{\small \ding{70}}
+\renewcommand{\labelitemiii}{\small \ding{86}}
+
+\pagestyle{fancy}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{.1pt}
+\newcommand{\indentsize}{1.25em}
+
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[L]{GlyphMosaic}
+\fancyfoot[C]{Zwerdling}
+\fancyfoot[R]{\thepage /\pageref{LastPage}}
+\fancyfootoffset{.5in}
+
+\setlength\parindent{\indentsize}
+
+\begin{document}
+
+\include{preamble}
+\include{introduction}
+\include{requirements}
+\include{qualities}
+\include{views}
+\include{architecture}
+
+\newpage
+
+% \include{appendix}
+
+\end{document}
+\endinput
