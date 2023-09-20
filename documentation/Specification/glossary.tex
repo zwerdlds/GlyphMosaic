@@ -1,0 +1,38 @@
+\section{Glossary}
+\begin{itemize}
+  \pbodyitem{Bitmap}{
+    A 2-dimensional matrix of pixels, representing an image.
+    Each pixel may contain an arbitrary number of channels.
+    In practice, bitmaps typically contain 3 channels (in the case of source images and output images) or a single channel (in the case of region masks and path dilation masks).
+  }
+  \pbodyitem{Document}{
+    A file which contains all the necessary elements to recreate the output image.
+    A user will create and modify documents for each output file they wish to create.
+    Documents are stored and managed outside this system, by the host.
+  }
+  \pbodyitem{Glyph}{
+    A single textual element.
+    Generally corresponds to a single letter, but that definition is incomplete due to complexities introduced by Unicode, which the system utilizes in the process of rendering.
+  }
+  \pbodyitem{Output Image}{
+    A system-rendered bitmap.
+    Users may export output images 
+  }
+  \pbodyitem{Path Dilation Masks}{
+    The system generates a series of dilations around the given region line kernel.
+    This involves taking the prior iteration, or kernel in the case of the first iteration, and accreting (dilating) pixels within a given radius of existing pixels, generating the next iteration.
+    In this method, a series of concentric lines can be generated, enabling a text path to be calculated.
+  }
+  \pbodyitem{Render}{ }
+  \pbodyitem{Region}{ }
+  \pbodyitem{Region Line Kernel}{ }
+  \pbodyitem{Region Mask}{ }
+  \pbodyitem{Source Image}{
+    A bitmap which serves as an oracle for individual pixels.
+    Source image pixels are sampled to determine the size and color of each glyph before stamping.
+  }
+  \pbodyitem{Source Text}{
+    A corpus of text is specified as a source for glyphs, which are then applied to the calculated glyph data elements.
+    These glyphs are scaled, translated, and rotated accordingly, and then stamped on a bitmap, forming the final image render.
+  }
+\end{itemize}

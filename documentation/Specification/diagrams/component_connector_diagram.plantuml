@@ -1,4 +1,4 @@
-@startuml component-connector-diagram
+@startuml
 skinparam nodesep 20
 skinparam ranksep 1
 left to right direction

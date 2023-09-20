@@ -1,4 +1,4 @@
-@startuml workflow
+@startuml
 skinparam componentStyle uml1
 
 start

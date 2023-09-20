@@ -1,4 +1,4 @@
-@startuml region-drawing
+@startuml
 skinparam nodesep 50
 skinparam ranksep 5
 top to bottom direction

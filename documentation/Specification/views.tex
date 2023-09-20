@@ -1,25 +1,24 @@
 \section{Architectural Views}{
-\nosplit{
-  \subsection{Components \& Connectors}
-  The system interacts with the following aspects of the host system:
-  \begin{itemize}
-    \pbodyitem{Filesystem}{The system retrieves source images and text from the local filesystem.}
-  \end{itemize}
+  \nosplit{
+    \subsection{Components \& Connectors}
+    The system interacts with the following aspects of the host system:
+    \begin{itemize}
+      \pbodyitem{Filesystem}{The system retrieves source images and text from the local filesystem.}
+    \end{itemize}
 
-  \lidiagram
-  {diagrams/component-connector-diagram}
-  {The GlyphMosaic system is fairly limited in responsibility from an application/systems administrator perspective.}
-  {fig:cnc}
-}
-\nosplit{
-  \subsection{Modules}
-  \label{sec:decomp}
+    \sidiagram
+    {diagrams/component_connector_diagram}
+    {The GlyphMosaic system is fairly limited in responsibility from an application/systems administrator perspective.}
+    {fig:cnc}
+    {\diagsize}
+  }
+  \nosplit{
+    \subsection{Modules}
+    \label{sec:decomp}
 
-  % \sidiagram{documentation/src/diagrams/main-modules-diagram}
-  % {The top-level organization of the system.}
-  % {fig:modules-top}
-  % {\compDiagScale}
-  % }
-}
-
-\break
+    \sidiagram{diagrams/main_modules_diagram}
+    {The top-level organization of the system.}
+    {fig:modules-top}
+    {\diagsize}
+  }
+ }
