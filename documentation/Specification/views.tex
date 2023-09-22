@@ -1,24 +1,56 @@
 \section{Architectural Views}{
   \nosplit{
-    \subsection{Components \& Connectors}
+    \subsection{Top-Level System}
     The system interacts with the following aspects of the host system:
     \begin{itemize}
-      \pbodyitem{Filesystem}{The system retrieves source images and text from the local filesystem.}
+      \pbodyitem{Filesystem}{
+        The system reads source images and text from the host filesystem.
+        Output images are written to the host filesystem.
+        Application documents are read and written to the host filesystem.
+      }
     \end{itemize}
 
     \sidiagram
-    {diagrams/component_connector_diagram}
-    {The GlyphMosaic system is fairly limited in responsibility from an application/systems administrator perspective.}
+    {diagrams/app_host}
+    {The GlyphMosaic system has limited responsibility from the host system perspective.}
     {fig:cnc}
     {\diagsize}
   }
   \nosplit{
     \subsection{Modules}
     \label{sec:decomp}
+    The system is composed of the following top-level modules:
+    \begin{itemize}
+      \pbodyitem{UI}{
+        The user interface manages the frontend of the system.
+        In particular, it manages the state of the UI.
 
-    \sidiagram{diagrams/main_modules_diagram}
+        The UI module publishes the following data:
+        \begin{itemize}
+          \pbodyitem{Region Parameters}{
+            When a region parameter is updated by a user, the UI module is responsible for forwarding that change to the remainder of the system.
+            
+          }
+          \pbodyitem{Bitmap Draw Events}{
+            The user may draw on the canvas to modify a region mask or a path line kernel.
+          }
+          \pbodyitem{File Save}{
+            The user may specify a location from which a file must be saved.
+          }
+          \pbodyitem{File Load}{
+            The user may specify a location from which a file must be loaded.
+          }
+        \end{itemize}
+        The UI must also reflect when a relevant change is made to the internal system, to allow the user to view that change.
+        These changes
+      }
+    \end{itemize}
+
+    \sidiagram{diagrams/top_level_modules}
     {The top-level organization of the system.}
     {fig:modules-top}
     {\diagsize}
+
+
   }
  }

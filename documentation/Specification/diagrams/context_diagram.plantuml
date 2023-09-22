@@ -13,7 +13,6 @@ package Filesystem as fs {
   file "Output Image" as si
 }
 
-
 usr -r-> gm
 
 @enduml

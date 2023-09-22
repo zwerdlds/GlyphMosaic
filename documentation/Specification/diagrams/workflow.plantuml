@@ -3,15 +3,14 @@ skinparam componentStyle uml1
 
 start
 
-:Load Source Image;
-
 split
-    :Modify SI Regions;
+    :Load Source Image;
 split again
     :Load Source Text;
+split again
+    :Add Regions;
+    :Modify Region Glyph Parameters;
 end split
-
-:Modify Regions Glyph Parameters;
 
 :Render Output;
 
