@@ -34,8 +34,8 @@ watch watchtarget:
         --ignore '**/*.svg' \
         --ignore 'lcov.info' \
         --ignore 'README.md' \
-        --ignore 'documentation/dist/*.pdf' \
-        --ignore 'documentation/src/documents/*.pdf' \
+        --ignore 'documentation/*.pdf' \
+        --ignore '.doc_build/**' \
         --ignore '**/*.pytxcode' \
         --ignore 'dist/' \
         --ignore 'mutants.out*/**'
@@ -93,3 +93,6 @@ update-coverage:
         --target-dir target/just-tarpaulin \
         --out Lcov \
         --skip-clean
+
+clean:
+    make clean
