@@ -1,0 +1,50 @@
+\subsection{Drivers}
+\begin{itemize}
+  \lbodyitem{Design Purposes}{
+    \pbodyitem{Modeling a Specialized Workflow}{
+      \label{sec:user_workflow_model}
+      The system is designed to facilitate a specific graphic design workflow.
+      This workflow follows an iterative approach, similar to most graphic design workflows, in which a document is created and modified in successive phases until the designer is content with the result.
+      Eventually the designer indicates to the system that the image should be rendered at high-resolution for output and consumption by other systems.
+
+      \sidiagram{diagrams/workflow.pdf}
+      {The system workflow models a specialized graphic design process.}
+      {fig:workflow}
+      {\diagsize}
+    }
+  }
+  \lbodyitem{Constraints}{
+    \pbodyitem{Resource Use Limitations}{
+      Devices serving GlyphMosaic may be constrained by their ability to perform the large number of computations necessary for the production of the end results.
+      In particular, resource use may be constrained in the following aspects of the system's functions:
+
+      \begin{itemize}
+        \pbodyitem{Path Calculation}{
+          The system must calculate the path on which glyphs are then vectorized.
+          This involves using the region kernel specified by the user and applying a dilation function onto it.
+          Over successive operations, this eventually will cover the entire region.
+          The accretion operation can be implemented using various methods.
+          However, the highest-quality version involves creating an image kernel sized corresponding to the user-defined line distance and applying the transform over a large area.
+
+          The system implements this calculation as detailed in \prettyref{sec:path_calculation}.
+        }
+        \pbodyitem{Glyph Data}{
+          The position and direction of each individual glyph must then be calculated based on the calculated path.
+          This involves walking the path and generating locations at user-specified intervals.
+          Additionally, each glyph must calculate its scale and color by sampling the source image at the calculated location.
+          This operation is computationally intensive due to the large number of glyphs, and must be optimized to this document's performance standards.
+
+          The system implements this calculation as detailed in \prettyref{sec:glyph_data_calculation}.
+        }
+        \pbodyitem{Glyph Rendering}{
+          Each glyph is stamped on a bitmap as part of the rendering process.
+          This is constrained by the host system's ability to process potentially thousands of glyphs.
+          Glyphs can be stamped on arbitrary bitmaps which can then be merged to form the final rendered bitmap.
+          This pattern allows the system to trade memory (additional bitmaps) and processing power (additional glyph-data-consuming threads) for wall-clock time.
+
+          The system implements this calculation as detailed in \prettyref{sec:glyph_render_calculation}.
+        }
+      \end{itemize}
+    }
+  }
+\end{itemize}

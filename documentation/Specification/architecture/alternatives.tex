@@ -1,0 +1,20 @@
+\subsection{Alternative Architectures}
+\begin{itemize}
+  \pbodyitem{Distributed Computing}{
+    \label{sec:alt_dist_comp}
+    Breaking up components of GlyphMosaic into services could enable more computational resources to be added to the system.
+    In the future, it may be beneficial to implement a networked architecture to enable the system to scale horizontally and improve responsiveness.
+    A distributed approach will need to consider the following aspects:
+    \begin{itemize}
+      \pbodyitem{File Transfers}{
+        Preview and rendered images may be large.
+        Operating on bitmaps in memory is substantially faster than over a network.
+        Performance profile comparisons between implementations will need to show a clear benefit to this approach before full integration.
+      }
+      \pbodyitem{Complexity}{
+        Interacting with remote compute nodes introduces complexity to the system which is not related to the core functionality of the system.
+        Adding, removing, and sending data will all need distinct components to provide a hygenic solution, which will require additional engineering effort.
+      }
+    \end{itemize}
+  }
+\end{itemize}

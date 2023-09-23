@@ -1,23 +1,23 @@
 \documentclass{article}
-\usepackage{wrapfig}
-\usepackage{multicol}
-\usepackage{dirtytalk}
-\usepackage{blindtext}
 \usepackage{adjustbox}
-\usepackage{graphicx}
-\usepackage[headings]{fancyhdr}
-\usepackage{lastpage}
-\usepackage{enumitem}
-\usepackage{plantuml}
-\usepackage{float}
-\usepackage{pifont}
-\usepackage{prettyref}
+\usepackage[title, titletoc]{appendix}
+\usepackage{blindtext}
 \usepackage{caption}
+\usepackage{dirtytalk}
+\usepackage{enumitem}
+\usepackage[letterpaper, bottom=1in, top=1in, left=1.25in, right=1.25in ]{geometry}
+\usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{import}
+\usepackage[headings]{fancyhdr}
+\usepackage{float}
+\usepackage{lastpage}
+\usepackage{multicol}
+\usepackage{pifont}
 \usepackage{plantuml}
-\usepackage[titletoc]{appendix}
-\usepackage[letterpaper, bottom=1in, top=1in, left=1.25in, right=1.25in ]{geometry}
+\usepackage{prettyref}
+\usepackage{wrapfig}
+
 \newrefformat{fig}{Figure \ref{#1}}
 \raggedbottom
 \def\footnoterule{\vfill\vspace{1em}\kern-3pt \hrule width 15em \kern 2.6pt}
@@ -30,7 +30,7 @@
   citecolor=black,
 }
 
-\include{common}
+\input{common}
 
 \renewcommand{\labelitemi}{\fontsize{5pt}{0pt}\selectfont\raisebox{0.17 em}{\ding{108}}}
 \renewcommand{\labelitemii}{\small \ding{70}}
@@ -53,20 +53,25 @@
 
 \begin{document}
 
-\include{title_page}
-\include{toc}
-\include{version_history}
-\include{introduction}
-\include{system_overview}
-\include{glossary}
-\include{stakeholders}
-\include{requirements}
-\include{qualities}
-\include{architecture}
-\include{views}
-\include{ui_mockups}
-\include{subsystems}
-\include{appendix}
+\input{title_page}
+\input{toc}
+\newpage
+
+\input{version_history}
+\newpage
+
+\input{introduction}
+\input{system_overview}
+\input{glossary}
+\input{stakeholders}
+\input{requirements}
+\input{qualities}
+\input{architecture/architecture}
+\input{views}
+\input{subsystems}
+\newpage
+
+\input{appendix/appendix}
 
 
 \addcontentsline{toc}{section}{References}

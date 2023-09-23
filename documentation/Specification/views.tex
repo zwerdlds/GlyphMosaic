@@ -1,4 +1,5 @@
 \section{Architectural Views}{
+  \label{sec:views}
   \nosplit{
     \subsection{Top-Level System}
     The system interacts with the following aspects of the host system:
@@ -18,7 +19,7 @@
   }
   \nosplit{
     \subsection{Modules}
-    \label{sec:decomp}
+    \label{sec:modules}
     The system is composed of the following top-level modules:
     \begin{itemize}
       \pbodyitem{UI}{
@@ -29,7 +30,6 @@
         \begin{itemize}
           \pbodyitem{Region Parameters}{
             When a region parameter is updated by a user, the UI module is responsible for forwarding that change to the remainder of the system.
-            
           }
           \pbodyitem{Bitmap Draw Events}{
             The user may draw on the canvas to modify a region mask or a path line kernel.
@@ -42,15 +42,24 @@
           }
         \end{itemize}
         The UI must also reflect when a relevant change is made to the internal system, to allow the user to view that change.
-        These changes
+        These changes are also forwarded to the document management system to ensure the change is reflected when the document is exported.
       }
     \end{itemize}
 
     \sidiagram{diagrams/top_level_modules}
     {The top-level organization of the system.}
-    {fig:modules-top}
+    {fig:modules_top}
     {\diagsize}
-
-
+  }
+  \nosplit{
+    \subsection{Data Flows}
+    \label{sec:dataflows}
+    Data flows between each module in such a way as to accomplish the workflow set forth in \prettyref{sec:user_workflow_model}.
+    This process somewhat mirrors the components described in \prettyref{sec:modules}, but also describes the relationships necessary to update the user interface and document.
+  
+    \sidiagram{diagrams/data_flow}
+    {Succinct description.}
+    {fig:data_flow}
+    {\diagsize}
   }
  }

@@ -33,7 +33,7 @@ clean:
 	mkdir -p $(@D)
 	cd $(TEX_BLD_PDF_TO_SRC_DIR) ; \
 	TEXINPUTS=.:$(TEX_PDF_TO_DIAG_DIR)//: \
-	pdflatex -output-directory=$(TEX_BLD_PDF_TO_ABS_DIR) main.tex
+	pdflatex -halt-on-error -output-directory=$(TEX_BLD_PDF_TO_ABS_DIR) main.tex
 
 
 documentation/%.pdf : .doc_build/tex/%/main.pdf

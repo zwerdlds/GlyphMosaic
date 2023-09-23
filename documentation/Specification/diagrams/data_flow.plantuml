@@ -1,0 +1,29 @@
+@startuml
+skinparam componentStyle uml1
+
+package "Interfaces" as intf {
+    component "UI" as ui
+    component "File" as file
+
+    file -u[hidden]- ui
+}
+
+package "Library" as lib {
+    component "Bitmap" as bmp
+    component "Regions" as reg
+    component "Lines" as line
+    component "Points" as pts
+    component "Glyphs" as gly
+}
+
+lib -r[hidden]-> intf
+
+line -u-> bmp
+reg -u-> bmp
+pts -u-> line
+gly -u-> pts
+gly -u-> bmp
+pts -u-> reg
+
+
+@enduml
