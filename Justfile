@@ -85,7 +85,7 @@ format:
     cargo fmt
 
 build-documentation:
-    make documentation
+    make --jobs "$(nproc --all)" documentation
 
 update-coverage:
     CARGO_TERM_COLOR="always" \
