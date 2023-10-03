@@ -2,3 +2,4 @@ target
 GlyphMosaic.code-workspace
 .vscode
 .doc_build
+documentation/Specification.pdf
