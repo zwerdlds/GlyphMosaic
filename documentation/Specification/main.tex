@@ -17,6 +17,7 @@
 \usepackage{plantuml}
 \usepackage{prettyref}
 \usepackage{wrapfig}
+\usepackage{makeidx}
 
 \newrefformat{fig}{Figure \ref{#1}}
 \raggedbottom
@@ -66,15 +67,16 @@
 \input{stakeholders}
 \input{requirements}
 \input{qualities}
-\input{architecture/architecture}
+\input{architecture}
 \input{views}
 \input{subsystems}
 \newpage
 
-\input{appendix/appendix}
+\input{appendix}
 
 
-\addcontentsline{toc}{section}{References}
+\newpage
+\input{index}
 
 \end{document}
 \endinput
