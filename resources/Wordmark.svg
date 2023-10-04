@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="269mm"
-   height="46mm"
-   viewBox="0 0 269 46"
+   width="243mm"
+   height="44mm"
+   viewBox="0 0 243 44"
    version="1.1"
    id="svg5"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
@@ -26,7 +26,7 @@
      showgrid="false"
      inkscape:zoom="0.93806818"
      inkscape:cx="373.64022"
-     inkscape:cy="561.79285"
+     inkscape:cy="562.85887"
      inkscape:window-width="3840"
      inkscape:window-height="2003"
      inkscape:window-x="1080"
@@ -48,13 +48,11 @@
      id="layer1">
     <text
        xml:space="preserve"
-       transform="matrix(0.49305423,0,0,0.49305423,-7.715164,-11.612211)"
+       transform="matrix(1.1514943,0,0,1.1514943,-21.230748,-26.690461)"
        id="text234"
-       style="font-size:40px;line-height:1.25;font-family:sans-serif;word-spacing:0px;white-space:pre;shape-inside:url(#rect236);display:inline"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:1.25;font-family:FreeSerif;-inkscape-font-specification:'FreeSerif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;word-spacing:0px;white-space:pre;shape-inside:url(#rect236);display:inline"><tspan
          x="18.119141"
-         y="90.991234"
-         id="tspan787"><tspan
-           style="font-size:85.3333px;font-family:'TeX Gyre Bonum';-inkscape-font-specification:'TeX Gyre Bonum, Normal'"
-           id="tspan785">GlyphMosaic</tspan></tspan></text>
+         y="51.447266"
+         id="tspan835">GlyphMosaic</tspan></text>
   </g>
 </svg>
