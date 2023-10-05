@@ -1,44 +1,122 @@
-\section{Mosaic Parameters}
+\newcommand{\paritem}[4]{
+  \pbodyitem{#1}{
+    \index{#1}
+    \textbf{Domain:}{#3} \newline
+    \textbf{Notated:}{#4} \newline
+    {#2}
+  }
+}
+
+\newcommand{\FontParSymbol}{\(F\)}
+\newcommand{\SrcImgParSymbol}{\(SI\)}
+\newcommand{\SrcTxtParSymbol}{\(ST\)}
+\newcommand{\RegMskParSymbol}{\(M_r\)}
+\newcommand{\GlyphPathKernelParSymbol}{\(PK_r\)}
+\newcommand{\GtrHtParSymbol}{\(GH_r\)}
+\newcommand{\LnHtParSymbol}{\(LH_r\)}
+\newcommand{\GlyphKrnParSymbol}{\(GK_r\)}
+\newcommand{\GlyphSzMinParSymbol}{\(GSM_r\)}
+\newcommand{\GlyphSzMaxParSymbol}{\(GSX_r\)}
+\newcommand{\DnsSampleParSymbol}{\(DS_r\)}
+\newcommand{\GlyphRotParSymbol}{\(GRS_r\)}
+\newcommand{\PathGenSclParSymbol}{\(PS_r\)}
+
+
+\section{Parameters}
 \label{apx:userparams}
 The process of developing mosaics necessitates user manipulation of the following parameters to ensure correct output:
 \begin{itemize}
-  \pbodyitem{Font}{
-    \index{Font}
-    The specific glyph set used when stamping glyphs in the rendered image.
-  }
-  \pbodyitem{Source Image}{
-    Used to calculate pixel sizing.
-  }
-  \pbodyitem{Source Text}{
-    Used to determine which glyph is placed at the successive locations.
-  }
-  \pbodyitem{Regions}{
-    When a region is added, it is `empty' in that it will not allow any glyph points to be added to the output image.
-    Removing a region is a cascading delete - all parameters associated with the region are also removed.
+  \paritem
+  {Font}
+  {The specific glyph set used when stamping glyphs in the rendered image.  }
+  {System-installed fonts}
+  {\FontParSymbol}
+
+  \paritem
+  {Source Image}
+  {Used to calculate pixel sizing.}
+  {Bitmaps}
+  {\SrcImgParSymbol}
+
+  \paritem
+  {Source Text}
+  {Used to determine which glyph is placed at the successive locations.}
+  {UTF-8 String}
+  {\SrcTxtParSymbol}
+
+  \pbodyitem
+  {Regions}
+  {
+    A region most accurately represents a set of pixels which are treated the same when it comes time to render glyphs to paths.
+    This is done so that distinct line areas can be treated separately:  If a user wants a text path in a certain section of the image,
 
     Each region maintains a set of additional parameters which determines the rendered glyphs:
     \begin{itemize}
-      \pbodyitem{Mask}{
-        A 1-channel bitmap representing the area for which glyph points will be considered valid.
-        This can be thought of as the effective area of the region.
-      }
-      \pbodyitem{Glyph Path Kernel}{
-        A 1-channel bitmap representing the seed of the dilated layers which are then used to generate the region text path.
-      }
-      \pbodyitem{Line Height}{
-        The distance between the lines of text on which glyphs are placed.
-      }
-      \pbodyitem{Glyph Kerning}{
-        The fixed distance between each glyph.
-      }
-      \pbodyitem{Glyph Minimum Size}{
-        The smallest size glyphs are scaled to.
-        This corresponds to the size a glyph would be generated from by encountering a white pixel at its point.
-      }
-      \pbodyitem{Glyph Maximum Size}{
-        The largest size glyphs are scaled to.
+      \paritem
+      {Mask}
+      {A 1-channel bitmap representing the area for which glyph points will be considered valid.
+        This can be thought of as the effective area of the region.}
+      {1-Bit Matrix Congruent to Source Image}
+      {\RegMskParSymbol}
+      \paritem
+      {Glyph Path Kernel}
+      {A 1-channel bitmap representing the seed of the dilated layers which are then used to generate the region text path.}
+      {1-Bit Matrix Congruent to Source Image}
+      {\GlyphPathKernelParSymbol}
+
+      \paritem
+      {Gutter Line Height}
+      {The distance between the first concentric path around the kernel and the kernel itself.
+        Zero means the kernel itself will represent the first line.}
+      {ℕ}
+      {\GtrHtParSymbol}
+
+      \paritem
+      {Line Height}
+      {The distance between the lines of text on which glyphs are placed.}
+      {ℕ}
+      {\LnHtParSymbol}
+
+      \paritem
+      {Glyph Kerning}
+      {The fixed distance between each glyph.}
+      {ℕ}
+      {\GlyphKrnParSymbol}
+
+      \paritem
+      {Glyph Minimum Size}
+      {The smallest size glyphs are scaled to.
+        This corresponds to the size a glyph would be generated from by encountering a white pixel (lowest density) at its point.}
+      {ℕ}
+      {\GlyphSzMinParSymbol}
+
+      \paritem
+      {Glyph Maximum Size}
+      {The largest size glyphs are scaled to.
         This corresponds to the size a glyph would be generated from by encountering a black pixel at its point.
       }
+      {ℕ}
+      {\GlyphSzMaxParSymbol}
+
+      \paritem
+      {Density Sample Size}
+      {How many pixels are sampled when a pixel density for a glyph is calculated.}
+      {ℕ}
+      {\DnsSampleParSymbol}
+
+      \paritem
+      {Glyph Rotation Sample Size}
+      {How many neighboring pixels on the glyph path are used to calculate the rotation of a given pixel.}
+      {ℕ}
+      {\GlyphRotParSymbol}
+
+      \paritem
+      {Path Generation Scale}
+      {By how many times should the matrices that are involved in path generation be scaled up in order to generate text paths.
+        Gives higher precision, and therefore resolution, in the resulting path.}
+      {ℕ}
+      {\PathGenSclParSymbol}
+
     \end{itemize}
   }
 \end{itemize}
