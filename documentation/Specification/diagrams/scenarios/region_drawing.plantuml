@@ -5,6 +5,7 @@ top to bottom direction
 skinparam PackageStyle rectangle
 skinparam ComponentStyle rectangle
 skinparam PackageBorderColor transparent
+skinparam defaultFontName DejaVu Serif
 
 package "<size:50><&target>\nSource" {
     [User] as src

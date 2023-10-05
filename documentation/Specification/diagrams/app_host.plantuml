@@ -3,6 +3,7 @@ skinparam nodesep 20
 skinparam ranksep 1
 left to right direction
 skinparam componentStyle uml1
+skinparam defaultFontName DejaVu Serif
 
 node "Host System" {
     [GlyphMosaic] as gm

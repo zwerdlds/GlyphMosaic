@@ -1,6 +1,7 @@
 @startuml
 left to right direction
 skinparam componentStyle uml1
+skinparam defaultFontName DejaVu Serif
 
 person "User" as usr
 
