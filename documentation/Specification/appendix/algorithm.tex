@@ -1,0 +1,34 @@
+\newcommand{\ntl}{\(N_{tl}\)}
+\newcommand{\akp}{\(AKP\)}
+\newcommand{\akpc}{\akp\(_{c}\)}
+
+
+\section{Algorithm}
+\label{apx:algorithm}
+This section details the process followed to deterministically produce a given mosaic.
+It assumes that all top- and region-level parameters have already been specified.
+This is a high-level description of the process: it does not include any implementation-specific aspects of the system.
+
+\begin{deepEnum}
+  \item Calculate each glyph's information (GI):
+        \begin{deepEnum}
+          \item Generate concentric text paths.
+                For each region:
+                \begin{deepEnum}
+                  \item Collect active glyph path kernel pixels (\akp s).
+                  \item Calculate the number of text lines (\ntl) necessary to generate the path:
+                        \begin{deepEnum}
+                          \item Find the point in the mask which is furthest from all active glyph kernel pixels (\(MP\)), and the closest AKP to that pixel (\akpc).
+                          \item Divide the distance between the MP and \akpc\space by the line height, giving \ntl.
+                        \end{deepEnum}
+                  \item Create \(i\) in \ntl\space paths:
+                        \begin{deepEnum}
+                          \item For pixel \(p\) in AKPs:
+                          \begin{deepEnum}
+                            \item Draw a circle of radius \(i * LH\) around each AKP
+                          \end{deepEnum}
+                        \end{deepEnum}
+                \end{deepEnum}
+        \end{deepEnum}
+  \item Render the glyphs.
+\end{deepEnum}
