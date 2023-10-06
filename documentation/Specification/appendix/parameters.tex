@@ -1,6 +1,6 @@
 \newcommand{\paritem}[4]{
   \pbodyitem{#1}{
-    \index{#1}
+    \index{Parameters!#1}
     \textbf{Domain:}{#3} \newline
     \textbf{Notated:}{#4} \newline
     {#2}
@@ -54,6 +54,7 @@ The process of developing mosaics necessitates user manipulation of the followin
   \pbodyitem
   {Regions}
   {
+    \label{apx:regparams}
     A region most accurately represents a set of pixels which are treated the same when it comes time to render glyphs to paths.
     This is done so that distinct line areas can be treated separately:  If a user wants a text path in a certain section of the image,
 

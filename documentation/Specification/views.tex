@@ -6,8 +6,8 @@
     \begin{itemize}
       \pbodyitem{Filesystem}{
         The system reads source images and text from the host filesystem.
-        Output images are written to the host filesystem.
-        Application documents are read and written to the host filesystem.
+        \Glspl{out_image} are written to the host filesystem.
+        \Glspl{document} are read and written to the host filesystem.
       }
     \end{itemize}
 
@@ -31,14 +31,14 @@
           \pbodyitem{Region Parameters}{
             When a region parameter is updated by a user, the UI module is responsible for forwarding that change to the remainder of the system.
           }
-          \pbodyitem{Bitmap Draw Events}{
-            The user may draw on the canvas to modify a region mask or a path line kernel.
+          \pbodyitem{Direct \gls{bitmap} Manipulation}{
+            The user may draw on the canvas to modify \glspl{path_dilation_mask} or \glspl{glyph_path_kernel}.
           }
           \pbodyitem{File Save}{
-            The user may specify a location from which a file must be saved.
+            The user may specify a location from which a \gls{document} or \gls{out_image} can be saved.
           }
           \pbodyitem{File Load}{
-            The user may specify a location from which a file must be loaded.
+            The user may specify a location from which a \gls{document}, \gls{src_img}, or \gls{src_txt} can be loaded.
           }
         \end{itemize}
         The UI must also reflect when a relevant change is made to the internal system, to allow the user to view that change.

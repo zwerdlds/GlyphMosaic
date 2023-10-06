@@ -13,9 +13,9 @@ Existing systems perform a similar, but limited subset, of functionality of the 
 Textaizer\cite{textaizer}, for example, has the ability to specify various line patterns, such as spirals.
 Many other examples exist that focus solely on LTR horizontal mosaics.
 
-GlyphMosaic does not have these limitations.
-The creator is able to specify the glyph line pattern by specifying a region line kernel for each region.
-The system then determines a text path which encompasses the entire region, and develops a
+GlyphMosaic's pathing is \gls{bitmap}-based, using \glspl{glyph_path_kernel} instead.
+Mosaic creators are able to specify the glyph line pattern by specifying a region line kernel for each region.
+The system then determines a text path which encompasses the entire region, and stamps glyphs from the \gls{src_txt} along the \gls{glyph_path}, scaling according to the \gls{density} from the \gls{src_img} to arrive at the \gls{out_image}.
 
 \subsection{Use Cases}
 \label{sec:use_cases}

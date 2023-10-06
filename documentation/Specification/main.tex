@@ -20,7 +20,7 @@
 \usepackage{imakeidx}
 \usepackage{xltxtra,xunicode}
 \usepackage[tocentry]{vhistory}
-
+\usepackage[toc]{glossaries}
 
 \setmainfont{DejaVu Serif}
 \newrefformat{fig}{Figure \ref{#1}}
@@ -57,6 +57,10 @@
 \setlength\parindent{\indentsize}
 
 \makeindex
+\makeglossaries
+
+\input{glossary_terms}
+
 
 \begin{document}
 
@@ -69,22 +73,26 @@
 
 \input{introduction}
 \input{system_overview}
-\input{glossary}
 \input{stakeholders}
 \input{requirements}
 \input{qualities}
 \input{architecture}
 \input{views}
 \input{subsystems}
-\newpage
 
+\newpage
 \input{appendix}
-\newpage
 
-\input{references}
 \newpage
+\printglossary[toctitle=Glossary]
 
-\input{index}
+\newpage
+\section*{References}
+\addcontentsline{toc}{section}{References}
+
+\newpage
+\addcontentsline{toc}{section}{Index}
+\printindex
 
 \end{document}
 \endinput
