@@ -1,6 +1,13 @@
 \newcommand{\ntl}{\(N_{tl}\)}
-\newcommand{\akp}{\(AKP\)}
-\newcommand{\akpc}{\akp\(_{c}\)}
+\newcommand{\ak}{\(AK\)}
+\newcommand{\akc}{\ak\(_{c}\)}
+\newcommand{\TextLineIMaskSymbol}{\(TLM_{i,r}\)}
+\newcommand{\TextLineISymbol}{\(TL_{i,r}\)}
+\newcommand{\GDataCtrSymbol}{\(GDC\)}
+\newcommand{\GDataRotSymbol}{\(GDR\)}
+\newcommand{\GDataDnsSymbol}{\(GDD\)}
+\newcommand{\GDataGlySymbol}{\(GDG\)}
+\newcommand{\OutBmSymbol}{\(OB\)}
 
 
 \section{Algorithm}
@@ -10,25 +17,30 @@ It assumes that all top- and region-level parameters have already been specified
 This is a high-level description of the process: it does not include any implementation-specific aspects of the system.
 
 \begin{deepEnum}
-  \item Calculate each glyph's information (GI):
-        \begin{deepEnum}
-          \item Generate concentric text paths.
-                For each region:
-                \begin{deepEnum}
-                  \item Collect active glyph path kernel pixels (\akp s).
-                  \item Calculate the number of text lines (\ntl) necessary to generate the path:
-                        \begin{deepEnum}
-                          \item Find the point in the mask which is furthest from all active glyph kernel pixels (\(MP\)), and the closest AKP to that pixel (\akpc).
-                          \item Divide the distance between the MP and \akpc\space by the line height, giving \ntl.
-                        \end{deepEnum}
-                  \item Create \(i\) in \ntl\space paths:
-                        \begin{deepEnum}
-                          \item For pixel \(p\) in AKPs:
-                          \begin{deepEnum}
-                            \item Draw a circle of radius \(i * LH\) around each AKP
-                          \end{deepEnum}
-                        \end{deepEnum}
-                \end{deepEnum}
-        \end{deepEnum}
-  \item Render the glyphs.
+  \item Create an output bitmap (\OutBmSymbol) of size \SrcImgParSymbol \(*\) \OutSclParSymbol.
+  \item Calculate each glyph's information (GI).
+  For each region:
+  \begin{deepEnum}
+    \item Collect active glyph path kernel pixels (\ak).
+    \item Calculate the number of text lines (\ntl) necessary to generate the path:
+    \begin{deepEnum}
+      \item Find the point in the mask which is furthest from all in \GlyphKrnParSymbol, and that closest pixel in \GlyphKrnParSymbol, giving \akc.
+      \item Divide the distance between the MP and \akc\space by \LnHtParSymbol, giving \ntl.
+    \end{deepEnum}
+    \item Create \(i\) in \ntl\space paths:
+    \begin{deepEnum}
+      \item Mark a circle of radius \(i * \)\LnHtParSymbol\space around each \GlyphKrnParSymbol\space on a single matrix, creating a new mask representing the area inside this text line (\TextLineIMaskSymbol).
+      \item Find the exterior pixels of \TextLineIMaskSymbol\space using an edge detection image kernel.
+      \item Order the pixels: Starting at an arbitrary unclaimed pixel, move to the next closest pixel and mark it claimed, giving \TextLineISymbol.
+      \item Render the glyph:
+      \begin{deepEnum}
+        \item Walk each concentric path, skipping \GlyphKrnParSymbol\space subsequent pixels after each, giving the glyph datum's center (\GDataCtrSymbol).
+        \item For each \GDataCtrSymbol, sample \GlyphRotParSymbol\space nearby pixels on \TextLineISymbol, to produce an average direction from the near side of \GDataCtrSymbol\space to the far side.
+        This represents the glyph datum's rotation (\GDataRotSymbol).
+        \item Sample \SrcImgParSymbol\space pixels within \DnsSampleParSymbol\space distance of \GDataCtrSymbol\space and average their densities together, giving the glyph datum's density (\GDataDnsSymbol).
+        \item Sample \SrcTxtParSymbol\space in order, giving the glyph datum's glyph (\GDataGlySymbol).
+        \item Render the glyphs on \OutBmSymbol.
+      \end{deepEnum}
+    \end{deepEnum}
+  \end{deepEnum}
 \end{deepEnum}

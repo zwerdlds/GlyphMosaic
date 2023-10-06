@@ -10,6 +10,7 @@
 \newcommand{\FontParSymbol}{\(F\)}
 \newcommand{\SrcImgParSymbol}{\(SI\)}
 \newcommand{\SrcTxtParSymbol}{\(ST\)}
+\newcommand{\OutSclParSymbol}{\(OS\)}
 \newcommand{\RegMskParSymbol}{\(M_r\)}
 \newcommand{\GlyphPathKernelParSymbol}{\(PK_r\)}
 \newcommand{\GtrHtParSymbol}{\(GH_r\)}
@@ -43,6 +44,12 @@ The process of developing mosaics necessitates user manipulation of the followin
   {Used to determine which glyph is placed at the successive locations.}
   {UTF-8 String}
   {\SrcTxtParSymbol}
+
+  \paritem
+  {Output Scale}
+  {The relationship in size of the output image to \SrcImgParSymbol.}
+  {ℚ \(\geq 0\)}
+  {\OutSclParSymbol}
 
   \pbodyitem
   {Regions}
