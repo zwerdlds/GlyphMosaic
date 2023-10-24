@@ -6,6 +6,7 @@ skinparam PackageStyle rectangle
 skinparam ComponentStyle rectangle
 skinparam PackageBorderColor transparent
 skinparam defaultFontName DejaVu Serif
+skinparam linetype ortho
 
 package "<size:50><&target>\nSource" {
     [User] as src

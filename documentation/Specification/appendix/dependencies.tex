@@ -1,0 +1,33 @@
+\newcommand{\deplisting}[4]{
+    \pbodyitem{
+        \href{#2}{#1}
+    }
+    {
+        {#3}
+        \textbf{Project Locations Used:}
+        \begin{itemize}
+            {#4}
+        \end{itemize}
+    }
+}
+
+
+
+\section{Dependencies}
+This section details all the external dependencies the project utilizes.
+Each dependency is enumerated, along with a justification as for why they are used, and a listing of subsystems and modules in which they are used.
+
+\begin{itemize}
+    \deplisting{egui}
+    {https://www.egui.rs/}
+    {}
+    {
+        \pbodyitem{test}{test}
+    }
+    % \deplisting{Roopes}
+    % {}
+    % {}
+    % {
+    %     \pbodyitem{test}{test}
+    % }
+\end{itemize}

@@ -1,0 +1,59 @@
+\newcommand{\bitmaparea}[4]{
+    \index{#1}
+    \pbodyitem{#2}{
+        \textbf{Pixel Dimensions:} {#3} \newline
+        {#4}
+    }
+}
+
+\newcommand{\bmtype}{\texttt{BitMap}}
+\newcommand{\bmftype}{\texttt{BitMapFacade}}
+\newcommand{\bmctype}{\texttt{BitMapCache}}
+
+
+\subsection{BitMap}
+Bitmaps are 2-dimensional arrays of arbitrary-dimension pixels.
+Sub-bitmap pixels are of arbitrary dimensions due to their varied use: In some contexts, they are representative of 3-channel RGB images, while others are simply binary maps, which are used in successive processes to build the \index{Output Image}output image.
+
+The universal facade with which other systems can interact with this module is \bmftype.
+These methods are forwarded directly to a referenced \bmctype.
+It exposes the following functionality:
+\begin{itemize}
+    \pbodyitem{Creation}{
+        Client code may `check-out' \bmtype\space objects.
+        These are potentially recycled heap objects.
+    }
+    \pbodyitem{Destruction}{
+        Client code may `check-in' \bmtype\space object with which it has no more use.
+        These objects will be `washed' once they are `checked-out' once again.
+    }
+\end{itemize}
+
+The following types are also members of this module, but probably shouldn't be used directly.  Instead, client code should access functionality through \bmftype:
+\begin{itemize}
+    \component{BitMapBuilder}{BitMapBuilder}{
+        Provides type-safe incremental construction of \bmtype s.
+    }
+    \component{BitMap}{BitMap}{
+        Stores data relevant for the individual matrices.
+    }
+\end{itemize}
+
+\lidiagram{diagrams/subsystems/bitmap}
+{Bitmap subsystem components.}
+{fig:bitmap_components}
+
+
+\subsubsection{}
+Bitmaps are used in the following exterior components:
+\begin{itemize}
+    \bitmaparea{Output Image}{Output Image}{3}{}
+    \bitmaparea{Parameters!Source Image}{Source Image}{3}{}
+    \bitmaparea{Parameters!Glyph Path Kernel}{Glyph Path Kernel}{1}{}
+    \bitmaparea{Glyph Path}{Glyph Path}{1}{}
+    \bitmaparea{Glyph Path Kernel}{Glyph Path Kernel}{1}{}
+    \bitmaparea{Path Dilation Mask}{Path Dilation Mask}{1}{}
+\end{itemize}
+
+
+

@@ -4,6 +4,7 @@ skinparam ranksep 1
 left to right direction
 skinparam componentStyle uml1
 skinparam defaultFontName DejaVu Serif
+skinparam linetype ortho
 
 node "Host System" {
     [GlyphMosaic] as gm

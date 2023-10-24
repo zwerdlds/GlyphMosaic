@@ -1,6 +1,7 @@
 @startuml
 skinparam componentStyle uml1
 skinparam defaultFontName DejaVu Serif
+skinparam linetype ortho
 
 start
 

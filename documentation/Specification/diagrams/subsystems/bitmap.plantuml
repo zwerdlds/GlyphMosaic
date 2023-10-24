@@ -1,0 +1,79 @@
+@startuml
+left to right direction
+skinparam componentStyle uml1
+skinparam defaultFontName DejaVu Serif
+
+package "bitmap" {
+    interface "BitMap" as bm{
+        + usize get_h_px()
+        + usize get_v_px()
+    }
+
+    struct "SimpleBitMap" as bms {
+        - mat : ColorImage
+    }
+
+    interface "Cache" as bmc{
+        + HeapPool get_pool()
+    }
+
+    struct "SimpleCache" as bmsc{
+    }
+
+    interface "Facade" as bmf{
+        + BitMap get_bitmap(usize h_px, usize v_px)
+    }
+
+    struct "SimpleFacade" as bmsf{
+
+    }
+
+    struct "SimpleFacadeFactory" as bmsff{
+        + Facade create_facade()
+    }
+
+    struct "SimpleBitMapBuilder" as bmsbmb{
+    }
+}
+
+
+package "roopes"{
+    package "primitives::emitter" {
+        interface "Emitter" as ree {}
+
+        package "lambda" {
+            struct "Lambda" as rel {}
+        }
+    }
+
+    package "patterns::heap_pool" {
+        interface "HeapPool" as rhphp {}
+        struct "RefCellBox" as rhphrcb{}
+    }
+}
+
+package eframe::egui {
+    struct "ColorImage" as eeci {}
+}
+
+
+bmf --> bm
+bmsf --* bmc
+bms ..|> bm
+bmc --> bm
+bmsc ..|> bmc
+bmsff --> bmsbmb
+bmsbmb --> bms
+bmsf ..|> bmf
+bmc --|> rhphp
+bmsc --* rhphp
+rhphrcb ..|> rhphp
+bmsff --> rhphrcb
+bmsff --> bmsc
+bmsff --> bmsf
+rel ..|> ree
+bmsff --> rel
+rhphrcb --* ree
+bms --> eeci
+
+@enduml

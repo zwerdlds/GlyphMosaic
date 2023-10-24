@@ -82,6 +82,20 @@
   0.75
 }
 
+\newcommand{\submodule}[5]{
+    \index{#1}
+    \pbodyitem{#2}{
+        {#3} \newline
+        \textbf{Components:} {#4} \newline
+        \textbf{Submodules:} {#5} 
+    }
+}
+
+\newcommand{\component}[3]{
+    \index{#1}
+    \pbodyitem{\texttt{#2}}{#3}
+}
+
 
 \newlist{deepEnum}{enumerate}{9}
 \setlist[deepEnum,1]{label=\arabic*.}
