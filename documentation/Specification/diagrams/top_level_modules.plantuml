@@ -5,7 +5,7 @@ skinparam linetype ortho
 
 package "Interfaces" as intf {
     component "UI" as ui
-    component "File" as file
+    component "Document" as file
 
     file -u[hidden]- ui
 }

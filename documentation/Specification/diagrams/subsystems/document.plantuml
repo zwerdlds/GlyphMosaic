@@ -1,0 +1,38 @@
+@startuml
+left to right direction
+
+package "document" {
+    interface "Facade" as docf{
+
+    }
+
+    interface "DocumentPropertyChangeListener" as dpcl {
+        + void notify()
+    }
+
+    enum "DocumentProperty" as dp {
+        Font
+        SourceImage
+        SourceText
+        OutputScale
+        Regions[RegionProperty]
+    }
+
+    enum "RegionProperty" as drp {
+        Mask
+        GlyphPathKernel
+        GutterLineHeight
+        LineHeight
+        GlyphKerning
+        GlyphMinimumSize
+        GlyphMaximumSize
+        DensitySampleSize
+        GlyphRotationSampleSize
+        PathGenerationScale
+    }
+}
+
+
+
+
+@enduml

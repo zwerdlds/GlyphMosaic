@@ -1,0 +1,13 @@
+\section{Document}
+The document component acts as location in which the state of the system can be preserved, or recalled.
+This sub-system listens for the application to change parameters of the document, and relays them to registered listeners.
+This allows the listeners to be notified when a parameter\index{Parameters} defined in \prettyref{apx:userparams} changes.
+
+The most apparent implementation of this is the \verb|FileDocument|\index{FileDocument} struct, which listens for parameters to change, and writes them to a file.
+In the case of the system being built for a WASM\index{Web Assembly} target, however, this listener will not be registered.
+Instead a \verb|LocalStorageDocument|\index{Local Storage} listener will have the ability to write to the browser's storage.
+
+
+\lidiagram{diagrams/subsystems/document}
+{Document subsystem components.}
+{fig:doc_components}
