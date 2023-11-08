@@ -7,7 +7,7 @@ package "Interfaces" as intf {
     component "UI" as ui
     component "Document" as file
 
-    file -u[hidden]- ui
+    file -d[hidden]- ui
 }
 
 package "Library" as lib {
@@ -26,6 +26,6 @@ pts -u-> line
 gly -u-> pts
 gly -u-> bmp
 pts -u-> reg
-
+file -l-> bmp
 
 @enduml

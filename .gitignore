@@ -3,3 +3,8 @@ GlyphMosaic.code-workspace
 .vscode
 .doc_build
 documentation/Specification.pdf
+documentation/**/*.aux
+documentation/**/*.fdb_latexmk
+documentation/**/*.fls
+documentation/**/*.log
+documentation/**/*.pytxcode

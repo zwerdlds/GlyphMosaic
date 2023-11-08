@@ -83,7 +83,7 @@ The process of developing mosaics necessitates user manipulation of the followin
       \paritem
       {Line Height}
       {The distance between the lines of text on which glyphs are placed.}
-      {ℕ}
+      {ℚ \( > 0\)}
       {\LnHtParSymbol}
 
       \paritem
@@ -96,7 +96,7 @@ The process of developing mosaics necessitates user manipulation of the followin
       {Glyph Minimum Size}
       {The smallest size glyphs are scaled to.
         This corresponds to the size a glyph would be generated from by encountering a white pixel (lowest density) at its point.}
-      {ℕ}
+      {ℚ \(\geq 0\)}
       {\GlyphSzMinParSymbol}
 
       \paritem
@@ -104,7 +104,7 @@ The process of developing mosaics necessitates user manipulation of the followin
       {The largest size glyphs are scaled to.
         This corresponds to the size a glyph would be generated from by encountering a black pixel at its point.
       }
-      {ℕ}
+      {ℚ \(\geq 0\)}
       {\GlyphSzMaxParSymbol}
 
       \paritem
@@ -123,7 +123,7 @@ The process of developing mosaics necessitates user manipulation of the followin
       {Path Generation Scale}
       {By how many times should the matrices that are involved in path generation be scaled up in order to generate text paths.
         Gives higher precision, and therefore resolution, in the resulting path.}
-      {ℕ}
+      {ℚ \(\geq 0\)}
       {\PathGenSclParSymbol}
 
     \end{itemize}

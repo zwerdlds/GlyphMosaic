@@ -1,38 +1,52 @@
 @startuml
-left to right direction
+skinparam componentStyle uml1
 
 package "document" {
     interface "Facade" as docf{
-
+        + void ResetDocument()
+        + DocumentPropertyChangeSubscriber GetDocumentSubscriber()
     }
 
-    interface "DocumentPropertyChangeListener" as dpcl {
-        + void notify()
+    interface "DocumentPropertyChangeSubscriber" as docpcs {
+        + void publish(DocumentPropertyChange)
     }
 
-    enum "DocumentProperty" as dp {
-        Font
-        SourceImage
-        SourceText
-        OutputScale
-        Regions[RegionProperty]
+    enum "DocumentPropertyChange" as docpc {
+        SetFont(String)
+        SetSourceImage(BitMap)
+        SetSourceText(String)
+        SetOutputScale(f32)
+        RegionPropertyChange[RegionPropertyChange]
     }
 
-    enum "RegionProperty" as drp {
-        Mask
-        GlyphPathKernel
-        GutterLineHeight
-        LineHeight
-        GlyphKerning
-        GlyphMinimumSize
-        GlyphMaximumSize
-        DensitySampleSize
-        GlyphRotationSampleSize
-        PathGenerationScale
+    enum "RegionPropertyChange" as docrpc {
+        SetMask(BitMap)
+        SetGlyphPathKernel(BitMap)
+        SetGutterLineHeight(f32)
+        SetLineHeight(usize)
+        SetGlyphKerning(f32)
+        SetGlyphMinimumSize(f32)
+        SetGlyphMaximumSize(f32)
+        SetDensitySampleSize(f32)
+        SetGlyphRotationSampleSize(f32)
+        SetPathGenerationScale(f32)
     }
+
+    struct "SimpleFacade" as sdocf
+    struct "FileSystemDocumentPropertyChangeSubscriber" as sfssub
+    struct "LocalStorageDocumentPropertyChangeSubscriber" as lssub
+    struct "SimpleFacaadeFactory" as sffact
 }
 
+sffact --> sdocf
+sffact --> sfssub
+sffact --> lssub
 
-
+sdocf ..> docf
+sfssub ..> docpcs
+lssub ..> docpcs
+docpcs --> docpc
+docf --> docpc
+docpc --> docrpc
 
 @enduml
