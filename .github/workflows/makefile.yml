@@ -14,8 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Plantuml
-      run: sudo apt install plantuml
+      run: sudo apt-get install -y plantuml
     - name: Install Latex
-      run: sudo apt install latex
+      run: sudo apt-get install -y latexmk
     - name: Make Documentation
       run: make documentation
