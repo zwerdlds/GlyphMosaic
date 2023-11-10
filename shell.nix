@@ -27,12 +27,12 @@ stable.mkShell rec {
       expect
       tmux
 
+      # Design Documentation Generation
+      rubber
+      texlive.combined.scheme-full
+
       # Documentation Diagrams
       plantuml
-      
-      # Used to render SVG elements in the documentation
-      inkscape
-      rubber
       svg2pdf
     ]);
 
