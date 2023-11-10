@@ -28,10 +28,11 @@ jobs:
       - name: Build
         run: just build-documentation
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          artifacts: "documentation/Specification.pdf"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           prerelease: true
-          tag: "Nightly"
-
+          title: "Nightly Documentation"
+          files: |
+            "documentation/Specification.pdf"
