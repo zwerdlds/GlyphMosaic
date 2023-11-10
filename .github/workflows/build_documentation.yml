@@ -40,3 +40,4 @@ jobs:
         with:
           artifacts: "documentation/Specification.pdf"
           prerelease: true
+          tag: "Nightly"
