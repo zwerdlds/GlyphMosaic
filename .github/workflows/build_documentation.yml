@@ -30,7 +30,8 @@ jobs:
 
       - name: Release Nightly Documentation
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
+          name: Nightly
+          prerelease: true
           files: |
-            "documentation/Specification.pdf"
+            documentation/Specification.pdf
