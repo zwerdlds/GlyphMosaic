@@ -14,13 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Plantuml
-      run: sudo apt install \
-          libavalon-framework-java \
-          libbatik-java \
-          libcommons-collections3-java \
-          libcommons-logging-java \
-          libfop-java \
-          libxmlgraphics-commons-java \
+      run: sudo apt install
+          libavalon-framework-java
+          libbatik-java
+          libcommons-collections3-java
+          libcommons-logging-java
+          libfop-java
+          libxmlgraphics-commons-java
           plantuml
     - name: Install Latex
       run: sudo apt install latexmk
