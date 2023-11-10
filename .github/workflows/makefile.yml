@@ -2,7 +2,7 @@ name: Make Documentation
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "ci" ]
   pull_request:
     branches: [ "main" ]
 
@@ -14,7 +14,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Plantuml
-      run: sudo apt-get install -y plantuml
+      run: sudo apt-get install \
+        -y \
+        --no-install-recommends \
+          libavalon-framework-java \
+          libbatik-java \
+          libcommons-collections3-java \
+          libcommons-logging-java \
+          libfop-java \
+          libxmlgraphics-commons-java \
+          plantuml
     - name: Install Latex
       run: sudo apt-get install -y latexmk
     - name: Make Documentation
