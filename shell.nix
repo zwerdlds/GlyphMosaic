@@ -26,6 +26,9 @@ stable.mkShell rec {
       moreutils
       expect
       tmux
+
+      # Documentation Diagrams
+      plantuml
       
       # Used to render SVG elements in the documentation
       inkscape
