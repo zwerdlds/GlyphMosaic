@@ -21,24 +21,17 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
-      - name: Nix Cache
-        uses: nix-community/cache-nix-action@v3
-        with:
-          key: nix-ubuntu
-          gc-linux: true
-          gc-max-store-size-linux: 8000000000
-
       - uses: rrbutani/use-nix-shell-action@v1
         with:
           file: shell.nix
 
-      # - name: Build
-      #   run: just build-documentation
+      - name: Build
+        run: just build-documentation
 
-      # - name: Create Release
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     artifacts: "documentation/Specification.pdf"
-      #     prerelease: true
-      #     tag: "Nightly"
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "documentation/Specification.pdf"
+          prerelease: true
+          tag: "Nightly"
 
