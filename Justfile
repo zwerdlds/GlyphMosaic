@@ -96,3 +96,7 @@ update-coverage:
 
 clean:
     make clean
+
+cp msg:
+    git commit -am "{{msg}}"
+    git push --all
