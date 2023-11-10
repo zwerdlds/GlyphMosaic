@@ -35,9 +35,10 @@ jobs:
       - name: Build
         run: just build-documentation
 
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "documentation/Specification.pdf"
-          prerelease: true
-          tag: "Nightly"
+      # - name: Create Release
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     artifacts: "documentation/Specification.pdf"
+      #     prerelease: true
+      #     tag: "Nightly"
+
