@@ -17,21 +17,16 @@ jobs:
         with:
           submodules: true
 
-      - uses: nixbuild/nix-quick-install-action@v25
+      - uses: cachix/install-nix-action@v23
         with:
-          nix_conf: |
-            substituters = https://cache.nixos.org/ https://nix-community.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
-            keep-outputs = true
+          nix_path: nixpkgs=channel:nixos-unstable
 
       - name: Nix Cache
         uses: nix-community/cache-nix-action@v3
         with:
-          key: cache-${{ matrix.os }}-${{ hashFiles('**/*.nix') }}
-          restore-keys: |
-            cache-${{ matrix.os }}-
+          key: nix-ubuntu
           gc-linux: true
-          gc-max-store-size-linux: 1000000000
+          gc-max-store-size-linux: 8000000000
 
       - uses: rrbutani/use-nix-shell-action@v1
         with:
