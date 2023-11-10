@@ -17,11 +17,8 @@ jobs:
         with:
           submodules: true
 
-      - name: Nix Store Cache
-        uses: actions/cache@v3
-        with:
-          key: nix-store
-          path: /nix/store
+      - name: Nix Cache
+        uses: nix-community/cache-nix-action@v3
 
       - uses: cachix/install-nix-action@v23
         with:
