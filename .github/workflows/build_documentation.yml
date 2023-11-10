@@ -17,7 +17,7 @@ jobs:
         with:
           submodules: true
 
-      - name: Setup Nix Store Cache
+      - name: Nix Store Cache
         uses: actions/cache@v3
         with:
           key: nix-store
@@ -30,15 +30,6 @@ jobs:
       - uses: rrbutani/use-nix-shell-action@v1
         with:
           file: shell.nix
-
-      - name: Setup Cargo Cache
-        uses: actions/cache@v3
-        with:
-          key: cargo-store
-          path: target
-
-      - name: Init
-        run: just reinit-workspace
 
       - name: Build
         run: just build-documentation

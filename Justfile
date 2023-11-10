@@ -43,7 +43,6 @@ watch watchtarget:
 reinit-workspace:
     cargo install cargo-watch --force
     cargo install cargo-tarpaulin --force
-    cargo install cargo-doc --force
     cargo install cargo-mutants --force
     cargo install cargo-readme --force
 
