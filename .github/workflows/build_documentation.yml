@@ -19,6 +19,7 @@ jobs:
       - name: Cache Nix Store
         uses: actions/cache@v3
         with:
+          key: nix-store
           path: /nix/store
       - uses: cachix/install-nix-action@v23
         with:
