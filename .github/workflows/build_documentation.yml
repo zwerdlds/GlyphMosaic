@@ -29,10 +29,11 @@ jobs:
         run: just build-documentation
 
       - name: Release Nightly Documentation
-        uses: softprops/action-gh-release@v1
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: Nightly
+          repo_token: "${{ secrets.GLYPHMOSAIC_MOD }}"
+          Title: Nightly
           prerelease: true
-          tag_name: nightly
+          automatic_release_tag: nightly
           files: |
             documentation/Specification.pdf
