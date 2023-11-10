@@ -33,5 +33,6 @@ jobs:
         with:
           name: Nightly
           prerelease: true
+          tag_name: nightly
           files: |
             documentation/Specification.pdf
