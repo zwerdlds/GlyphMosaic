@@ -22,5 +22,7 @@ jobs:
       - uses: rrbutani/use-nix-shell-action@v1
         with:
           file: shell.nix
+      - name: Init
+        run: just reinit-workspace
       - name: Build
         run: just build-documentation
