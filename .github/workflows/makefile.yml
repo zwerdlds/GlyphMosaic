@@ -2,27 +2,25 @@ name: Make Documentation
 
 on:
   push:
-    branches: [ "main", "ci" ]
+    branches: ["main", "ci"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-
+  nix-build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Install Plantuml
-      run: sudo apt install
-          libavalon-framework-java
-          libbatik-java
-          libcommons-collections3-java
-          libcommons-logging-java
-          libfop-java
-          libxmlgraphics-commons-java
-          plantuml
-    - name: Install Latex
-      run: sudo apt install latexmk
-    - name: Make Documentation
-      run: make documentation
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: cachix/install-nix-action@v23
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+      - uses: rrbutani/use-nix-shell-action@v1
+        with:
+          file: shell.nix
+      - name: Build
+        run: just build-documentation
