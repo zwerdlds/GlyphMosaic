@@ -15,8 +15,6 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install Plantuml
       run: sudo apt-get install \
-        -y \
-        --no-install-recommends \
           libavalon-framework-java \
           libbatik-java \
           libcommons-collections3-java \
@@ -25,6 +23,6 @@ jobs:
           libxmlgraphics-commons-java \
           plantuml
     - name: Install Latex
-      run: sudo apt-get install -y latexmk
+      run: sudo apt-get install latexmk
     - name: Make Documentation
       run: make documentation
