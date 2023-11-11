@@ -1,25 +1,36 @@
 @startuml
 skinparam componentStyle uml1
 
-package "document" {
+package "gm::document" {
     interface "Facade" as docf{
         + void ResetDocument()
-        + DocumentPropertyChangeSubscriber GetDocumentSubscriber()
+        + DocumentPropertyChangePublisher GetDocumentPropertyChangePublisher()
     }
 
-    interface "DocumentPropertyChangeSubscriber" as docpcs {
+    interface "DocumentPropertyChangePublisher" as docpcp {
         + void publish(DocumentPropertyChange)
     }
 
-    enum "DocumentPropertyChange" as docpc {
-        SetFont(String)
-        SetSourceImage(BitMap)
-        SetSourceText(String)
-        SetOutputScale(f32)
-        SetRegionPropertyChange(Uuid, RegionPropertyChange)
+    struct "SimpleDocumentPropertyChangePublisher" as docspcp {
     }
 
-    enum "RegionPropertyChange" as docrpc {
+    interface "DocumentPropertyChangeSubscriber" as docpcs {
+        + void receive(DocumentPropertyChange)
+    }
+
+    enum "DocumentPropertyChange" as docpc {
+        Set(DocumentProperty)
+    }
+
+    enum "DocumentProperty" as docp {
+        Font(String)
+        SourceImage(BitMap)
+        SourceText(String)
+        OutputScale(f32)
+        RegionProperty(Uuid, RegionProperty)
+    }
+
+    enum "RegionProperty" as docrp {
         PathDilationMask(BitMap)
         GlyphPathKernel(BitMap)
         GutterLineHeight(f32)
@@ -32,21 +43,80 @@ package "document" {
         PathGenerationScale(f32)
     }
 
-    struct "SimpleFacade" as sdocf
-    struct "FileSystemDocumentPropertyChangeSubscriber" as sfssub
-    struct "LocalStorageDocumentPropertyChangeSubscriber" as lssub
-    struct "SimpleFacaadeFactory" as sffact
+    struct "SimpleFacade" as docsf{
+        - doc_prop_change_pub: DocumentPropertyChangePublisher
+    }
+    struct "FileSystemDocumentPropertyChangeSubscriber" as docfdpcs
+    struct "LocalStorageDocumentPropertyChangeSubscriber" as doclspcs
+    struct "SimpleFacadeFactory" as docsff
+
+    interface "DocumentPropertyVisitor" as docpv {}
+    interface "RegionPropertyVisitor" as docrpv {}
 }
 
-sffact --> sdocf
-sffact --> sfssub
-sffact --> lssub
+package "roopes" {
+    package "patterns::publisher_subscriber" {
+        interface "MutablePublisher" as rmp {
+        }
 
-sdocf ..> docf
-sfssub ..> docpcs
-lssub ..> docpcs
-docpcs --> docpc
-docf --> docpc
-docpc --> docrpc
+        interface "Subscriber" as rs {
+        }
+
+        package "vec_publisher" {
+            struct "VecPublisher" as rvp {
+            }
+        }
+    }
+
+    package "primitives::handler" {
+        interface "Handler" as rphh {}
+    }
+}
+
+package web_sys{
+    struct "Storage" as wss {
+    }
+}
+
+package sqlite{
+    struct "Connection" as sqlc {
+    }
+}
+
+docsff --> docsf
+docsff --> docfdpcs
+docsff --> doclspcs
+docsff --> docspcp
+
+docsf ..|> docf
+docsf --* docpcp
+
+docfdpcs ..|> docpcs
+doclspcs ..|> docpcs
+docpcp --> docpc
+docpc --> docp
+docf --> docpcp
+docp --> docrp
+
+docpcs --|> rs
+docpcp --|> rmp
+
+docspcp ..|> docpcp
+docspcp --* rvp
+
+rvp ..|> rmp
+
+docpv --> docp
+docrpv --> docrp
+docpv --|> rphh
+docrpv --|> rphh
+
+doclspcs ..|> docpv
+doclspcs ..|> docrpv
+docfdpcs ..|> docpv
+docfdpcs ..|> docrpv
+
+doclspcs --* wss
+docfdpcs --* sqlc
 
 @enduml

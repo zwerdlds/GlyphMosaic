@@ -1,13 +1,31 @@
-\section{Document}
-The document component acts as location in which the state of the system can be preserved, or recalled.
+\newcommand{\dmod}{\texttt{document}}
+\newcommand{\dftype}{\texttt{Facade}}
+\newcommand{\dffspcstype}{\texttt{FileSystemDocumentPropertyChangeSubscriber}}
+\newcommand{\dflspcstype}{\texttt{LocalStorageDocumentPropertyChangeSubscriber}}
+
+\subsection{Document}
+The document component acts as a space in which the state of the system can be preserved or recalled.
 This sub-system listens for the application to change parameters of the document, and relays them to registered listeners.
 This allows the listeners to be notified when a parameter\index{Parameters} defined in \prettyref{apx:userparams} changes.
-
-The most apparent implementation of this is the \verb|FileDocument|\index{FileDocument} struct, which listens for parameters to change, and writes them to a file.
-In the case of the system being built for a WASM\index{Web Assembly} target, however, this listener will not be registered.
-Instead a \verb|LocalStorageDocument|\index{Local Storage} listener will have the ability to write to the browser's storage.
-
 
 \lidiagram{diagrams/subsystems/document}
 {Document subsystem components.}
 {fig:doc_components}
+
+
+\subsubsection{Usage}
+The \dmod\ facade is responsible for registering agents responsible for handling changes to the active document.
+Internal usage of this includes \dffspcstype\ struct, which listens for parameters to change, and writes them to a file.
+Alternatively, in the case of the system being built for a WASM\index{Web Assembly} target, however, this listener will not be registered.
+Instead a \dflspcstype\index{Local Storage} listener will have the ability to write to the browser's storage.
+
+
+\subsubsection{Usage}
+\dftype\ is also used to register for document changes for usage outside of this module:
+\begin{itemize}
+    \index{GUI}
+    \pbodyitem{GUI}{The GUI submodule must listen for field changes and especially document load events.}
+\end{itemize}
+
+
+
