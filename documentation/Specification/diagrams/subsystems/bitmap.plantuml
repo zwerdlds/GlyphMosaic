@@ -1,7 +1,7 @@
 @startuml
 skinparam componentStyle uml1
 
-package "bitmap" {
+package "gm::bitmap" {
     interface "BitMap" as bm{
         + usize get_h_px()
         + usize get_v_px()
@@ -23,7 +23,7 @@ package "bitmap" {
     }
 
     struct "SimpleFacade" as bmsf{
-
+        - cache: Cache
     }
 
     struct "SimpleFacadeFactory" as bmsff{
