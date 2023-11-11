@@ -1,23 +1,5 @@
-roopes-split-watch:
-    tmux \
-        set -g mouse on \; \
-        new-session 'just watch "parallel-iter"' \; \
-        select-pane -T "GlyphMosaic" \; \
-        split-window 'just serve' \; \
-        select-pane -T "Trunk" \; \
-        resize-pane -y 15 \; \
-        select-pane -t 0 \; \
-        split-window -p 50 'just watch-roopes' \; \
-        select-pane -T "Roopes" \; \
-        rename-session 'glyphmosaic' \; \
-        set -g pane-border-status top \;
-
-watch-roopes:
-    cd ../roopes/ ; \
+default:
     just watch "parallel-iter"
-
-kill:
-    tmux kill-session -t 'glyphmosaic'
 
 parallel-iter:
     @parallel just quietly -- \
