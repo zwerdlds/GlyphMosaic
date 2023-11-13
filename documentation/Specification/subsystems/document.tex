@@ -1,3 +1,11 @@
+\newcommand{\docarea}[3]{
+    \index{#1}\pbodyitem{#2}{#3}
+}
+
+\newcommand{\extparamref}[3]{
+    \index{#1}\pbodyitem{#2}{#3}
+}
+
 \newcommand{\dmod}{\texttt{document}}
 \newcommand{\dftype}{\texttt{Facade}}
 \newcommand{\dffspcstype}{\texttt{FileSystemDocumentPropertyChangeSubscriber}}
@@ -14,18 +22,24 @@ This allows the listeners to be notified when a parameter\index{Parameters} defi
 
 
 \subsubsection{Usage}
+% \dftype\ is also used to register for document changes for usage outside of this system:
+% \begin{itemize}
+%     \docarea{GUI}{GUI}{The GUI subsystem must listen for all field changes so that they are accurately displayed in the interface.}
+%     \docarea{Lines}{Lines}{
+%         The Lines subsystem listens for per-region parameters which affect that region's lines.  These include the following:
+%         % \begin{itemize}
+%         %     \extparamref{PathDilationMask}{PathDilationMask}
+%         %     \extparamref{GlyphPathKernel}{GlyphPathKernel}
+%         %     \extparamref{GutterLineHeight}{GutterLineHeight}
+%         %     \extparamref{LineHeight}{LineHeight}
+%         %     \extparamref{PathGenerationScale}{PathGenerationScale}
+%         % \end{itemize}
+%     }
+% \end{itemize}
+
+
+\subsubsection{Mechanics}
 The \dmod\ facade is responsible for registering agents responsible for handling changes to the active document.
 Internal usage of this includes \dffspcstype\ struct, which listens for parameters to change, and writes them to a file.
 Alternatively, in the case of the system being built for a WASM\index{Web Assembly} target, however, this listener will not be registered.
 Instead a \dflspcstype\index{Local Storage} listener will have the ability to write to the browser's storage.
-
-
-\subsubsection{Usage}
-\dftype\ is also used to register for document changes for usage outside of this module:
-\begin{itemize}
-    \index{GUI}
-    \pbodyitem{GUI}{The GUI submodule must listen for field changes and especially document load events.}
-\end{itemize}
-
-
-

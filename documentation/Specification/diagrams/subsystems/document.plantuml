@@ -4,6 +4,39 @@ skinparam componentStyle uml1
 package "gm::document" {
     interface "Facade" as docf{
         + void ResetDocument()
+        + void SaveDocument()
+        + void LoadDocument(TODO)
+    }
+
+    interface "DocumentEventPublisher" as docep {
+        + void publish(DocumentEvent)
+    }
+
+    struct "SimpleDocumentEventPublisher" as docsep {
+    }
+
+    interface "DocumentEventSubscriber" as docpcs {
+        + void receive(DocumentEvent)
+    }
+
+    enum "DocumentPropertyChange" as docpc {
+        {field} Set(DocumentProperty)
+    }
+
+    struct "SimpleFacade" as docsf{
+        - doc_prop_change_pub: DocumentPropertyChangePublisher
+    }
+    struct "FileSystemDocumentPropertyChangeSubscriber" as docfdpcs
+    struct "LocalStorageDocumentPropertyChangeSubscriber" as doclspcs
+    struct "SimpleFacadeFactory" as docsff
+
+    interface "DocumentPropertyVisitor" as parpv {}
+    interface "RegionPropertyVisitor" as docrpv {}
+}
+
+package "gm::parameters" {
+    interface "Facade" as docf{
+        + void ResetDocument()
         + DocumentPropertyChangePublisher GetDocumentPropertyChangePublisher()
     }
 
@@ -18,29 +51,29 @@ package "gm::document" {
         + void receive(DocumentPropertyChange)
     }
 
-    enum "DocumentPropertyChange" as docpc {
-        Set(DocumentProperty)
+    enum "ParameterChange" as docpc {
+        {field} Set(DocumentProperty)
     }
 
-    enum "DocumentProperty" as docp {
-        Font(String)
-        SourceImage(BitMap)
-        SourceText(String)
-        OutputScale(f32)
-        RegionProperty(Uuid, RegionProperty)
+    enum "Parameter" as docp {
+        {field} Font(String)
+        {field} SourceImage(BitMap)
+        {field} SourceText(String)
+        {field} OutputScale(f32)
+        {field} RegionParameter(Uuid, RegionParameter)
     }
 
-    enum "RegionProperty" as docrp {
-        PathDilationMask(BitMap)
-        GlyphPathKernel(BitMap)
-        GutterLineHeight(f32)
-        LineHeight(usize)
-        GlyphKerning(f32)
-        GlyphMinimumSize(f32)
-        GlyphMaximumSize(f32)
-        DensitySampleSize(f32)
-        GlyphRotationSampleSize(f32)
-        PathGenerationScale(f32)
+    enum "RegionParameter" as docrp {
+        {field} PathDilationMask(BitMap)
+        {field} GlyphPathKernel(BitMap)
+        {field} GutterLineHeight(f32)
+        {field} LineHeight(usize)
+        {field} GlyphKerning(f32)
+        {field} GlyphMinimumSize(f32)
+        {field} GlyphMaximumSize(f32)
+        {field} DensitySampleSize(f32)
+        {field} GlyphRotationSampleSize(f32)
+        {field} PathGenerationScale(f32)
     }
 
     struct "SimpleFacade" as docsf{
@@ -50,8 +83,8 @@ package "gm::document" {
     struct "LocalStorageDocumentPropertyChangeSubscriber" as doclspcs
     struct "SimpleFacadeFactory" as docsff
 
-    interface "DocumentPropertyVisitor" as docpv {}
-    interface "RegionPropertyVisitor" as docrpv {}
+    interface "ParameterVisitor" as parpv {}
+    interface "RegionParameterVisitor" as docrpv {}
 }
 
 package "roopes" {
@@ -106,14 +139,14 @@ docspcp --* rvp
 
 rvp ..|> rmp
 
-docpv --> docp
+parpv --> docp
 docrpv --> docrp
-docpv --|> rphh
+parpv --|> rphh
 docrpv --|> rphh
 
-doclspcs ..|> docpv
+doclspcs ..|> parpv
 doclspcs ..|> docrpv
-docfdpcs ..|> docpv
+docfdpcs ..|> parpv
 docfdpcs ..|> docrpv
 
 doclspcs --* wss
