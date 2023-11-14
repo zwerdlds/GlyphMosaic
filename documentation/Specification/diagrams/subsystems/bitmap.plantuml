@@ -54,24 +54,32 @@ package eframe::egui {
     struct "ColorImage" as eeci {}
 }
 
+bmc --> bm
+bmc --|> rhphp
 
 bmf --> bm
-bmsf --* bmc
+
 bms ..|> bm
-bmc --> bm
-bmsc ..|> bmc
-bmsff --> bmsbmb
+bms --> eeci
+
 bmsbmb --> bms
-bmsf ..|> bmf
-bmc --|> rhphp
+
 bmsc --* rhphp
-rhphrcb ..|> rhphp
+bmsc ..|> bmc
+
+bmsf --* bmc
+bmsf ..|> bmf
+
+bmsff --> bmsbmb
 bmsff --> rhphrcb
 bmsff --> bmsc
 bmsff --> bmsf
-rel ..|> ree
 bmsff --> rel
+bmsff --> bmf
+
 rhphrcb --* ree
-bms --> eeci
+rhphrcb ..|> rhphp
+
+rel ..|> ree
 
 @enduml

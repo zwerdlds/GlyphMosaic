@@ -1,7 +1,4 @@
 @startuml
-skinparam nodesep 20
-skinparam ranksep 1
-left to right direction
 skinparam componentStyle uml1
 skinparam defaultFontName DejaVu Serif
 skinparam linetype ortho
@@ -9,9 +6,13 @@ skinparam linetype ortho
 node "Host System" {
     [GlyphMosaic] as gm
     [File System] as fs
+    [Window Manager] as wm
+    [Browser] as br
 }
 
 
-gm -l-> fs
+gm -u-> fs
+gm -u-> wm
+gm -u-> br
 
 @enduml

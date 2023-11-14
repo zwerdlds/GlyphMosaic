@@ -4,36 +4,16 @@ skinparam componentStyle uml1
 skinparam defaultFontName DejaVu Serif
 
 component "source" as src
-component "ui" as ui
-component "document" as doc
-component "bitmap" as bmp
 component "region" as reg
 component "line" as line
 component "point" as pts
 component "glyph" as gly
 
 line -u-> reg : 1
-line -u-> bmp : 2
-pts -u-> line : 3
-pts -u-> reg : 4
-pts -u-> bmp : 5
-pts -u-> src : 6
-gly -u-> pts : 7
-gly -u-> src : 8
-reg -u-> bmp : 9
-ui -u-> doc : 10
-ui -u-> gly : 11
-ui -u-> pts : 12
-ui -u-> line : 13
-ui -u-> reg : 14
-ui -u-> bmp : 15
-ui -u-> src : 16
-doc -u-> bmp : 17
-doc -u-> gly : 18
-doc -u-> pts : 19
-doc -u-> reg : 20
-doc -u-> line : 21
-doc -u-> src : 22
-src -u-> bmp : 23
+pts -u-> line : 2
+pts -u-> reg : 3
+pts -u-> src : 4
+gly -u-> pts : 5
+gly -u-> src : 6
 
 @enduml

@@ -1,110 +1,70 @@
-\section{Architectural Views}{
-  \label{sec:views}
-  \nosplit{
-    \subsection{Top-Level System}
-    The system interacts with the following aspects of the host system:
+\section{Architectural Views}
+\label{sec:views}
+\subsection{Top-Level System}
+\sidiagram
+{diagrams/app_host}
+{The GlyphMosaic system has limited responsibility from the host system perspective.}
+{fig:cnc}
+{\diagsize}
+
+The system interacts with the following aspects of the host system:
+\begin{itemize}
+  \pbodyitem{Filesystem}{
     \begin{itemize}
-      \pbodyitem{Filesystem}{
-        The system reads source images and text from the host filesystem.
-        \Glspl{out_image} are written to the host filesystem.
-        \Glspl{document} are read and written to the host filesystem.
-      }
+      \item Source Image is loaded from the host filesystem.
+      \item Source Text is loaded from the host filesystem.
+      \item \Glspl{out_image} are written to the host filesystem.
+      \item \Glspl{document} are read and written to the host filesystem.
     \end{itemize}
-
-    \sidiagram
-    {diagrams/app_host}
-    {The GlyphMosaic system has limited responsibility from the host system perspective.}
-    {fig:cnc}
-    {\diagsize}
   }
-  \subsection{Modules}
-  \label{sec:modules}
-  The system is composed of the following top-level modules:
-  \begin{itemize}
-    \pbodyitem{UI}{
-      The user interface manages the frontend of the system.
-      In particular, it manages the state of the UI.
+  \pbodyitem{Window Manager}{
+    For appropriate targets, the application presents a window-based GUI for designing and rendering Output Images.
+  }
+  \pbodyitem{Web Browser}{
+    For appropriate targets, the application presents a window-based GUI for designing and rendering Output Images.
+  }
+\end{itemize}
 
-      The UI module publishes the following data:
-      \begin{itemize}
-        \pbodyitem{Region Parameters}{
-          When a region parameter is updated by a user, the UI module is responsible for forwarding that change to the remainder of the system.
-        }
-        \pbodyitem{Direct \gls{bitmap} Manipulation}{
-          The user may draw on the canvas to modify \glspl{path_dilation_mask} or \glspl{glyph_path_kernel}.
-        }
-        \pbodyitem{File Save}{
-          The user may specify a location from which a \gls{document} or \gls{out_image} can be saved.
-        }
-        \pbodyitem{File Load}{
-          The user may specify a location from which a \gls{document}, \gls{src_img}, or \gls{src_txt} can be loaded.
-        }
-      \end{itemize}
-      The UI must also reflect when a relevant change is made to the internal system, to allow the user to view that change.
-      These changes are also forwarded to the document management system to ensure the change is reflected when the document is exported.
-    }
-  \end{itemize}
 
-  \subsubsection{Module Dependencies}
-  Application subsystems must rely on each other to enable the program's function.
-  \prettyref{fig:modules_top} shows the module dependency hierarchy.
-  Below, each relationship is explained.
-  See \prettyref{sec:subsystems} for further details in the dependency relationships.
+\subsection{Modules}
+\label{sec:modules}
+See \prettyref{sec:subsystems} for a complete listing of top-level modules.
 
-  \sidiagram{diagrams/top_level_modules}
-  {The top-level dependencies of the project's subsystems.}
-  {fig:modules_top}
+
+\subsubsection{Module Dependencies}
+Application subsystems must rely on each other to enable the program's function.
+\prettyref{fig:modules_top} shows the module dependency hierarchy.
+Below, each relationship is explained.
+See \prettyref{sec:subsystems} for further details in the dependency relationships.
+
+\docmod, \uimod, and \bmmod are omitted from the discussion here because those modules use or are used by the subsystems listed here.
+In effect, the modules listed here include those central to the calculation of the program.
+
+The relationships described here refer to objects setup in the booting of the application, being defined by a \sysfact\ instance via \sysbldr which is aware of all module's facades in order to wire up subscribers with associated publisher, as described below.
+As a result, these relationships are not necessarily typed, they are set up by the \sysfact.
+
+\sidiagram{diagrams/top_level_modules}
+{The top-level dependencies of the project's subsystems.}
+{fig:modules_top}
+{\diagsize}
+
+\begin{enumerate}
+  \item \linemod\ depends on \regmod\ to be notified when a Region Mask changes.
+  \item \ptmod\ depends on \linemod\ to be notified when a region's text path changes.  This path affects the location of the region's points as well as their tangents.
+  \item \ptmod\ depends on \regmod\ to be notified when the Region Mask changes.  This \bmtype\ affects which region points are retained.
+  \item \ptmod\ depends on \srcmod\ to be notified when the Source Image changes.  This \bmtype\ is sampled to determine the size and color values of points.
+  \item \glymod\ depends on \ptmod\ to be notified of changes to point locations and tangents.  These values are used to place and rotate individual glyphs.
+  \item \glymod\ depends on \srcmod\ to be notified of changes to the source text.  This string is then sampled to determine which glyph corresponds to a given point.
+\end{enumerate}
+
+\nosplit{
+  \subsection{Data Flows}
+  \label{sec:dataflows}
+  Data flows between each module in such a way as to accomplish the workflow set forth in \prettyref{apx:algorithm}.
+  This process somewhat mirrors the components described in \prettyref{sec:modules}, but also describes the relationships necessary to update the user interface and document.
+
+  \sidiagram{diagrams/data_flow}
+  {Succinct description.}
+  {fig:data_flow}
   {\diagsize}
-
-  \begin{enumerate}
-    \item \linemod\ depends on \regmod\ to be notified when a Region Mask changes.
-    \item \linemod\ depends on \bmmod:
-          \begin{itemize}
-            \item The Region Mask is a \bmtype\ which is queried to determine the total number of concentric dilations to perform.
-            \item The Glyph Path Kernel is a \bmtype\ which is dilated to form each concentric line.
-            \item Dilation stages of the Glyph Path are generated in \bmtype\ s before being translated to a type supplied by lyon.
-          \end{itemize}
-    \item \ptmod\ depends on \linemod\ to be notified when a region's text path changes.  This path affects the location of the region's points as well as their tangents.
-    \item \ptmod\ depends on \regmod\ to be notified when the Region Mask changes.  This \bmtype\ affects which region points are retained.
-    \item \ptmod\ depends on \bmmod:
-          \begin{itemize}
-            \item The Region Mask is a \bmtype\ which is queried to determine which points are retained.
-            \item The Source Image is a \bmtype\ which is queried to determine the color and intensity attributes of the point.
-          \end{itemize}
-    \item \ptmod\ depends on \srcmod\ to be notified when the Source Image changes.  This \bmtype\ is sampled to determine the size and color values of points.
-    \item \glymod\ depends on \ptmod\ to be notified of changes to point locations and tangents.  These values are used to place and rotate individual glyphs.
-    \item \glymod\ depends on \srcmod\ to be notified of changes to the source text.  This string is then sampled to determine which glyph corresponds to a given point.
-    \item \regmod\ depends on \bmmod.  The Region Mask is a \bmtype\ which can be modified and sent to subscribing components.
-    \item \uimod\ depends on \docmod\ to save, load, and create files.
-    \item \uimod\ depends on \glymod\ to be notified when the glyph preview and final images have changed.
-          \uimod\ may also send changes to these values originating from user input.
-    \item \uimod\ depends on \ptmod\ to be notified when the point preview image has changed.
-          \uimod\ may also send changes to these values originating from user input.
-    \item \uimod\ depends on \linemod\ to be notified when the line preview image has changed.
-          \uimod\ may also send changes to these values originating from user input.
-    \item \uimod\ depends on \regmod\ to be notified when the region preview image has changed.
-          \uimod\ may also send changes to these values originating from user input.
-    \item \uimod\ depends on \srcmod\ to be notified when the source preview image has changed.
-          \uimod\ may also send changes to these values originating from user input.
-    \item \uimod\ depends on \bmmod.  All preview images are \bmtype s.
-    \item \docmod\ depends on \bmmod to encode and decode stored \bmtype s.
-    \item \docmod\ depends on \glymod\ to be notified when any of the glyph input parameters have changed.
-    \item \docmod\ depends on \ptmod\ to be notified when any of the point input parameters have changed.
-    \item \docmod\ depends on \regmod\ to be notified when any of the region input parameters have changed.
-    \item \docmod\ depends on \linemod\ to be notified when any of the line input parameters have changed.
-    \item \docmod\ depends on \srcmod\ to be notified when any of the source parameters have changed.
-    \item The Source Image is a \bmtype\ which is queried to determine the color and intensity attributes of points.
-  \end{enumerate}
-
-  \nosplit{
-    \subsection{Data Flows}
-    \label{sec:dataflows}
-    Data flows between each module in such a way as to accomplish the workflow set forth in \prettyref{apx:algorithm}.
-    This process somewhat mirrors the components described in \prettyref{sec:modules}, but also describes the relationships necessary to update the user interface and document.
-
-    \sidiagram{diagrams/data_flow}
-    {Succinct description.}
-    {fig:data_flow}
-    {\diagsize}
-  }
- }
+}

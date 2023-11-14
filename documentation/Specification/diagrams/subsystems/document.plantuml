@@ -1,155 +1,116 @@
 @startuml
 skinparam componentStyle uml1
 
-package "gm::document" {
+package "gm::document" as doc {
     interface "Facade" as docf{
-        + void ResetDocument()
+        + void InitializeDocument()
         + void SaveDocument()
-        + void LoadDocument(TODO)
+        + void LoadDocument(location: Path)
+        + void AttachDocumentPropertyChangeSubscriber(sub: DocumentPropertyChangeSubscriber)
+        + DocumentPropertyChangeSubscriber DocumentPropertyChangeSubscriber()
     }
 
-    interface "DocumentEventPublisher" as docep {
-        + void publish(DocumentEvent)
+    enum "DocumentProperty" as docp {
+        Font(TODO)
+        SourceImage(BitMap)
+        SourceText(String)
+        OutputScale(f32)
+        RegionProperty(TODO, RegionProperty)
     }
 
-    struct "SimpleDocumentEventPublisher" as docsep {
+    enum "RegionProperty" as docrp {
+        PathDilationMask(BitMap)
+        GlyphPathKernel(BitMap)
+        GutterLineHeight(f32)
+        LineHeight(usize)
+        GlyphKerning(f32)
+        GlyphMinimumSize(f32)
+        GlyphMaximumSize(f32)
+        DensitySampleSize(f32)
+        GlyphRotationSampleSize(f32)
+        PathGenerationScale(f32)
     }
 
-    interface "DocumentEventSubscriber" as docpcs {
-        + void receive(DocumentEvent)
+    interface "PropertyChangePublisher" as docpcp
+    interface "PropertyChangeSubscriber" as docpcs
+    interface "PropertyChangeVisitor" as docpcv
+
+    struct "SimpleFacadeFactory" as docsff {
+        + Facade create_facade()
+    }
+    struct "SimpleFacade" as docsf {
+        - property_change_publisher: "PropertyChangePublisher"
+    }
+    struct "DocumentBitmapSerializer" as docbmpser
+
+    package "FileSystem" as docfs {
+        struct "PropertyChangeVisitor" as docfspcv
+        struct "PropertyChangePublisher" as docfspcp
     }
 
-    enum "DocumentPropertyChange" as docpc {
-        {field} Set(DocumentProperty)
+    package "LocalStorage" as docls {
+        struct "DocumentPropertyChangeVisitor" as doclspcv
+        struct "DocumentPropertyChangePublisher" as doclspcp
     }
-
-    struct "SimpleFacade" as docsf{
-        - doc_prop_change_pub: DocumentPropertyChangePublisher
-    }
-    struct "FileSystemDocumentPropertyChangeSubscriber" as docfdpcs
-    struct "LocalStorageDocumentPropertyChangeSubscriber" as doclspcs
-    struct "SimpleFacadeFactory" as docsff
-
-    interface "DocumentPropertyVisitor" as parpv {}
-    interface "RegionPropertyVisitor" as docrpv {}
-}
-
-package "gm::parameters" {
-    interface "Facade" as docf{
-        + void ResetDocument()
-        + DocumentPropertyChangePublisher GetDocumentPropertyChangePublisher()
-    }
-
-    interface "DocumentPropertyChangePublisher" as docpcp {
-        + void publish(DocumentPropertyChange)
-    }
-
-    struct "SimpleDocumentPropertyChangePublisher" as docspcp {
-    }
-
-    interface "DocumentPropertyChangeSubscriber" as docpcs {
-        + void receive(DocumentPropertyChange)
-    }
-
-    enum "ParameterChange" as docpc {
-        {field} Set(DocumentProperty)
-    }
-
-    enum "Parameter" as docp {
-        {field} Font(String)
-        {field} SourceImage(BitMap)
-        {field} SourceText(String)
-        {field} OutputScale(f32)
-        {field} RegionParameter(Uuid, RegionParameter)
-    }
-
-    enum "RegionParameter" as docrp {
-        {field} PathDilationMask(BitMap)
-        {field} GlyphPathKernel(BitMap)
-        {field} GutterLineHeight(f32)
-        {field} LineHeight(usize)
-        {field} GlyphKerning(f32)
-        {field} GlyphMinimumSize(f32)
-        {field} GlyphMaximumSize(f32)
-        {field} DensitySampleSize(f32)
-        {field} GlyphRotationSampleSize(f32)
-        {field} PathGenerationScale(f32)
-    }
-
-    struct "SimpleFacade" as docsf{
-        - doc_prop_change_pub: DocumentPropertyChangePublisher
-    }
-    struct "FileSystemDocumentPropertyChangeSubscriber" as docfdpcs
-    struct "LocalStorageDocumentPropertyChangeSubscriber" as doclspcs
-    struct "SimpleFacadeFactory" as docsff
-
-    interface "ParameterVisitor" as parpv {}
-    interface "RegionParameterVisitor" as docrpv {}
 }
 
 package "roopes" {
-    package "patterns::publisher_subscriber" {
-        interface "MutablePublisher" as rmp {
-        }
-
-        interface "Subscriber" as rs {
-        }
+    package "patterns::publisher_subscriber" as rps {
+        interface "MutablePublisher" as rmp
+        interface "Subscriber" as rs
 
         package "vec_publisher" {
-            struct "VecPublisher" as rvp {
-            }
+            struct "VecPublisher" as rvp
         }
     }
 
-    package "primitives::handler" {
-        interface "Handler" as rphh {}
+    package "derive::visitor" as rvmod{
+        interface "Visitor" as rv
     }
 }
 
-package web_sys{
-    struct "Storage" as wss {
-    }
+package "web_sys" as ws { 
+    struct "Storage" as wss
 }
 
-package sqlite{
-    struct "Connection" as sqlc {
-    }
+package "sqlite" as sql {
+    struct "Connection" as sqlc
 }
 
-docsff --> docsf
-docsff --> docfdpcs
-docsff --> doclspcs
-docsff --> docspcp
+docf --> docpcs
 
 docsf ..|> docf
 docsf --* docpcp
 
-docfdpcs ..|> docpcs
-doclspcs ..|> docpcs
-docpcp --> docpc
-docpc --> docp
-docf --> docpcp
-docp --> docrp
+docsff --> docsf
+docsff --> docf
 
 docpcs --|> rs
+
+docfspcp --> docbmpser
+
+docfspcp ..|> docpcp
+docfspcv ..|> docpcv
+docfspcv --> sqlc
+docfspcp --* rvp
+docfspcp -d[hidden]- docfspcv
+
+doclspcv --> wss
+doclspcv ..|> docpcv
+doclspcp --> docbmpser
+doclspcp ..|> docpcp
+doclspcp --* rvp
+doclspcp -d[hidden]- doclspcv
+
 docpcp --|> rmp
 
-docspcp ..|> docpcp
-docspcp --* rvp
+docpcv --|> rv
+docpcv --> docp
+docpcv --> docrp
 
-rvp ..|> rmp
-
-parpv --> docp
-docrpv --> docrp
-parpv --|> rphh
-docrpv --|> rphh
-
-doclspcs ..|> parpv
-doclspcs ..|> docrpv
-docfdpcs ..|> parpv
-docfdpcs ..|> docrpv
-
-doclspcs --* wss
-docfdpcs --* sqlc
+docsff --> doclspcp
+docsff --> doclspcv
+docsff --> docfspcp
+docsff --> docfspcv
 
 @enduml

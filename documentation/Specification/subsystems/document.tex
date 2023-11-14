@@ -6,11 +6,6 @@
     \index{#1}\pbodyitem{#2}{#3}
 }
 
-\newcommand{\dmod}{\texttt{document}}
-\newcommand{\dftype}{\texttt{Facade}}
-\newcommand{\dffspcstype}{\texttt{FileSystemDocumentPropertyChangeSubscriber}}
-\newcommand{\dflspcstype}{\texttt{LocalStorageDocumentPropertyChangeSubscriber}}
-
 \subsection{Document}
 The document component acts as a space in which the state of the system can be preserved or recalled.
 This sub-system listens for the application to change parameters of the document, and relays them to registered listeners.
@@ -19,6 +14,10 @@ This allows the listeners to be notified when a parameter\index{Parameters} defi
 \lidiagram{diagrams/subsystems/document}
 {Document subsystem components.}
 {fig:doc_components}
+
+\lidiagram{diagrams/subsystems/document_property_change_worker}
+{Document property change worker component.}
+{fig:docpcw_component}
 
 
 \subsubsection{Usage}
