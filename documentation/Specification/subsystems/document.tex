@@ -7,11 +7,9 @@
 }
 
 \subsection{Document}
-The document component acts as a space in which the state of the system can be preserved or recalled.
-This sub-system listens for the application to change parameters of the document, and relays them to registered listeners.
-This allows the listeners to be notified when a parameter\index{Parameters} defined in \prettyref{apx:userparams} changes.
-
-Events are only published when files are loaded.
+The document namespace contains logic concerning the state of the persisted document.
+This sub-system listens for the application to change parameters of the document, and persists them.
+Additionally, when a program document file is loaded, it will send notifications to subscribed components.
 
 \lidiagram{diagrams/subsystems/document}
 {Document subsystem components.}

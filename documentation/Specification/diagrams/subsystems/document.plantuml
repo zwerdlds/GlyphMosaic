@@ -6,8 +6,8 @@ package "gm::document" as doc {
         + void InitializeDocument()
         + void SaveDocument()
         + void LoadDocument(location: Path)
-        + void AttachDocumentPropertyChangeSubscriber(sub: DocumentPropertyChangeSubscriber)
-        + DocumentPropertyChangeSubscriber DocumentPropertyChangeSubscriber()
+        + void AttachDocPropChangeSub(sub: DocumentPropertyChangeSubscriber)
+        + DocumentPropertyChangeSubscriber PropChangeSub()
     }
 
     enum "DocumentProperty" as docp {
@@ -34,25 +34,28 @@ package "gm::document" as doc {
     interface "PropertyChangePublisher" as docpcp
     interface "PropertyChangeSubscriber" as docpcs
     interface "PropertyChangeVisitor" as docpcv
+    interface "PersistenceWorker" as docpw
 
     struct "SimpleFacadeFactory" as docsff {
         + Facade create_facade()
     }
     struct "SimpleFacade" as docsf {
-        - property_change_publisher: "PropertyChangePublisher"
+        - prop_change_worker: PropertyChangeWorker
     }
+
     struct "DocumentBitmapSerializer" as docbmpser
 
-    package "FileSystem" as docfs {
-        struct "PropertyChangeVisitor" as docfspcv
-        struct "PropertyChangePublisher" as docfspcp
-    }
+    package "persistence" as docpers{
+        package "file_system" as docperfs {
+            struct "PersistenceWorker" as docperfspw
+        }
 
-    package "LocalStorage" as docls {
-        struct "DocumentPropertyChangeVisitor" as doclspcv
-        struct "DocumentPropertyChangePublisher" as doclspcp
+        package "local_storage" as docperls {
+            struct "PersistenceWorker" as docperlspw
+        }
     }
 }
+
 
 package "roopes" {
     package "patterns::publisher_subscriber" as rps {
@@ -69,7 +72,8 @@ package "roopes" {
     }
 }
 
-package "web_sys" as ws { 
+package "web_sys" as ws {
+
     struct "Storage" as wss
 }
 
@@ -80,27 +84,19 @@ package "sqlite" as sql {
 docf --> docpcs
 
 docsf ..|> docf
-docsf --* docpcp
+docsf --* docpw
 
 docsff --> docsf
 docsff --> docf
 
 docpcs --|> rs
 
-docfspcp --> docbmpser
+docpw --|> docpcp
+docpw --|> docpcv
+docpw --|> docpcs
 
-docfspcp ..|> docpcp
-docfspcv ..|> docpcv
-docfspcv --> sqlc
-docfspcp --* rvp
-docfspcp -d[hidden]- docfspcv
-
-doclspcv --> wss
-doclspcv ..|> docpcv
-doclspcp --> docbmpser
-doclspcp ..|> docpcp
-doclspcp --* rvp
-doclspcp -d[hidden]- doclspcv
+docpcp -d[hidden]- docpcv
+docpcv -d[hidden]- docpcs
 
 docpcp --|> rmp
 
@@ -108,9 +104,16 @@ docpcv --|> rv
 docpcv --> docp
 docpcv --> docrp
 
-docsff --> doclspcp
-docsff --> doclspcv
-docsff --> docfspcp
-docsff --> docfspcv
+docsff --* docperlspw
+docperlspw --|> docpw
+docperlspw --|> wss
+docperlspw --* rvp
+docperlspw --* docbmpser
+
+docsff --* docperfspw
+docperfspw --|> docpw
+docperfspw --|> sqlc
+docperfspw --* rvp
+docperfspw --* docbmpser
 
 @enduml
