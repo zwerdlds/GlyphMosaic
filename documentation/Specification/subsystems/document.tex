@@ -11,14 +11,11 @@ The document component acts as a space in which the state of the system can be p
 This sub-system listens for the application to change parameters of the document, and relays them to registered listeners.
 This allows the listeners to be notified when a parameter\index{Parameters} defined in \prettyref{apx:userparams} changes.
 
+Events are only published when files are loaded.
+
 \lidiagram{diagrams/subsystems/document}
 {Document subsystem components.}
 {fig:doc_components}
-
-\lidiagram{diagrams/subsystems/document_property_change_worker}
-{Document property change worker component.}
-{fig:docpcw_component}
-
 
 \subsubsection{Usage}
 % \dftype\ is also used to register for document changes for usage outside of this system:
