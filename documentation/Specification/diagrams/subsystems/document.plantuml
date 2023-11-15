@@ -3,11 +3,18 @@ skinparam componentStyle uml1
 
 package "gm::document" as doc {
     interface "Facade" as docf{
-        + void InitializeDocument()
-        + void SaveDocument()
-        + void LoadDocument(location: Path)
+        + void Initialize()
+        + void Save()
+        + void SaveAs(location: Path)
+        + void Load(location: Path)
         + void AttachDocPropChangeSub(sub: DocumentPropertyChangeSubscriber)
         + DocumentPropertyChangeSubscriber PropChangeSub()
+    }
+
+    enum "PropertyChange" as docpc {
+        SetValue(DocumentProperty)
+        CreateRegion(TODO)
+        RemoveRegion(TODO)
     }
 
     enum "DocumentProperty" as docp {
@@ -34,13 +41,17 @@ package "gm::document" as doc {
     interface "PropertyChangePublisher" as docpcp
     interface "PropertyChangeSubscriber" as docpcs
     interface "PropertyChangeVisitor" as docpcv
-    interface "PersistenceWorker" as docpw
+    interface "PersistenceWorker" as docpw {
+        + Load(location: Path)
+        + SaveAs(location: Path)
+        + Save()
+    }
 
     struct "SimpleFacadeFactory" as docsff {
         + Facade create_facade()
     }
     struct "SimpleFacade" as docsf {
-        - prop_change_worker: PropertyChangeWorker
+        - persist_worker: PersistenceWorker
     }
 
     struct "DocumentBitmapSerializer" as docbmpser
@@ -56,19 +67,18 @@ package "gm::document" as doc {
     }
 }
 
-
-package "roopes" {
+package "roopes"  as roopes {
     package "patterns::publisher_subscriber" as rps {
-        interface "MutablePublisher" as rmp
-        interface "Subscriber" as rs
+        interface "MutablePublisher" as rmpsp
+        interface "Subscriber" as rpss
 
-        package "vec_publisher" {
-            struct "VecPublisher" as rvp
+        package "vec_publisher" as rpsvp {
+            struct "VecPublisher" as rpsvpvp
         }
     }
 
-    package "derive::visitor" as rvmod{
-        interface "Visitor" as rv
+    package "derive::visitor" as rv {
+        interface "Visitor" as rvv
     }
 }
 
@@ -81,6 +91,10 @@ package "sqlite" as sql {
     struct "Connection" as sqlc
 }
 
+docpc -l-> docp
+
+docp -l-> docrp
+
 docf --> docpcs
 
 docsf ..|> docf
@@ -88,8 +102,11 @@ docsf --* docpw
 
 docsff --> docsf
 docsff --> docf
+docsff --> docperfspw
+docsff --> docperlspw
 
-docpcs --|> rs
+docpcs --|> rpss
+docpcs --> docpc
 
 docpw --|> docpcp
 docpw --|> docpcv
@@ -98,22 +115,21 @@ docpw --|> docpcs
 docpcp -d[hidden]- docpcv
 docpcv -d[hidden]- docpcs
 
-docpcp --|> rmp
+docpcp --|> rmpsp
+docpcp --> docpc
 
-docpcv --|> rv
-docpcv --> docp
-docpcv --> docrp
+docpcv --|> rvv
+docpcv --> docpc
 
-docsff --* docperlspw
-docperlspw --|> docpw
-docperlspw --|> wss
-docperlspw --* rvp
+docperlspw ..|> docpw
+docperlspw -r--* wss
 docperlspw --* docbmpser
 
-docsff --* docperfspw
-docperfspw --|> docpw
-docperfspw --|> sqlc
-docperfspw --* rvp
+docperfspw ..|> docpw
+docperfspw -r--* sqlc
 docperfspw --* docbmpser
+
+doc -r[hidden]- ws
+ws  -d[hidden]- sql
 
 @enduml
