@@ -1,0 +1,22 @@
+\subsection{Persistence}
+The \permod\ subsystem is responsible for ensuring \docdtype\ events are written to platform-appropriate storage.
+
+\lidiagram{diagrams/subsystems/persistence}
+{Persistence subsystem components.}
+{fig:pers_components}
+
+\subsubsection{Mechanics}
+
+\subsubsection{Usage}
+In general, the subsystem functions as follows:
+\begin{itemize}
+      \item Save \\
+            Write the current state of the document to a serialized location.
+            If the file does not already have an associated location and needs one\footnote{This need is target-specific.} this will prompt the user to select a location (TODO: the method with which this is implemented is tbd).
+      \item Save As \\
+            Write the current state of the document to a serialized location to a specific location.
+      \item Load \\
+            Taking a path argument, publish the necessary parameter changes to recreate the deserialized document at that location.
+            This propagates all parameters to the \docftype.
+\end{itemize}
+

@@ -1,0 +1,61 @@
+@startuml
+skinparam componentStyle uml1
+
+package "gm" {
+    package "document" as doc {
+        interface "PropertyChangeSubscriber" as docpcs
+    }
+
+    package "persistence" as per {
+        interface "Facade" as perf{
+        }
+
+        interface "PersistenceWorker" as perpw {
+            + void Save()
+            + void SaveAs(location: Path)
+            + void Load(location: Path)
+        }
+
+        struct "SimpleFacadeFactory" as persff {
+            + Facade create_facade()
+        }
+
+        struct "SimpleFacade" as persf {
+            - PersistenceWorker worker
+        }
+
+        package "platforms" as perp{
+            package "file_system" as perpfs {
+                struct "PersistenceWorker" as perpfspw
+            }
+
+            package "local_storage" as perpls {
+                struct "PersistenceWorker" as perplspw
+            }
+        }
+    }
+}
+
+package "web_sys" as ws {
+    struct "Storage" as wss
+}
+
+package "sqlite" as sql {
+    struct "Connection" as sqlc
+}
+
+persff --> perf
+persff --> persf
+persff --> perplspw
+persff --> perpfspw
+
+persf ..|> perf
+persf --* perpw
+perf --|> docpcs
+
+perplspw --|> perpw
+perplspw --* wss
+perpfspw --|> perpw
+perpfspw --* sqlc
+
+@enduml

@@ -3,10 +3,6 @@ skinparam componentStyle uml1
 
 package "gm::document" as doc {
     interface "Facade" as docf{
-        + void Initialize()
-        + void Save()
-        + void SaveAs(location: Path)
-        + void Load(location: Path)
         + void AttachDocPropChangeSub(sub: DocumentPropertyChangeSubscriber)
         + DocumentPropertyChangeSubscriber PropChangeSub()
     }
@@ -40,30 +36,12 @@ package "gm::document" as doc {
 
     interface "PropertyChangePublisher" as docpcp
     interface "PropertyChangeSubscriber" as docpcs
-    interface "PropertyChangeVisitor" as docpcv
-    interface "PersistenceWorker" as docpw {
-        + Load(location: Path)
-        + SaveAs(location: Path)
-        + Save()
-    }
 
     struct "SimpleFacadeFactory" as docsff {
         + Facade create_facade()
     }
     struct "SimpleFacade" as docsf {
-        - persist_worker: PersistenceWorker
-    }
-
-    struct "DocumentBitmapSerializer" as docbmpser
-
-    package "persistence" as docpers{
-        package "file_system" as docperfs {
-            struct "PersistenceWorker" as docperfspw
-        }
-
-        package "local_storage" as docperls {
-            struct "PersistenceWorker" as docperlspw
-        }
+        - PropertyChangePublisher notifier
     }
 }
 
@@ -76,20 +54,8 @@ package "roopes"  as roopes {
             struct "VecPublisher" as rpsvpvp
         }
     }
-
-    package "derive::visitor" as rv {
-        interface "Visitor" as rvv
-    }
 }
 
-package "web_sys" as ws {
-
-    struct "Storage" as wss
-}
-
-package "sqlite" as sql {
-    struct "Connection" as sqlc
-}
 
 docpc -l-> docp
 
@@ -98,38 +64,20 @@ docp -l-> docrp
 docf --> docpcs
 
 docsf ..|> docf
-docsf --* docpw
+docsf --* docpcp
 
 docsff --> docsf
+docsff --> rpsvpvp
 docsff --> docf
-docsff --> docperfspw
-docsff --> docperlspw
+
+rmpsp -|> rpsvpvp
 
 docpcs --|> rpss
 docpcs --> docpc
 
-docpw --|> docpcp
-docpw --|> docpcv
-docpw --|> docpcs
-
-docpcp -d[hidden]- docpcv
-docpcv -d[hidden]- docpcs
-
 docpcp --|> rmpsp
 docpcp --> docpc
 
-docpcv --|> rvv
-docpcv --> docpc
 
-docperlspw ..|> docpw
-docperlspw -r--* wss
-docperlspw --* docbmpser
-
-docperfspw ..|> docpw
-docperfspw -r--* sqlc
-docperfspw --* docbmpser
-
-doc -r[hidden]- ws
-ws  -d[hidden]- sql
 
 @enduml

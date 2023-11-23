@@ -1,9 +1,9 @@
 \newcommand{\docarea}[3]{
-    \index{#1}\pbodyitem{#2}{#3}
+      \index{#1}\pbodyitem{#2}{#3}
 }
 
 \newcommand{\extparamref}[3]{
-    \index{#1}\pbodyitem{#2}{#3}
+      \index{#1}\pbodyitem{#2}{#3}
 }
 
 \subsection{Document}
@@ -15,23 +15,30 @@ Additionally, when a program document file is loaded, it will send notifications
 {Document subsystem components.}
 {fig:doc_components}
 
-\subsection{Mechanics}
-The \dmod\ facade is responsible for registering agents responsible for handling changes to the active document.
+\subsubsection{Mechanics}
+A \docsftype\ is created from a \docsfftype\ by client code in the root of the application.
+That \docsftype\ that is passed into users of \docmod\ as a \docftype\ for further use.
+
+Each \docftype\ supposes a single active document at a given time.
+I.e: each document window should have a single attached \docftype.
+
+\subsubsection{Usage}
+\docftype\ is responsible for registering agents responsible for handling changes to the active document.
 The bulk of subsystem-internal implementation includes <<PersistenceWorker>>, which listens for parameters to change, and writes them to a file.
 
 The implementation of PersistenceWorker is bifurcated on target: WASM vs File Storage.
 
 In general, the subsystem functions as follows:
 \begin{itemize}
-    \item Initialize Document \\
-          Publish the necessary parameter changes to recreate the default document.
-    \item Save \\
-          Write the current state of the document to a serialized location.
-    \item Save As \\
-          Write the current state of the document to a serialized location to a specific location.
-    \item Load Document \\
-          Taking a path argument, publish the necessary parameter changes to recreate the deserialized document at that location.
-    \item Document Property Change \\
-          Perform the given task on the persisted document.
+      \item Initialize Document \\
+            Publish the necessary parameter changes to recreate the default document.
+      \item Save \\
+            Write the current state of the document to a serialized location.
+      \item Save As \\
+            Write the current state of the document to a serialized location to a specific location.
+      \item Load Document \\
+            Taking a path argument, publish the necessary parameter changes to recreate the deserialized document at that location.
+      \item Document Property Change \\
+            Perform the given task on the persisted document.
 \end{itemize}
 

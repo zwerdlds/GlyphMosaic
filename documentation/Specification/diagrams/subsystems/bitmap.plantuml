@@ -8,7 +8,7 @@ package "gm::bitmap" {
     }
 
     struct "SimpleBitMap" as bms {
-        - mat : ColorImage
+        - ColorImage mat
     }
 
     interface "Cache" as bmc{
@@ -23,7 +23,7 @@ package "gm::bitmap" {
     }
 
     struct "SimpleFacade" as bmsf{
-        - cache: Cache
+        - Cache cache
     }
 
     struct "SimpleFacadeFactory" as bmsff{
