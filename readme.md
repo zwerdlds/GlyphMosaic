@@ -13,7 +13,7 @@ Developers are suggested to use `nix-shell` to employ the accompanying `shell.ni
 Convenience commands (scripts?) are included in the accompanying `justfile`:
 
 ## `just build-documentation`
-Produces `documenation/Specification.pdf`.
+Produces `documentation/Specification.pdf`.
 
 
 ## Current Status
