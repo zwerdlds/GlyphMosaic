@@ -47,6 +47,18 @@
   \end{figure}
 }
 
+\newcommand{\slidiagram}[4]{
+  \begin{figure}[H]
+    \centering
+    \adjustbox{width={#4\textwidth}}{
+      \includegraphics{
+        {#1}
+      }}
+    \caption{{#2}}
+    \label{{#3}}
+  \end{figure}
+}
+
 \newcommand{\nosplit}[1]{
   \begin{samepage}
     #1
@@ -83,17 +95,17 @@
 }
 
 \newcommand{\submodule}[5]{
-    \index{#1}
-    \pbodyitem{#2}{
-        {#3} \newline
-        \textbf{Components:} {#4} \newline
-        \textbf{Submodules:} {#5} 
-    }
+  \index{#1}
+  \pbodyitem{#2}{
+    {#3} \newline
+    \textbf{Components:} {#4} \newline
+    \textbf{Submodules:} {#5}
+  }
 }
 
 \newcommand{\component}[3]{
-    \index{#1}
-    \pbodyitem{\texttt{#2}}{#3}
+  \index{#1}
+  \pbodyitem{\texttt{#2}}{#3}
 }
 
 

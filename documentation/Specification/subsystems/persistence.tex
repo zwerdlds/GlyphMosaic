@@ -1,11 +1,25 @@
 \subsection{Persistence}
 The \permod\ subsystem is responsible for ensuring \docdtype\ events are written to platform-appropriate storage.
+\permod\ will, depending on target, write to a specific store:
+\begin{itemize}
+      \item File System: SQLite-based binary file.
+      \item WASM: Browser-based local storage.
+\end{itemize}
 
-\lidiagram{diagrams/subsystems/persistence}
+\slidiagram{diagrams/subsystems/persistence/inter}
+{Persistence inter-system dependencies.}
+{fig:pers_inter}
+{.5}
+
+\lidiagram{diagrams/subsystems/persistence/intra}
 {Persistence subsystem components.}
-{fig:pers_components}
+{fig:pers_intra}
+{}
+
 
 \subsubsection{Mechanics}
+
+
 
 \subsubsection{Usage}
 In general, the subsystem functions as follows:
@@ -19,4 +33,3 @@ In general, the subsystem functions as follows:
             Taking a path argument, publish the necessary parameter changes to recreate the deserialized document at that location.
             This propagates all parameters to the \docftype.
 \end{itemize}
-

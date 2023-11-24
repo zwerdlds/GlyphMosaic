@@ -1,0 +1,19 @@
+@startuml
+skinparam componentStyle uml1
+
+package "gm" {
+    component "document" as doc
+    component "persistence" as per
+}
+
+component "web_sys" as ws
+component "sqlite" as sql
+
+gm -r[hidden]- ws
+ws -d[hidden]- sql
+
+per -u-> doc
+per -u-> ws
+per -u-> sql
+
+@enduml
