@@ -4,7 +4,7 @@ skinparam componentStyle uml1
 package "gm::document" as doc {
     interface "Facade" as docf{
         + void AttachDocPropChangeSub(sub: DocumentPropertyChangeSubscriber)
-        + DocumentPropertyChangeSubscriber PropChangeSub()
+        + DocumentPropertyChangeSubscriber propChangeSub()
     }
 
     enum "PropertyChange" as docpc {

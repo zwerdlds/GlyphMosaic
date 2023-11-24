@@ -37,7 +37,7 @@ Application subsystems must rely on each other to enable the program's function.
 Below, each relationship is explained.
 See \prettyref{sec:subsystems} for further details in the dependency relationships.
 
-\docmod, \uimod, and \bmmod\ are omitted from the discussion here because those modules use or are used by the subsystems listed here.
+\docmod, \uimod, \permod, and \bmmod\ are omitted from the discussion here because those modules use or are used by the subsystems listed here.
 In effect, the modules listed here include those central to the calculation of the program.
 
 The relationships described here refer to objects setup in the booting of the application, being defined by a \sysfact\ instance via \sysbldr\ which is aware of all module's facades in order to wire up subscribers with associated publisher, as described below.

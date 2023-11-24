@@ -1,0 +1,17 @@
+@startuml
+skinparam componentStyle uml1
+
+package "gm" as gm {
+    component document as doc
+}
+
+package "roopes"  as roopes {
+    component "patterns::publisher_subscriber" as rps
+}
+
+
+doc -u-> rps
+
+
+
+@enduml

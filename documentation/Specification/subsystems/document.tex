@@ -11,9 +11,11 @@ The document namespace contains logic concerning the state of the persisted docu
 This sub-system listens for the application to change parameters of the document, and persists them.
 Additionally, when a program document file is loaded, it will send notifications to subscribed components.
 
-\lidiagram{diagrams/subsystems/document}
-{Document subsystem components.}
-{fig:doc_components}
+\slidiagram{diagrams/subsystems/document/inter}
+{Document inter-subsystem dependencies.}
+{fig:doc__inter}
+{.5}
+
 
 \subsubsection{Mechanics}
 A \docsftype\ is created from a \docsfftype\ by client code in the root of the application.
@@ -22,23 +24,14 @@ That \docsftype\ that is passed into users of \docmod\ as a \docftype\ for furth
 Each \docftype\ supposes a single active document at a given time.
 I.e: each document window should have a single attached \docftype.
 
+\lidiagram{diagrams/subsystems/document/intra}
+{Document subsystem components.}
+{fig:doc_intra}
+
+
+
 \subsubsection{Usage}
-\docftype\ is responsible for registering agents responsible for handling changes to the active document.
-The bulk of subsystem-internal implementation includes <<PersistenceWorker>>, which listens for parameters to change, and writes them to a file.
-
-The implementation of PersistenceWorker is bifurcated on target: WASM vs File Storage.
-
-In general, the subsystem functions as follows:
-\begin{itemize}
-      \item Initialize Document \\
-            Publish the necessary parameter changes to recreate the default document.
-      \item Save \\
-            Write the current state of the document to a serialized location.
-      \item Save As \\
-            Write the current state of the document to a serialized location to a specific location.
-      \item Load Document \\
-            Taking a path argument, publish the necessary parameter changes to recreate the deserialized document at that location.
-      \item Document Property Change \\
-            Perform the given task on the persisted document.
-\end{itemize}
-
+\docftype\ is responsible for providing an interface for registering agents responsible for handling changes to the active document.
+This type is instantiated and referenced by other subsystems at startup.
+Those subsystems can register their own agents to be notified as \docpctype\ events are propagated by other subsystems.
+\docpctype\ events are propagated by passing them to the \docftype .\texttt{propChangeSub} subscriber.
