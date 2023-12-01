@@ -8,3 +8,4 @@ documentation/**/*.fdb_latexmk
 documentation/**/*.fls
 documentation/**/*.log
 documentation/**/*.pytxcode
+documentation/Specification/svg-inkscape

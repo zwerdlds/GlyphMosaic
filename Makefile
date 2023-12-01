@@ -16,8 +16,8 @@ TEX_OUT_PDF_TO_BLD_DIR = $(patsubst documentation/%.pdf,.doc_build/tex/%,$@)
 TEX_BLD_DIR_TO_SRC_DIR = $(patsubst .doc_build/tex/%,documentation/%,$(@D))
 TEX_BLD_DIR_TO_DIAG_DIR = $(shell pwd)/$(patsubst .doc_build/tex/%,.doc_build/pml/%,$(@D))
 
-TEX_BLD_OPT = TEXINPUTS=.:$(TEX_BLD_DIR_TO_DIAG_DIR)//:
-TEX_BLD_CMD = xelatex -halt-on-error -output-directory=$(TEX_BLD_TO_ABS_DIR) main.tex
+TEX_BLD_OPT = TEXINPUTS=.:$(shell pwd)/resources:$(TEX_BLD_DIR_TO_DIAG_DIR)//:
+TEX_BLD_CMD = xelatex --shell-escape -halt-on-error -output-directory=$(TEX_BLD_TO_ABS_DIR) main.tex
 TEX_BLD_ALL = $(TEX_BLD_OPT) $(TEX_BLD_CMD)
 
 

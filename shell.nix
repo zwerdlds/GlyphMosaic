@@ -30,6 +30,7 @@ stable.mkShell rec {
       # Design Documentation Generation
       rubber
       texlive.combined.scheme-full
+      inkscape
 
       # Documentation Diagrams
       plantuml
