@@ -1,5 +1,53 @@
 \subsection{Challenges and Limitations}
 \subsubsection{Performance}
 The system requires computational power to produce result images.
-Specifically, the large number of individual glyphs represent a potential scaling issue.
+Specifically, the large number of individual glyphs represents a potential scaling issue.
 In addition, the large bitmaps the system may interact with may also contribute to performance degradation.
+
+This should be mitigated via the following techniques:
+\begin{itemize}
+    \item Limiting memory allocations where possible via flyweights.
+    \item Limiting memory reallocations where possible via heap pools.
+    \item Using data structures with limited size where possible.
+    \item Arrays and vectors should be reallocated or resized as little as possible.
+    \item {
+          When the \index{Parameters!Source Text} changes, dependant vectors should be pre-allocated and preserved until it is changed further.
+          This implementation detail is accepted -- there may be memory use considerations to implement this trade for performance.
+          }
+\end{itemize}
+
+
+\subsubsection{Malleability}
+The system should be designed in such a way that design changes are easily executed.
+To enforce this purpose, best practices should be followed to implement a decoupled design.
+In practice, these principles are embodied by ``SOLID'' principles.
+
+The project should implement them by using the following guidelines:
+\begin{itemize}
+    \item {
+          Use commonly acknowledged OOP-style patterns to implement behavior.
+          This will be performed by using the ROOPES library abstractions as often as possible.
+          }
+    \item {
+          Limit internal components to a single responsibility.
+          Since a majority of abstract behavior should be implemented by ROOPES, most internal components should have minimal implementations.
+
+          In the inevitable cases where custom behavior is necessary, the implementation should be encapsulated as much as possible, and implement the appropriate ROOPES primitive abstraction traits (Executable, Emitter, Handler, Transformer).
+          Where possible, explicit and generic types should be used to enforce correctness across component boundaries.
+          }
+    \item {
+          Inter-module dependencies should implement behavioral dependencies via traits, not structs.
+          This may cause some dependencies to require \texttt{Box<dyn ... >} types that demand heap allocations.
+          This implementation detail is accepted -- there may be performance degradation associated with these allocations.
+          This should be balanced by pre-allocating as many resources as possible singly and not re-performed, either by using heap pools, flyweights, and pre-allocations.
+          }
+    \item {
+          Allow components to inject internal behavior into changes of data from other components.
+          At the subsystem level, this could be accomplished by defining a publisher to which other subsystems can subscribe to events.
+
+          For example, as parameters are changed, the UI subsystems may modify attributes defined in the Document subsystem, via the facade-provided publisher.
+          During system launch, the Persistence subsystem would have provided a subscriber to that publisher which would then be notified of changes.
+          Behavior internal to the Persistence subsystem would be performed as appropriate.
+          In this way, behavior local to Persistence can be triggered by UI without direct dependencies, decoupling the two subsystems.
+          }
+\end{itemize}
