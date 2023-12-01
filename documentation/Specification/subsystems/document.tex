@@ -8,7 +8,7 @@
 
 \subsection{Document}
 The document namespace contains logic concerning the state of the persisted document.
-This sub-system listens for the application to change parameters of the document, and persists them.
+This sub-system listens for the application to change the parameters of the document and persists them.
 Additionally, when a program document file is loaded, it will send notifications to subscribed components.
 
 \slidiagram{diagrams/subsystems/document/inter}
@@ -19,7 +19,7 @@ Additionally, when a program document file is loaded, it will send notifications
 
 \subsubsection{Mechanics}
 A \docsftype\ is created from a \docsfftype\ by client code in the root of the application.
-That \docsftype\ that is passed into users of \docmod\ as a \docftype\ for further use.
+The \docsftype\ that is passed into users of \docmod\ as a \docftype\ for further use.
 
 Each \docftype\ supposes a single active document at a given time.
 I.e: each document window should have a single attached \docftype.

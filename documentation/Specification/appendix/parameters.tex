@@ -55,10 +55,10 @@ The process of developing mosaics necessitates user manipulation of the followin
   {Regions}
   {
     \label{apx:regparams}
-    A region most accurately represents a set of pixels which are treated the same when it comes time to render glyphs to paths.
+    A region represents a set of pixels treated the same when rendering glyphs to paths.
     This is done so that distinct line areas can be treated separately:  If a user wants a text path in a certain section of the image,
 
-    Each region maintains a set of additional parameters which determines the rendered glyphs:
+    Each region maintains a set of additional parameters that determine the rendered glyphs:
     \begin{itemize}
       \paritem
       {Mask}
@@ -66,7 +66,7 @@ The process of developing mosaics necessitates user manipulation of the followin
         This can be thought of as the effective area of the region.}
       {1-Bit Matrix Congruent to Source Image}
       {\RegMskParSymbol}
-      
+
       \paritem
       {Glyph Path Kernel}
       {A 1-channel bitmap representing the seed of the dilated layers which are then used to generate the region text path.}
@@ -109,20 +109,22 @@ The process of developing mosaics necessitates user manipulation of the followin
 
       \paritem
       {Density Sample Size}
-      {How many pixels are sampled when a pixel density for a glyph is calculated.}
+      {The number of pixels sampled when a pixel density for a glyph is calculated.}
       {ℕ}
       {\DnsSampleParSymbol}
 
       \paritem
       {Glyph Rotation Sample Size}
-      {How many neighboring pixels on the glyph path are used to calculate the rotation of a given pixel.}
+      {The number of neighboring pixels on the glyph path used to calculate the rotation of a given pixel.}
       {ℕ}
       {\GlyphRotParSymbol}
 
       \paritem
       {Path Generation Scale}
-      {By how many times should the matrices that are involved in path generation be scaled up in order to generate text paths.
-        Gives higher precision, and therefore resolution, in the resulting path.}
+      {
+        The number of times the matrices involved in path generation are scaled up when generating text paths.
+        Gives higher precision, and therefore resolution, in the resulting path.
+      }
       {ℚ \(\geq 0\)}
       {\PathGenSclParSymbol}
 

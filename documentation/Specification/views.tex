@@ -35,12 +35,13 @@ See \prettyref{sec:subsystems} for a complete listing of top-level modules.
 Application subsystems must rely on each other to enable the program's function.
 \prettyref{fig:modules_top} shows the module dependency hierarchy.
 Below, each relationship is explained.
-See \prettyref{sec:subsystems} for further details in the dependency relationships.
+See \prettyref{sec:subsystems} for further details on the dependency relationships.
 
 \docmod, \uimod, \permod, and \bmmod\ are omitted from the discussion here because those modules use or are used by the subsystems listed here.
 In effect, the modules listed here include those central to the calculation of the program.
 
-The relationships described here refer to objects setup in the booting of the application, being defined by a \sysfact\ instance via \sysbldr\ which is aware of all module's facades in order to wire up subscribers with associated publisher, as described below.
+The relationships described here refer to objects set up in the booting of the application, being defined by a \sysfact\ instance via \sysbldr\ which is aware of all module's facades.
+\sysbldr\ is responsible for wiring up subscribers with associated publishers, as described below.
 As a result, these relationships are not necessarily typed, they are set up by the \sysfact.
 
 \sidiagram{diagrams/top_level_modules}
@@ -60,7 +61,7 @@ As a result, these relationships are not necessarily typed, they are set up by t
 \nosplit{
   \subsection{Data Flows}
   \label{sec:dataflows}
-  Data flows between each module in such a way as to accomplish the workflow set forth in \prettyref{apx:algorithm}.
+  Data flow between each module in such a way as to accomplish the workflow outlined in \prettyref{apx:algorithm}.
   This process somewhat mirrors the components described in \prettyref{sec:modules}, but also describes the relationships necessary to update the user interface and document.
 
   \sidiagram{diagrams/data_flow}
