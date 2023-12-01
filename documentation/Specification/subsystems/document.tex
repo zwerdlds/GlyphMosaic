@@ -33,5 +33,5 @@ I.e: each document window should have a single attached \docftype.
 \subsubsection{Usage}
 \docftype\ is responsible for providing an interface for registering agents responsible for handling changes to the active document.
 This type is instantiated and referenced by other subsystems at startup.
-Those subsystems can register their own agents to be notified as \docpctype\ events are propagated by other subsystems.
+Those subsystems can register their agents to be notified as \docpctype\ events are propagated by other subsystems.
 \docpctype\ events are propagated by passing them to the \docftype .\texttt{propChangeSub} subscriber.

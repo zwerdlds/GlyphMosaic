@@ -30,11 +30,12 @@ stable.mkShell rec {
       # Design Documentation Generation
       rubber
       texlive.combined.scheme-full
-      inkscape
 
       # Documentation Diagrams
       plantuml
-      svg2pdf
+
+      # Resource conversion
+      librsvg
     ]);
 
   RUST_SRC_PATH = "${stable.rust.packages.stable.rustPlatform.rustLibSrc}";
