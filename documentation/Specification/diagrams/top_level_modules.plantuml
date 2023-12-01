@@ -1,4 +1,4 @@
-@startuml
+@startuml top_level_modules
 skinparam ranksep 25
 skinparam componentStyle uml1
 skinparam defaultFontName DejaVu Serif
