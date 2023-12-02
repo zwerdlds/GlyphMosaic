@@ -35,7 +35,6 @@ documentation: $(OUT_FILE)
 .PHONY: clean
 clean:
 	rm -rf .doc_build $(OUT_FILE)
-	
 
 .SECONDARY:
 .SECONDEXPANSION:
@@ -58,6 +57,7 @@ documentation/%.pdf : .doc_build/tex/%/main.pdf
 
 .SECONDARY:
 .doc_build/resources/%.pdf : resources/%.svg
+	mkdir -p $(@D)
 	rsvg-convert -f pdf -o $@ $(RSRC_SVG_BLD_PDF_TO_LCL_SVG)
 	# mkdir -p $(@D)
 	# mv $(RSRC_SVG_BLD_PDF_TO_LCL_PDF) $@
