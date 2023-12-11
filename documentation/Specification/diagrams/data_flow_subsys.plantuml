@@ -1,0 +1,11 @@
+@startuml data_flow_subsys
+skinparam componentStyle uml1
+skinparam defaultFontName DejaVu Serif
+skinparam linetype ortho
+
+: Rebuild Lines;
+: Rebuild Points;
+: Rebuild Glyphs;
+: Rebuild Output Image;
+
+@enduml

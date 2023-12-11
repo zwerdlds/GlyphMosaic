@@ -1,0 +1,14 @@
+@startuml inter
+skinparam componentStyle uml1
+
+package "gm" as gm {
+    component ui as ui
+    component document as doc
+}
+
+component "eframe" as eframe
+
+ui -u-> doc
+ui -u-> eframe
+
+@enduml

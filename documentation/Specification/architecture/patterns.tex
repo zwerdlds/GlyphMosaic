@@ -1,51 +1,6 @@
-\subsection{Patterns}
-The application is implemented at the top level as a unified message bus.
-This enables decoupling between other components of the system.
-Typed messages are freely submitted to this bus by any component or sub-component of the system.
-A shared handler is used to reference the bus by other subsystems.
-Subsystems do not send messages directly to one another.
+\subsection{Top-level Pattern}
+The application is implemented at the top level as a set of separate subsystems which interact in decoupled ways with each other, via facades that define their exposed behavior.
+Within each subsystem, designers have the freedom to structure each as necessary.
+This enables approaches that permit rapid responses to user input, preserving the performance goals of the application.
 
-\begin{itemize}
-  \pbodyitem{Monolithic}{
-    GlyphMosaic communicates with the host operating system using standard methods.
-    Within the host operating system, the process exists within a singular executable.
-    This simplifies the complexity of interacting with the host operating system by reducing the abstract footprint of the application.
-    In summary: the system needs only manage a single executable element, eliminating the need to implement IPC-, or networking-related requirements.
-    This decision does impact potential performance, as discussed in \prettyref{sec:alt_dist_comp}.
-  }
-
-
-  \pbodyitem{Layered}{
-    Within the monolithic system, subsystems are composed of functionality as layers.
-    This method of design is an attempt to mitigate the complexity of the system by reducing the possible interaction between sub-systems.
-    This approach is utilized in the following locations:
-    \begin{itemize}
-      \pbodyitem{Test}{Desctiption.}
-    \end{itemize}
-  }
-
-
-  \pbodyitem{Pipe/Filter}{
-    In many cases, systems are composed in series to build larger functionality.
-    This approach is utilized in the following locations:
-    \begin{itemize}
-      \pbodyitem{Test}{Desctiption.}
-    \end{itemize}
-  }
-
-
-  \pbodyitem{Model-View-Controller}{
-    This approach is utilized in the following locations:
-    \begin{itemize}
-      \pbodyitem{Test}{Desctiption.}
-    \end{itemize}
-  }
-
-
-  \pbodyitem{Event Bus}{
-    This approach is utilized in the following locations:
-    \begin{itemize}
-      \pbodyitem{Test}{Desctiption.}
-    \end{itemize}
-  }
-\end{itemize}
+Each subsystem's patterns are defined in \prettyref{sec:subsystems}.

@@ -15,14 +15,18 @@
 
 \section{Dependencies}
 This section details all the external dependencies the project utilizes.
-Each dependency is enumerated, along with a justification as for why they are used, and a listing of subsystems and modules in which they are used.
+Each dependency is enumerated, along with a justification for why they are used, and a listing of subsystems and modules in which they are used.
 
 \begin{itemize}
-    \deplisting{egui}
+    \deplisting{egui/eframe}
     {https://www.egui.rs/}
     {}
     {
-        \pbodyitem{test}{test}
+        \pbodyitem
+        {UI}
+        {
+            The UI subsystem uses the egui library via the eframe framework to display the user interface in either a browser or as a native desktop application.
+        }
     }
 
     % \deplisting{web_sys}

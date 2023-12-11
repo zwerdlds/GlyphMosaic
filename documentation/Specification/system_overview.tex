@@ -1,9 +1,8 @@
 \section{System Overview}
 \subsection{Scope}
-GlyphMosaic is a specialized graphic design application.
-It comprises the following functionality:
+GlyphMosaic is a specialized graphic design application composed of the following functionality:
 \begin{itemize}
-  \item Enable the user to finely specify the parameters with which the output image is generated.
+  \item Enable the user to specify the parameters with which the output image is generated.  These parameters are numerous and so are described comprehensively in \prettyref{apx:userparams}.
   \item Produce the output image.
 \end{itemize}
 
@@ -14,30 +13,6 @@ Users interact with the system's GUI to create, load, and modify graphical mosai
 
 \sidiagram
 {diagrams/context}
-{A hypothetical local install of GlyphMosaic and related components.}
+{The user must supply the source image, source text, and modify use the GlyphMosaic program for the system to produce the output image.  In-progress work can be saved as a file system document.}
 {fig:contextDiagram}
 {\diagsize}
-
-
-\subsection{Audience}
-This document is intended for contributors and consumers involved in the development, maintenance, and use of the GlyphMosaic application.
-It aims to provide audiences with a complete description of the underlying organization of the application, facilitating insight into how all system components interact to deliver system functions.
-By reading this document developers can make informed decisions about how to design and implement functionalities that will deliver an optimal user experience.
-This document's purpose is to provide a comprehensive overview of the GlyphMosaic software architecture to support all audience members involved.
-
-
-\subsection{Statement of Purpose}
-GlyphMosaic is described in this architectural document.
-Diagrams are also supplied to facilitate comprehension of the system internals.
-All aspects of the GlyphMosaic architecture, including context, modules, and code structure are described.
-End-user-facing functionality is also described.
-This document also highlights architectural compromises and alternatives that were considered during the design phases of the system.
-This document should act as a reference for any person interested in better understanding the GlyphMosaic architecture.
-
-This report attempts to accomplish the following goals:
-\begin{itemize}
-  \item Describe the complete architecture of the system.
-  \item Describe available process alternative methods and their trade-offs.
-  \item Provide a broad statement of use for the implemented system.
-  \item Provide a plan for the implementation of the system.
-\end{itemize}

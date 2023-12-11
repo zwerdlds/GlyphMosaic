@@ -1,0 +1,83 @@
+@startuml intra
+skinparam componentStyle uml1
+
+package "gm::document" as doc {
+    interface "Facade" as docf{
+        + void AttachDocPropChangeSub(sub: DocumentPropertyChangeSubscriber)
+        + DocumentPropertyChangeSubscriber propChangeSub()
+    }
+
+    enum "PropertyChange" as docpc {
+        SetValue(DocumentProperty)
+        CreateRegion(TODO)
+        RemoveRegion(TODO)
+    }
+
+    enum "DocumentProperty" as docp {
+        Font(TODO)
+        SourceImage(BitMap)
+        SourceText(String)
+        OutputScale(f32)
+        RegionProperty(TODO, RegionProperty)
+    }
+
+    enum "RegionProperty" as docrp {
+        PathDilationMask(BitMap)
+        GlyphPathKernel(BitMap)
+        GutterLineHeight(f32)
+        LineHeight(usize)
+        GlyphKerning(f32)
+        GlyphMinimumSize(f32)
+        GlyphMaximumSize(f32)
+        DensitySampleSize(f32)
+        GlyphRotationSampleSize(f32)
+        PathGenerationScale(f32)
+    }
+
+    interface "PropertyChangePublisher" as docpcp
+    interface "PropertyChangeSubscriber" as docpcs
+
+    struct "SimpleFacadeFactory" as docsff {
+        + Facade create_facade()
+    }
+    struct "SimpleFacade" as docsf {
+        - PropertyChangePublisher notifier
+    }
+}
+
+package "roopes"  as roopes {
+    package "patterns::publisher_subscriber" as rps {
+        interface "MutablePublisher" as rmpsp
+        interface "Subscriber" as rpss
+
+        package "vec_publisher" as rpsvp {
+            struct "VecPublisher" as rpsvpvp
+        }
+    }
+}
+
+
+docpc -l-> docp
+
+docp -l-> docrp
+
+docf --> docpcs
+
+docsf ..|> docf
+docsf --* docpcp
+
+docsff --> docsf
+docsff --> rpsvpvp
+docsff --> docf
+
+rmpsp -|> rpsvpvp
+
+docpcs --|> rpss
+docpcs --> docpc
+
+docpcp --|> rmpsp
+docpcp --> docpc
+
+
+
+@enduml

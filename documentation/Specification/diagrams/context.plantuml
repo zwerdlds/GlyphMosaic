@@ -1,8 +1,6 @@
 @startuml context
-left to right direction
 skinparam componentStyle uml1
 skinparam defaultFontName DejaVu Serif
-skinparam linetype ortho
 
 person "User" as usr
 
@@ -10,11 +8,18 @@ agent "GlyphMosaic" as gm
 
 package Filesystem as fs {
   file "Source Image" as si
-  file "Source Text" as si
-  file "GM Document" as si
-  file "Output Image" as si
+  file "Source Text" as st
+  file "GM Document" as gd
+  file "Output Image" as oi
 }
 
-usr -r-> gm
+usr --> gm
+gm --> si
+gm --> gd
+gm --> oi
+
+usr --> si
+usr --> st
+usr --> oi
 
 @enduml

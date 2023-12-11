@@ -1,6 +1,8 @@
 \section{Architectural Views}
 \label{sec:views}
 \subsection{Top-Level System}
+The system operates as a single abstract running process, either in a browser or within the host operating system directly.
+
 \sidiagram
 {diagrams/app_host}
 {The GlyphMosaic system has limited responsibility from the host system perspective.}
@@ -53,9 +55,7 @@ As a result, these relationships are not necessarily typed, they are set up by t
   \item \linemod\ depends on \regmod\ to be notified when a Region Mask changes.
   \item \ptmod\ depends on \linemod\ to be notified when a region's text path changes.  This path affects the location of the region's points as well as their tangents.
   \item \ptmod\ depends on \regmod\ to be notified when the Region Mask changes.  This \bmtype\ affects which region points are retained.
-  \item \ptmod\ depends on \srcmod\ to be notified when the Source Image changes.  This \bmtype\ is sampled to determine the size and color values of points.
   \item \glymod\ depends on \ptmod\ to be notified of changes to point locations and tangents.  These values are used to place and rotate individual glyphs.
-  \item \glymod\ depends on \srcmod\ to be notified of changes to the source text.  This string is then sampled to determine which glyph corresponds to a given point.
 \end{enumerate}
 
 \nosplit{
@@ -64,8 +64,28 @@ As a result, these relationships are not necessarily typed, they are set up by t
   Data flow between each module in such a way as to accomplish the workflow outlined in \prettyref{apx:algorithm}.
   This process somewhat mirrors the components described in \prettyref{sec:modules}, but also describes the relationships necessary to update the user interface and document.
 
-  \sidiagram{diagrams/data_flow}
-  {Succinct description.}
+  Specifically, when parameters are changed, they trigger recalculations of downstream data, according to the relationships described here:
+  \begin{itemize}
+    \item source image: Glyphs \\
+    \item source text: Glyphs
+    \item font: Output Image
+    \item output scale: Output Image
+    \item region mask: Points
+    \item region glyph path kernel: Lines
+    \item region gutter line height: Lines
+    \item region line height: Lines
+    \item region glyph kerning: Points
+    \item region glyph minimum size: Glyphs
+    \item region glyph maximum size: Glyphs
+    \item region density sample size: Glyphs
+    \item region glyph rotation sample size: Points
+    \item region path generation scale: Lines
+  \end{itemize}
+
+  In addition, when subsystems' data are changed, they also trigger their own downstream recalculations:
+
+  \sidiagram{diagrams/data_flow_subsys}
+  {Changes to parameters of a document will have cascading effects to downstream subsystems.}
   {fig:data_flow}
   {\diagsize}
 }

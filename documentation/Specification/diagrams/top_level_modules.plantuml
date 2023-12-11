@@ -3,7 +3,6 @@ skinparam ranksep 25
 skinparam componentStyle uml1
 skinparam defaultFontName DejaVu Serif
 
-component "source" as src
 component "region" as reg
 component "line" as line
 component "point" as pts
@@ -12,8 +11,6 @@ component "glyph" as gly
 line -u-> reg : 1
 pts -u-> line : 2
 pts -u-> reg : 3
-pts -u-> src : 4
-gly -u-> pts : 5
-gly -u-> src : 6
+gly -u-> pts : 4
 
 @enduml
