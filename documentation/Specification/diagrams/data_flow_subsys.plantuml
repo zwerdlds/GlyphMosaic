@@ -16,16 +16,16 @@ rectangle "region density sample size" as crdss
 rectangle "region glyph rotation sample size" as crgrss
 rectangle "region path generation scale" as crpgs
 
-rectangle "Rebuild Lines" as rl
+rectangle "Rebuild Lines" as rli
 rectangle "Rebuild Points" as rp
-rectangle "Rebuild Glyphs" as rg
+rectangle "Rebuild Letters" as rle
 rectangle "Rebuild Output Image" as roi
 
-csi -d-> rg
-cst -d-> rg
-crgmins -d-> rg
-crgmaxs -u-> rg
-crdss -u-> rg
+csi -d-> rle
+cst -d-> rle
+crgmins -d-> rle
+crgmaxs -u-> rle
+crdss -u-> rle
 
 cf -d-> roi
 cos -u-> roi
@@ -34,13 +34,13 @@ crm -d-> rp
 crgk -d-> rp
 crgrss -u-> rp
 
-crpk -d-> rl
-crglh -d-> rl
-crlh -u-> rl
-crpgs -u-> rl
+crpk -d-> rli
+crglh -d-> rli
+crlh -u-> rli
+crpgs -u-> rli
 
-rl -d-> rp
-rp -d-> rg
-rg -d-> roi
+rli -d-> rp
+rp -d-> rle
+rle -d-> roi
 
 @enduml

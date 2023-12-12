@@ -6,11 +6,11 @@ skinparam defaultFontName DejaVu Serif
 component "region" as reg
 component "line" as line
 component "point" as pts
-component "glyph" as gly
+component "letter" as let
 
 line -u-> reg : 1
 pts -u-> line : 2
 pts -u-> reg : 3
-gly -u-> pts : 4
+let -u-> pts : 4
 
 @enduml
