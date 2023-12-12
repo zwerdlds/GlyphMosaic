@@ -6,15 +6,15 @@ skinparam linetype ortho
 start
 
 split
-    :Load Source Image;
+    :Load Document;
 split again
-    :Load Source Text;
-split again
-    :Add Regions;
-    :Modify Region Glyph Parameters;
+    :Create Document;
 end split
 
-:Render Output;
+repeat
+    :Render Output;
+    :Modify Parameter;
+repeatwhile ()
 
 stop
 

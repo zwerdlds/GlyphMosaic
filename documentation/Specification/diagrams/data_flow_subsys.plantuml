@@ -1,11 +1,46 @@
 @startuml data_flow_subsys
-skinparam componentStyle uml1
 skinparam defaultFontName DejaVu Serif
-skinparam linetype ortho
 
-: Rebuild Lines;
-: Rebuild Points;
-: Rebuild Glyphs;
-: Rebuild Output Image;
+rectangle "source image" as csi
+rectangle "source text" as cst
+rectangle "font" as cf
+rectangle "output scale" as cos
+rectangle "region mask" as crm
+rectangle "region glyph path kernel" as crpk
+rectangle "region gutter line height" as crglh
+rectangle "region line height" as crlh
+rectangle "region glyph kerning" as crgk
+rectangle "region glyph minimum size" as crgmins
+rectangle "region glyph maximum size" as crgmaxs
+rectangle "region density sample size" as crdss
+rectangle "region glyph rotation sample size" as crgrss
+rectangle "region path generation scale" as crpgs
+
+rectangle "Rebuild Lines" as rl
+rectangle "Rebuild Points" as rp
+rectangle "Rebuild Glyphs" as rg
+rectangle "Rebuild Output Image" as roi
+
+csi -d-> rg
+cst -d-> rg
+crgmins -d-> rg
+crgmaxs -u-> rg
+crdss -u-> rg
+
+cf -d-> roi
+cos -u-> roi
+
+crm -d-> rp
+crgk -d-> rp
+crgrss -u-> rp
+
+crpk -d-> rl
+crglh -d-> rl
+crlh -u-> rl
+crpgs -u-> rl
+
+rl -d-> rp
+rp -d-> rg
+rg -d-> roi
 
 @enduml
