@@ -71,11 +71,11 @@ Specifically, when parameters are changed, they trigger recalculations of downst
 \begin{itemize}
   \item source image: Letters \\
         The source image defines the scale of letters, and changing it has the likely impact of changing the result of the line point's sample pixels.
-        This means that changing the source image must cause letters data to be recalculated.
+        This means that changing the source image must cause letter data to be recalculated.
 
   \item source text: Letters \\
         The source text is placed on the output image bitmap glyph by glyph, transformed by each element in the line point list.
-        This means that changing the text must cause letters data to be recalculated.
+        This means that changing the text must cause letter data to be recalculated.
 
   \item font: Output Image \\
         The font face determines the specific glyphs that are used to represent letter data, being placed and scaled according to point data.
@@ -93,12 +93,12 @@ Specifically, when parameters are changed, they trigger recalculations of downst
         A region glyph path kernel is used to iteratively calculate the region's lines using progressively larger circular radii, involving the region line and gutter height.
         This means changing a path kernel must cause the lines to be recalculated.
 
-  \item region gutter line height: Lines \\
+  \item region gutter line-height: Lines \\
         A region gutter line height affects the offset of a region's lines.
         This means changing a gutter height must cause the lines to be recalculated.
 
-  \item region line height: Lines \\
-        A region line height is used to iteratively calculate the region's lines using progressively larger circular radii.
+  \item region line-height: Lines \\
+        A region line-height is used to iteratively calculate the region's lines using progressively larger circular radii.
         This means changing a line height must cause the lines to be recalculated.
 
   \item region glyph kerning: Points \\
