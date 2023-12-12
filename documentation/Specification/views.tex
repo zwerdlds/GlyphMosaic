@@ -67,25 +67,50 @@ As a result, these relationships are not necessarily typed, they are set up by t
   Specifically, when parameters are changed, they trigger recalculations of downstream data, according to the relationships described here:
   \begin{itemize}
     \item source image: Glyphs \\
+          The source image defines the scale of glyphs, and changing it has the likely impact of changing the result of the line point's sample pixels.
+          This means that changing the source image should cause glyphs to be recalculated.
+
     \item source text: Glyphs
+
+
     \item font: Output Image
+
     \item output scale: Output Image
+
     \item region mask: Points
+
     \item region glyph path kernel: Lines
+
     \item region gutter line height: Lines
+
     \item region line height: Lines
+
     \item region glyph kerning: Points
+
     \item region glyph minimum size: Glyphs
+
     \item region glyph maximum size: Glyphs
+
     \item region density sample size: Glyphs
+
     \item region glyph rotation sample size: Points
+
     \item region path generation scale: Lines
+
   \end{itemize}
 
   In addition, when subsystems' data are changed, they also trigger their own downstream recalculations:
 
-  \sidiagram{diagrams/data_flow_subsys}
-  {Changes to parameters of a document will have cascading effects to downstream subsystems.}
+  \lidiagram{diagrams/data_flow_subsys}
+  {Changes to document parameters will have cascading effects on downstream subsystems.}
   {fig:data_flow}
-  {\diagsize}
+
+  \begin{itemize}
+    \item Lines triggers Points \\
+          Changes to a line will likely change the location of points.
+          Lines define the locations the point walking algorithm will select from.
+
+    \item
+  \end{itemize}
+
 }

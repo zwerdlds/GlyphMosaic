@@ -7,7 +7,7 @@ package "gm" as gm {
 }
 
 component "eframe" as eframe
-
+0
 ui -u-> doc
 ui -u-> eframe
 
