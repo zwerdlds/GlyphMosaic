@@ -20,14 +20,14 @@
   \pbodyitem{Shaders}{
     \label{sec:shaders}
     An intermediate enhancement to the system would be to replace many of the CPU-based transformations with shaders.
-    This approach may have architectural impacts, but would enable much faster feedback by enabling matrix transformations on the GPU.
+    This approach may have architectural impacts but would enable much faster feedback by enabling matrix transformations on the GPU.
     This implementation will be considered in the future if the performance criteria are not being met.
   }
   \pbodyitem{AI Platforms}{
     \label{sec:ai_plat}
     Generative AI neural networks present an interesting application to the process of isolating regions, and glyph path generation.
     Implementing this approach could replace a substantial amount of the existing design, but it could also eliminate a substantial amount of the work necessary on the part of users.
-    This approach is not considered in the current form of the design, but it may be possible in the future to create training data from 3-D renders, merged with a midjourney-like model.
-    This approach would also need to carefully consider the problem of compatibility, since video card interfaces such as ROCm or CUDA are both common candidate platforms.
+    This approach is not considered in the current form of the design, but it may be possible in the future to create training data from 3-D renders, merged with a "wMidjourney"-like model.
+    This approach would also need to carefully consider the problem of compatibility since interfaces such as ROCm or CUDA are both common candidate platforms and have had mixed support in other systems.
   }
 \end{itemize}
