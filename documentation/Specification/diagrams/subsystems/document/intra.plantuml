@@ -1,47 +1,50 @@
 @startuml intra
 skinparam componentStyle uml1
 
-package "gm::document" as doc {
-    interface "Facade" as docf{
-        + void AttachDocPropChangeSub(sub: DocumentPropertyChangeSubscriber)
-        + DocumentPropertyChangeSubscriber propChangeSub()
-    }
+package "gm" as gm {
+    package "document" as doc {
+        interface "Facade" as docf{
+            + void AttachDocPropChangeSub(sub: DocumentPropertyChangeSubscriber)
+            + DocumentPropertyChangeSubscriber propChangeSub()
+        }
 
-    enum "PropertyChange" as docpc {
-        SetValue(DocumentProperty)
-        CreateRegion(TODO)
-        RemoveRegion(TODO)
-    }
+        enum "PropertyChange" as docpc {
+            SetValue(DocumentProperty)
+            CreateRegion(TODO)
+            RemoveRegion(TODO)
+        }
 
-    enum "DocumentProperty" as docp {
-        Font(TODO)
-        SourceImage(BitMap)
-        SourceText(String)
-        OutputScale(f32)
-        RegionProperty(TODO, RegionProperty)
-    }
+        enum "DocumentProperty" as docp {
+            Font(TODO)
+            SourceImage(BitMap)
+            SourceText(String)
+            OutputScale(f32)
+            RegionProperty(TODO, RegionProperty)
+        }
 
-    enum "RegionProperty" as docrp {
-        PathDilationMask(BitMap)
-        GlyphPathKernel(BitMap)
-        GutterLineHeight(f32)
-        LineHeight(usize)
-        GlyphKerning(f32)
-        GlyphMinimumSize(f32)
-        GlyphMaximumSize(f32)
-        DensitySampleSize(f32)
-        GlyphRotationSampleSize(f32)
-        PathGenerationScale(f32)
-    }
+        enum "RegionProperty" as docrp {
+            PathDilationMask(BitMap)
+            GlyphPathKernel(BitMap)
+            GutterLineHeight(f32)
+            LineHeight(usize)
+            GlyphKerning(f32)
+            GlyphMinimumSize(f32)
+            GlyphMaximumSize(f32)
+            DensitySampleSize(f32)
+            GlyphRotationSampleSize(f32)
+            PathGenerationScale(f32)
+        }
 
-    interface "PropertyChangePublisher" as docpcp
-    interface "PropertyChangeSubscriber" as docpcs
+        interface "PropertyChangePublisher" as docpcp
+        interface "PropertyChangeSubscriber" as docpcs
 
-    struct "SimpleFacadeFactory" as docsff {
-        + Facade create_facade()
-    }
-    struct "SimpleFacade" as docsf {
-        - PropertyChangePublisher notifier
+        struct "SimpleFacadeFactory" as docsff {
+            + Facade create_facade()
+        }
+        struct "SimpleFacade" as docsf {
+            - PropertyChangePublisher notifier
+        }
+
     }
 }
 
@@ -57,9 +60,9 @@ package "roopes"  as roopes {
 }
 
 
-docpc -l-> docp
+docpc -d-> docp
 
-docp -l-> docrp
+docp -d-> docrp
 
 docf --> docpcs
 
