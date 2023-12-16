@@ -14,9 +14,11 @@ package Filesystem as fs {
 }
 
 usr --> gm
+
 gm --> si
 gm --> gd
 gm --> oi
+gm --> st
 
 usr --> si
 usr --> st
