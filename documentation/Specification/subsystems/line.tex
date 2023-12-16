@@ -1,1 +1,64 @@
 \subsection{Line}
+
+\lidiagram{diagrams/subsystems/line/abstract}
+{The data that is used and produced by the line subsystem.}
+{fig:lin_abstract}
+
+The line subsystem is responsible for creating and updating paths.
+This requires two key elements: the path kernel and the region mask.
+The line is used as an initial set of all possible points on the line.
+
+To build it, each 'on' kernel pixel is used to determine the center of a circle, which has a radius corresponding to the iteration's line distance.
+The line distance is a combination of the gutter and the line height multiplied by the iteration count.
+The iteration's circles are combined to form the entire interior of the iteration line.
+
+The region mask is used to determine the number of iterations necessary for the complete coverage of the region.
+This is done by determining the closest kernel pixel for each region boundary pixel.
+The distance between the two represents the maximum distance necessary for the lines to cover, so the number of iterations, not including the gutter iteration, is the distance minus the gutter space divided by the line height.
+
+Once all the line iterations are complete, an edge detection algorithm is performed on each iteration.
+Each iteration's edge pixels are compiled into a series of lines.
+These lines are then used by the point subsystem to determine the particular locations and angles of each glyph.
+
+\slidiagram{diagrams/subsystems/line/inter}
+{The line subsystem types do not depend on any other system types.  However, it is necessary for other systems to be wired up at runtime.}
+{fig:lin_inter}
+{.5}
+
+
+\subsubsection{Mechanics}
+Line logic exists per region.
+To prevent coupling, regions are not directly referenced in this module.
+It is the responsibility of client code (such as a factory or builder class) to instantiate and wire up the necessary relationships between the two subsystems.
+
+When a region is deleted, it is also necessary to de-wire associated line subscribers.
+In practice, this means that when a new region is created, the client code responsible for setting up the region will create a new LineManager for that region, which will then listen for parameter changes.
+
+The subsystem, via the facade, provides clients the ability to create instances of the LineManager class, which collects various subscribers associated with a single region instance.
+Client code must create a manager for each region, and then use the manager's descendant data to set up the necessary relationships, described in \prettyref{sec:line_usage}.
+
+All material logic for creating the resultant Lines is isolated to LineGenerator\footnote{This situation may need to be re-examined as complexity in the component is revealed.}.
+When a parameter is changed by notifying the appropriate subscriber, the LineManager will
+
+The Lines type is the primary output type of the subsystem.
+This collects each text Line into an ordered data element for later processing.
+
+Line corresponds to a single iteration of the process.
+A line is a continuous series of pixels.
+There will be however many lines necessary to cover the entire region mask.
+
+When a property is changed, the appropriate subscriber is notified.
+This is concretely handled by the SimpleLineManager, which updates the appropriate value in its internal params field.
+Then it calls the generator with the updated values.
+When the generator has completed, the manager forwards the updated Lines value to the LinesPublisher, which then sends the new values to subscribed components.
+
+
+\lidiagram{diagrams/subsystems/line/intra}
+{Line subsystem components.}
+{fig:lin_intra}
+
+
+\subsubsection{Usage}
+\label{sec:line_usage}
+For each region, a line manager must be subscribed to region glyph kernel, gutter, scale, and line height changes.
+The sole downstream subscriber is the point subsystem, which uses the data calculated in this subsystem to determine the location of glyphs.

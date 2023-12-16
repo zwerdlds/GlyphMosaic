@@ -1,0 +1,179 @@
+@startuml intra
+skinparam componentStyle uml1
+
+package "gm" as gm {
+    package "line" as lin {
+        interface "LineManagerFactory" as linlmf {
+            + LineManager create_line_manager()
+        }
+
+        struct "SimpleLineManagerFactory" as linslmf {}
+
+        struct "SimpleLineManager" as linslm {
+            - LineGenerator generator
+            - LineParameters params
+            - LinesPublisher publisher
+        }
+
+        interface "LineManager" as linlm {
+            + MaskSubscriber get_mask_subscriber()
+            + LineHeightSubscriber get_region_line_height_subscriber()
+            + GutterSubscriber get_region_gutter_subscriber()
+            + PathKernelSubscriber get_region_path_kernel_subscriber()
+            + LinesPublisher get_lines_publisher()
+        }
+
+        struct "SimpleFacadeFactory" as linsff {
+            + Facade create_facade()
+        }
+
+        interface "Facade" as linf {
+            + LineManagerFactory get_line_manager_factory()
+        }
+
+        struct "SimpleFacade" as linsf {
+            + LineManagerFactory get_line_manager_factory()
+        }
+
+        interface "Line" as linl {
+            + Set<LinePoint> all_points()
+            + Vec<LinePoint> ordered_points()
+        }
+
+        struct "SimpleLine" as linsl {
+            - Vec<LinePoint> line
+        }
+
+        struct "SimpleLines" as linsls {
+            - Vec<Line> lines
+        }
+
+        interface "Lines" as linls {
+            + Vec<Line> get_lines()
+        }
+
+        interface "LinePoint" as linlpt {
+            + usize get_x()
+            + usize get_y()
+        }
+
+        struct "SimpleLinePoint" as linslpt {}
+
+        package "property_subscribers" as linps {
+            interface "MaskSubscriber" as linpsms {}
+            interface "LineHeightSubscriber" as linpslhs {}
+            interface "GutterSubscriber" as linpsgs {}
+            interface "PathKernelSubscriber" as linpspks {}
+            interface "Scale" as linpss {}
+        }
+
+        interface "LineGenerator" as linlg {
+            + Lines generate(LineParameters params)
+        }
+
+        struct "SimpleLineGenerator" as linslg {}
+
+        interface "LineParameters" as linlp {
+            + Set<Point> get_mask()
+            + Set<Point> get_kernel()
+            + usize get_gutter_height()
+            + usize get_line_height()
+        }
+
+        struct "SimpleLineParameters" as linslp {
+            + Set<Point> mask
+            + Set<Point> kernel
+            + usize gutter_height
+            + usize line_height
+        }
+
+        struct "SimpleLinesPublisher" as linslsp {
+
+        }
+
+        interface "LinesPublisher" as linlsp {
+        }
+    }
+}
+
+package "roopes"  as roopes {
+    package "patterns::publisher_subscriber" as rps {
+        interface "MutablePublisher" as rpsmp
+        interface "Subscriber" as rpss
+
+        package "vec_publisher" as rpsvp {
+            struct "VecPublisher" as rpsvpvp
+        }
+    }
+}
+
+linlmf --> linlm
+
+linsf --> linslmf
+
+linf --> linlmf
+
+linslmf --> linslm
+linslmf --> linslg
+linslmf --> linslsp
+
+linslm --* linlsp
+linslsp ..|> linlsp
+linlsp --|> rpsmp
+
+linlg --> linslp
+linlg --> linlp
+
+linslp ..|> linlp
+
+linsls --> linl
+linsls ..|> linls
+
+linslmf ..|> linlmf
+
+linsff --> linf
+linsff --> linsf
+
+linsf ..|> linf
+linsf --* linlmf
+
+linlm -r-|> linpsms
+linlm -r-|> linpslhs
+linlm -r-|> linpsgs
+linlm -r-|> linpspks
+linlm -r-|> linpss
+linlm --> linlsp
+
+
+linpsms -d[hidden]- linpslhs
+linpslhs -d[hidden]- linpsgs
+linpsgs -d[hidden]- linpspks
+linpspks -d[hidden]- linpss
+
+linslm ..|> linlm
+
+linpsms --|> rpss
+linpslhs --|> rpss
+linpsgs --|> rpss
+linpspks --|> rpss
+linpss --|> rpss
+
+linslg ..|> linlg
+
+linslm --* linlg
+linslm --* linlp
+
+linsl ..|> linl
+linsl --> linlpt
+
+linls --> linl
+linl --> linlpt
+
+linslpt ..|> linlpt
+
+linslg --> linsl
+linslg --> linsls
+linslg --> linslpt
+
+
+@enduml

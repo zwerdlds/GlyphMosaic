@@ -1,0 +1,19 @@
+@startuml abstract
+skinparam defaultFontName DejaVu Serif
+
+rectangle "region glyph path kernel" as crpk
+rectangle "region gutter line height" as crglh
+rectangle "region line height" as crlh
+rectangle "region path generation scale" as crpgs
+
+rectangle "Lines" as rli
+rectangle "Points" as rp
+
+crpk --> rli
+crglh --> rli
+crlh --> rli
+crpgs --> rli
+
+rli --> rp : Line point sets
+
+@enduml

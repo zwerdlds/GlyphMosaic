@@ -1,0 +1,14 @@
+@startuml inter
+skinparam componentStyle uml1
+
+package "gm" as gm {
+    component "line" as lin
+}
+
+package "roopes"  as roopes {
+    component "patterns::publisher_subscriber" as rps
+}
+
+lin -u-> rps
+
+@enduml
