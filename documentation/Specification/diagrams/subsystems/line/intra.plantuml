@@ -32,11 +32,10 @@ package "gm" as gm {
         }
 
         struct "SimpleFacade" as linsf {
-            + LineManagerFactory get_line_manager_factory()
+            - LineManagerFactory line_manager_factory
         }
 
         interface "Line" as linl {
-            + Set<LinePoint> all_points()
             + Vec<LinePoint> ordered_points()
         }
 
@@ -78,6 +77,10 @@ package "gm" as gm {
             + Set<Point> get_kernel()
             + usize get_gutter_height()
             + usize get_line_height()
+            + void set_mask(Set<Point> v)
+            + void set_kernel(Set<Point> v)
+            + void set_gutter_height(usize v)
+            + void set_line_height(usize v)
         }
 
         struct "SimpleLineParameters" as linslp {
