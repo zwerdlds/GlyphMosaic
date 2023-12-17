@@ -11,20 +11,20 @@ The system operates as a single abstract running process, either in a browser or
 
 The system interacts with the following aspects of the host system:
 \begin{itemize}
-  \pbodyitem{Filesystem}{
-    \begin{itemize}
-      \item Source Image is loaded from the host filesystem.
-      \item Source Text is loaded from the host filesystem.
-      \item \Glspl{out_image} are written to the host filesystem.
-      \item \Glspl{document} are read and written to the host filesystem.
-    \end{itemize}
-  }
-  \pbodyitem{Window Manager}{
-    For appropriate targets, the application presents a window-based GUI for designing and rendering Output Images.
-  }
-  \pbodyitem{Web Browser}{
-    For appropriate targets, the application presents a window-based GUI for designing and rendering Output Images.
-  }
+      \pbodyitem{Filesystem}{
+            \begin{itemize}
+                  \item Source Image is loaded from the host filesystem.
+                  \item Source Text is loaded from the host filesystem.
+                  \item \Glspl{out_image} are written to the host filesystem.
+                  \item \Glspl{document} are read and written to the host filesystem.
+            \end{itemize}
+      }
+      \pbodyitem{Window Manager}{
+            For appropriate targets, the application presents a window-based GUI for designing and rendering Output Images.
+      }
+      \pbodyitem{Web Browser}{
+            For appropriate targets, the application presents a window-based GUI for designing and rendering Output Images.
+      }
 \end{itemize}
 
 
@@ -53,10 +53,10 @@ As a result, these relationships are not necessarily typed, they are set up by t
 {\diagsize}
 
 \begin{enumerate}
-  \item \linemod\ depends on \regmod\ to be notified when a Region Mask changes.
-  \item \ptmod\ depends on \linemod\ to be notified when a region's text path changes.  This path affects the location of the region's points as well as their tangents.
-  \item \ptmod\ depends on \regmod\ to be notified when the Region Mask changes.  This \bmtype\ affects which region points are retained.
-  \item \lettermod\ depends on \ptmod\ to be notified of changes to point locations and tangents.  These values are used to place and rotate individual Letters.
+      \item \linemod\ depends on \regmod\ to be notified when a Region Mask changes.
+      \item \ptmod\ depends on \linemod\ to be notified when a region's text path changes.  This path affects the location of the region's points as well as their tangents.
+      \item \ptmod\ depends on \regmod\ to be notified when the Region Mask changes.  This \bmtype\ affects which region points are retained.
+      \item \lettermod\ depends on \ptmod\ to be notified of changes to point locations and tangents.  These values are used to place and rotate individual Letters.
 \end{enumerate}
 
 
@@ -67,76 +67,81 @@ As a result, these relationships are not necessarily typed, they are set up by t
 Data flow between each module in such a way as to accomplish the workflow outlined in \prettyref{sec:moddep} and \prettyref{apx:algorithm}.
 This section also describes the relationships necessary to update the user interface and document properties not necessarily exposed directly to the user.
 
-Specifically, when parameters are changed, they trigger recalculations of downstream data, according to these relationships:
-\begin{itemize}
-  \item source image: Letters \\
-        The source image defines the scale of letters, and changing it has the likely impact of changing the result of the line point's sample pixels.
-        This means that changing the source image must cause letter data to be recalculated.
-
-  \item source text: Letters \\
-        The source text is placed on the output image bitmap glyph by glyph, transformed by each element in the line point list.
-        This means that changing the text must cause letter data to be recalculated.
-
-  \item font: Output Image \\
-        The font face determines the specific glyphs that are used to represent letter data, being placed and scaled according to point data.
-        This means changing the font will cause the output image to be recalculated.
-
-  \item output scale: Output Image \\
-        The output scale of an image determines the location and size of the glyphs as they are stamped according to point data.
-        This means changing the output scale will cause the output image to be recalculated.
-
-  \item region mask: Points \\
-        A region mask represents the area for which a region line's points are valid and therefore is responsible for filtering line points.
-        This means changing a region mask must cause points to be recalculated.
-
-  \item region glyph path kernel: Lines \\
-        A region glyph path kernel is used to iteratively calculate the region's lines using progressively larger circular radii, involving the region line and gutter height.
-        This means changing a path kernel must cause the lines to be recalculated.
-
-  \item region gutter line-height: Lines \\
-        A region gutter line height affects the offset of a region's lines.
-        This means changing a gutter height must cause the lines to be recalculated.
-
-  \item region line-height: Lines \\
-        A region line-height is used to iteratively calculate the region's lines using progressively larger circular radii.
-        This means changing a line height must cause the lines to be recalculated.
-
-  \item region glyph kerning: Points \\
-        A region's glyph kerning values affect the inter-point spacing while walking the region line.
-        This means that changing kerning must cause the points to be recalculated.
-
-  \item region glyph minimum size: Letters \\
-        The glyph minimum size is used in calculating individual letter scales.
-        This means that changing the minimum size must cause the letter data to be recalculated.
-
-  \item region glyph maximum size: Letters \\
-        The glyph maximum size is used in calculating individual letter scales.
-        This means that changing the maximum size must cause the letter data to be recalculated.
-
-  \item region density sample size: Letters \\
-        The density sample size is used to determine which pixels are sampled when a point scale is calculated.
-        This means that changing the density sample size must cause the letter data to be recalculated.
-
-  \item region glyph rotation sample size: Points \\
-        The rotation sample size is used to determine which points are sampled when a point rotation is calculated.
-        This means that changing the rotation sample size must cause the letter data to be recalculated.
-
-  \item region path generation scale: Lines \\
-        Lines are calculated using a bitmap and edge detection, and the scale of that bitmap can affect the amount of precision provided while calculating lines.
-        Changing this value will change the location of the successive lines, and must therefore require them to be recalculated.
-\end{itemize}
-
-In addition, when subsystems' data are changed, they also trigger their downstream recalculations:
-
 \lidiagram{diagrams/data_flow_subsys}
 {Changes to document parameters will have cascading effects on downstream subsystems.}
 {fig:data_flow}
 
+Specifically, when parameters are changed, they trigger recalculations of downstream data, according to these relationships:
 \begin{itemize}
-  \item Lines triggers Points \\
-        Changes to a line will likely change the location of points.
-        Lines define the locations the point walking algorithm will select from.
+      \item source image: Letters \\
+            The source image defines the scale of letters, and changing it has the likely impact of changing the result of the line point's sample pixels.
+            This means that changing the source image must cause letter data to be recalculated.
 
-  \item
+      \item source text: Letters \\
+            The source text is placed on the output image bitmap glyph by glyph, transformed by each element in the line point list.
+            This means that changing the text must cause letter data to be recalculated.
+
+      \item font: Output Image \\
+            The font face determines the specific glyphs that are used to represent letter data, being placed and scaled according to point data.
+            This means changing the font will cause the output image to be recalculated.
+
+      \item output scale: Output Image \\
+            The output scale of an image determines the location and size of the glyphs as they are stamped according to point data.
+            This means changing the output scale will cause the output image to be recalculated.
+
+      \item region mask: Points \\
+            A region mask represents the area for which a region line's points are valid and therefore is responsible for filtering line points.
+            This means changing a region mask must cause points to be recalculated.
+
+      \item region glyph path kernel: Lines \\
+            A region glyph path kernel is used to iteratively calculate the region's lines using progressively larger circular radii, involving the region line and gutter height.
+            This means changing a path kernel must cause the lines to be recalculated.
+
+      \item region gutter line-height: Lines \\
+            A region gutter line height affects the offset of a region's lines.
+            This means changing a gutter height must cause the lines to be recalculated.
+
+      \item region line-height: Lines \\
+            A region line height is used to iteratively calculate the region's lines using progressively larger circular radii.
+            This means changing a line height must cause the lines to be recalculated.
+
+      \item region glyph kerning: Points \\
+            A region's glyph kerning values affect the inter-point spacing while walking the region line.
+            This means that changing kerning must cause the points to be recalculated.
+
+      \item region glyph minimum size: Letters \\
+            The glyph minimum size is used in calculating individual letter scales.
+            This means that changing the minimum size must cause the letter data to be recalculated.
+
+      \item region glyph maximum size: Letters \\
+            The glyph maximum size is used in calculating individual letter scales.
+            This means that changing the maximum size must cause the letter data to be recalculated.
+
+      \item region density sample size: Letters \\
+            The density sample size is used to determine which pixels are sampled when a point scale is calculated.
+            This means that changing the density sample size must cause the letter data to be recalculated.
+
+      \item region glyph rotation sample size: Points \\
+            The rotation sample size is used to determine which points are sampled when a point rotation is calculated.
+            This means that changing the rotation sample size must cause the letter data to be recalculated.
+
+      \item region path generation scale: Lines \\
+            Lines are calculated using a bitmap and edge detection, and the scale of that bitmap can affect the amount of precision provided while calculating lines.
+            Changing this value will change the location of the successive lines, and must therefore require them to be recalculated.
+\end{itemize}
+
+In addition, when subsystems' data are changed, they also trigger their downstream recalculations:
+\begin{itemize}
+      \item Lines triggers Points \\
+            Changes to a line will likely change the location of points.
+            Lines define the locations the point walking algorithm will select from.
+
+      \item Points triggers Letters \\
+            Changes to a region's points will cause the parameters associated with each letter to change.
+            Points define the location and rotation of each letter.
+
+      \item Letters triggers Output Image \\
+            Changes to any letter will cause the output image to change.
+            Letters define the location, size, and rotation of glyphs which are stamped to create the output image.
 \end{itemize}
 
