@@ -1,0 +1,155 @@
+@startuml intra
+skinparam componentStyle uml1
+
+package "gm" as gm {
+    package "point" as pt {
+        interface "PointRotSequenceManagerFactory" as ptprsmf {
+            + PointRotSequenceManager create_point_manager()
+        }
+
+        struct "SimplePointRotSequenceManagerFactory" as ptsprsmf {}
+
+        struct "SimplePointRotSequenceManager" as ptsprsm {
+            - PointRotSequenceGenerator generator
+            - PointRotSequenceParameters params
+            - PointRotSequencePublisher publisher
+        }
+
+        interface "PointRotSequenceManager" as ptprsm {
+            + MaskSubscriber get_mask_subscriber()
+            + KerningSubscriber get_kerning_subscriber()
+            + RotationSampleSizeSubscriber get_rotation_sample_size_subscriber()
+            + LinesSubscriber get_lines_subscriber()
+            + PointsPublisher get_points_publisher()
+        }
+
+        struct "SimpleFacadeFactory" as ptsff {
+            + Facade create_facade()
+        }
+
+        interface "Facade" as ptf {
+            + PointRotSequenceManagerFactory get_point_manager_factory()
+        }
+
+        struct "SimpleFacade" as ptsf {
+            - PointRotSequenceManagerFactory point_manager_factory
+        }
+
+        interface "PointRotSequence" as ptprs {
+            + Vec<PointRot> ordered_points()
+        }
+
+        struct "SimplePointRotSequence" as ptsprs {
+            - Vec<PointRot> ordered_points
+        }
+
+        interface "PointRot" as ptpr {
+            + usize get_x()
+            + usize get_y()
+            + float get_rot()
+        }
+
+        struct "SimpleInheritedPointRot" as ptsipr {
+            - LinePoint line_pt
+            - float rotation
+        }
+
+        package "property_subscribers" as ptps {
+            interface "MaskSubscriber" as ptpsms {}
+            interface "KerningSubscriber" as ptpsks {}
+            interface "LinesSubscriber" as ptpsls {}
+        }
+
+        interface "PointRotSequenceGenerator" as ptprsg {
+            + PointRotSequence generate(PointRotSequenceParameters params)
+        }
+
+        struct "SimplePointRotSequenceGenerator" as ptsprsg {}
+
+        interface "PointRotSequenceParameters" as ptprsp {
+            + Set<Point> get_mask()
+            + usize get_kerning()
+            + Vec<Vec<Point>> get_lines()
+            + void set_mask(Set<Point> v)
+            + void set_kerning(usize v)
+            + void set_lines(Vec<Vec<Point>> v)
+        }
+
+        struct "SimplePointRotSequenceParameters" as ptsprsp {
+            + Set<Point> mask
+            + usize kerning
+            + Vec<Vec<Point>> lines
+        }
+
+        struct "SimplePointRotSequencePublisher" as ptsprspub {
+        }
+
+        interface "PointRotSequencePublisher" as ptprspub {
+        }
+    }
+}
+
+package "roopes"  as roopes {
+    package "patterns::publisher_subscriber" as rps {
+        interface "MutablePublisher" as rpsmp
+        interface "Subscriber" as rpss
+
+        package "vec_publisher" as rpsvp {
+            struct "VecPublisher" as rpsvpvp
+        }
+    }
+}
+
+ptsprsmf --> ptsprsg
+ptsprsmf --> ptsprsp
+ptsprsmf --> ptsprspub
+ptsff --> ptsf
+ptsf --> ptsprsmf
+
+ptsprsmf --> ptsprsm
+
+ptsprsm --* ptprsg
+ptsprsm --* ptprsp
+ptsprsm --* ptprspub
+
+ptprsg --> ptprsp
+ptprsg --> ptsprs
+ptprsg --> ptprs
+
+ptprs --> ptpr
+ptsprs --> ptpr
+
+ptsprsg --> ptsipr
+ptsprsg --> ptsprs
+
+ptsff --> ptf
+
+ptf --> ptprsmf
+ptsf --> ptprsmf
+
+ptprsmf --> ptprsm
+ptprsm --|> ptpsms
+ptprsm --|> ptpsks
+ptprsm --|> ptpsls
+
+ptpsms --|> rpss
+ptpsks --|> rpss
+ptpsls --|> rpss
+
+
+ptsipr ..|> ptpr
+
+ptsf ..|> ptf
+
+ptsprsmf ..|> ptprsmf
+
+ptsprsm ..|> ptprsm
+
+ptsprsg ..|> ptprsg
+
+ptsprsp ..|> ptprsp
+
+ptsprspub ..|> ptprspub
+ptprspub --|> rpsmp
+
+@enduml

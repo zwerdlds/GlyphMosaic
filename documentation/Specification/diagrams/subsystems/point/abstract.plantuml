@@ -1,0 +1,19 @@
+@startuml abstract
+skinparam defaultFontName DejaVu Serif
+
+rectangle "region mask" as crm
+rectangle "region glyph kerning" as crgk
+rectangle "region glyph rotation sample size" as crgrss
+
+rectangle "Lines" as rli
+rectangle "Points" as rp
+rectangle "Letters" as rle
+
+crm --> rp
+crgk --> rp
+crgrss --> rp
+
+rli --> rp
+rp --> rle
+
+@enduml
