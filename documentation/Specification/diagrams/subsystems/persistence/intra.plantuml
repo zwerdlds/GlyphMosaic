@@ -2,17 +2,26 @@
 skinparam componentStyle uml1
 
 package "gm" {
-    package "document" as doc {
-        interface "PropertyChangeSubscriber" as docpcs
+    package "ui" as ui {
+        interface "PropertyChangeSubscriber" as uipcs
+        interface "PropertyChangePublisher" as uipcp
     }
 
     package "persistence" as per {
         interface "Facade" as perf{
+            + SaveHandler get_save_handler()
+            + LoadHandler get_load_handler()
+            + PersistedValueEventVisitor get_persisted_value_event_listener()
         }
 
-        interface "PersistenceWorker" as perpw {
+        struct "PersistenceWorker" as perpw {}
+
+        interface "SaveHandler" as persh {
             + void Save()
-            + void SaveAs(location: Path)
+        }
+
+        struct "SimpleLoadHandler" as perslh
+        interface "LoadHandler" as perlh {
             + void Load(location: Path)
         }
 
@@ -24,38 +33,66 @@ package "gm" {
             - PersistenceWorker worker
         }
 
-        package "platforms" as perp{
-            package "file_system" as perpfs {
-                struct "PersistenceWorker" as perpfspw
-            }
+        struct "SimpleValueEventVisitor" as perspvev {}
+        interface "PersistedValueEventVisitor" as perpvev {}
+        enum "PersistedValueEvent" as perpve {
+            SetValue(PersistedValue)
+            CreateRegion(TODO)
+            RemoveRegion(TODO)
+            SetSaveLocation(String)
+        }
 
-            package "local_storage" as perpls {
-                struct "PersistenceWorker" as perplspw
-            }
+        struct "SimplePersistedValueVisitor" as perspvv {}
+        interface "PersistedValueVisitor" as perpvv {}
+        enum "PersistedValue" as perpv {
+            Font(TODO)
+            SourceImage(BitMap)
+            SourceText(String)
+            OutputScale(f32)
+            RegionValue(TODO, RegionValue)
+        }
+
+        struct "SimpleRegionValueVisitor" as persrvv {}
+        interface "RegionValueVisitor" as perrvv {}
+        enum "RegionValue" as perrv {
+            PathDilationMask(BitMap)
+            GlyphPathKernel(BitMap)
+            GutterLineHeight(f32)
+            LineHeight(usize)
+            GlyphKerning(f32)
+            GlyphMinimumSize(f32)
+            GlyphMaximumSize(f32)
+            DensitySampleSize(f32)
+            GlyphRotationSampleSize(f32)
+            PathGenerationScale(f32)
         }
     }
 }
 
-package "web_sys" as ws {
-    struct "Storage" as wss
+package "unqlite" as unq {
+    struct "UnQLite" as unqunq
 }
 
-package "sqlite" as sql {
-    struct "Connection" as sqlc
-}
+perpvev --> perpve
+perpve --> perpv
+
+perpvv --> perpv
+perpv --> perrv
+
+perrvv --> perrv
+
 
 persff --> perf
 persff --> persf
-persff --> perplspw
-persff --> perpfspw
+persff --> perpw
 
 persf ..|> perf
 persf --* perpw
-perf --|> docpcs
+perf --|> uipcp
+perf --|> uipcs
 
-perplspw --|> perpw
-perplspw --* wss
-perpfspw --|> perpw
-perpfspw --* sqlc
+perpw --|> persh
+perpw --|> perlh
+perpw --* unqunq
 
 @enduml
