@@ -89,9 +89,13 @@ Specifically, when parameters are changed, they trigger recalculations of downst
             The output scale of an image determines the location and size of the glyphs as they are stamped according to point data.
             This means changing the output scale will cause the output image to be recalculated.
 
-      \item region mask: Points \\
+      \item region mask: Points, Lines \\
             A region mask represents the area for which a region line's points are valid and therefore is responsible for filtering line points.
-            This means changing a region mask must cause points to be recalculated.
+            This means changing a region mask must cause points to be recalculated. \\
+            \\
+            In addition, a region mask is used to calculate the number of lines required for the region to be fully covered in text.
+            This means changing a region mask must cause lines to be recalculated.
+
 
       \item region glyph path kernel: Lines \\
             A region glyph path kernel is used to iteratively calculate the region's lines using progressively larger circular radii, involving the region line and gutter height.
