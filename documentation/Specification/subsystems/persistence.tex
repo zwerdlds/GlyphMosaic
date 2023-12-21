@@ -1,10 +1,10 @@
 \subsection{Persistence}
-The \permod\ subsystem is responsible for ensuring \docdtype\ events are written to platform-appropriate storage.
-\permod\ will, depending on the target, write to a specific store:
-\begin{itemize}
-      \item File System: SQLite-based binary file.
-      \item WASM: Browser-based local storage.
-\end{itemize}
+\permod\ is responsible for reading and writing system parameters to and from self-contained documents.
+This enables the system to recreate the in-progress work of a user after the application has been closed.
+
+Events that trigger a document write or load are triggered by the user via the interface.
+Load events propagate document parameters associated with them to every subsystem.
+To eliminate coupling, these relationships will be constructed by the system at runtime, such that this subsystem is fully distinct from others.
 
 \slidiagram{diagrams/subsystems/persistence/inter}
 {Persistence inter-system dependencies.}
@@ -13,7 +13,11 @@ The \permod\ subsystem is responsible for ensuring \docdtype\ events are written
 
 
 \subsubsection{Mechanics}
-\perftype\ subscribes to \docmod\ events via that subsystem's \docftype subscriber features.
+\perftype\ acts as a subscriber to property change events.
+It implements a listener for all the associated fields which a user can modify.
+
+To ensure correct dataflows, an enum provides typed data fields.
+\permod\ then uses that enum to generate a visitor that acts as a single entry point for clients.
 
 
 \lidiagram{diagrams/subsystems/persistence/intra}
@@ -21,13 +25,23 @@ The \permod\ subsystem is responsible for ensuring \docdtype\ events are written
 {fig:pers_intra}
 {}
 
+The subsystem uses a SQL-style transactional approach to writing data to a file:
+\begin{itemize}
+      \item On startup, an UnQLite document is created and a new transaction is initiated.
+      \item When \verb|gm::persistence::PersistenceWorker::save()| is invoked, the UnQLite transaction is committed and a new one is begun.
+      \item When \verb|...::save_as()| is invoked, the UnQLite document path is set, and \verb|...::save()| is invoked.
+      \item When .\verb|..::load()| is invoked, the UnQLite file is opened, replacing the existing one, and all parameters are re-published.
+\end{itemize}
+
 
 \subsubsection{Usage}
+In addition to document-related properties, this subsystem contains an agent responsible for initiating the document write-out and read processes.
+Agents are registered for the \uimod\ "Save", "Save As", and "Load" events.
 In general, the subsystem functions as follows:
 \begin{itemize}
       \item Save \\
             Write the current state of the document to a serialized location.
-            If the file does not already have an associated location and needs one\footnote{This need is target-specific.} this will prompt the user to select a location (TODO: the method with which this is implemented is to be determined).
+            If the file does not already have an associated location and needs one, this will prompt the user to select a location (TODO: the method with which this is implemented is to be determined).
       \item Save As \\
             Write the current state of the document from a serialized location to a specific location.
       \item Load \\
