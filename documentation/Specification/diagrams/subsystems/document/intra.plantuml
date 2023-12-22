@@ -4,52 +4,78 @@ skinparam componentStyle uml1
 package "gm" as gm {
     package "document" as doc {
         interface "Facade" as docf{
-            + void AttachDocPropChangeSub(sub: DocumentPropertyChangeSubscriber)
-            + DocumentPropertyChangeSubscriber propChangeSub()
+            + PropertyChangePublisher create_property_change_publisher()
+            + DocumentPropertyChangePublisher create_document_property_change_publisher()
+            + RegionPropertyChangePublisher create_region_property_change_publisher()
         }
 
-        enum "PropertyChange" as docpc {
-            SetValue(DocumentProperty)
-            CreateRegion(TODO)
-            RemoveRegion(TODO)
-        }
+        package "event" {
+            enum "PropertyChange" as docpc {
+                SetValue(DocumentProperty)
+                CreateRegion(TODO)
+                RemoveRegion(TODO)
+            }
 
-        enum "DocumentProperty" as docp {
-            Font(TODO)
-            SourceImage(BitMap)
-            SourceText(String)
-            OutputScale(f32)
-            RegionProperty(TODO, RegionProperty)
-        }
+            interface "PropertyChangePublisher" as docpcp {}
+            interface "PropertyChangeSubscriber" as docpcs {}
+            interface "PropertyChangeVisitor" as docpcv {}
+            interface "PropertyChangePublisherFactory" as docpcpf {}
+            struct "SimplePropertyChangePublisherFactory" as docspcpf {}
 
-        enum "RegionProperty" as docrp {
-            PathDilationMask(BitMap)
-            GlyphPathKernel(BitMap)
-            GutterLineHeight(f32)
-            LineHeight(usize)
-            GlyphKerning(f32)
-            GlyphMinimumSize(f32)
-            GlyphMaximumSize(f32)
-            DensitySampleSize(f32)
-            GlyphRotationSampleSize(f32)
-            PathGenerationScale(f32)
-        }
+            package "document" as docd {
+                enum "DocumentProperty" as docdp {
+                    Font(TODO)
+                    SourceImage(BitMap)
+                    SourceText(String)
+                    OutputScale(f32)
+                    RegionProperty(TODO, RegionProperty)
+                }
+                interface "DocumentPropertyChangeVisitor" as docdpcv {}
+                interface "DocumentPropertyChangeSubscriber" as docdpcs {}
+                interface "DocumentPropertyChangePublisher" as docdpcp {}
+                interface "DocumentPropertyChangePublisherFactory" as docdpcpf {}
+                struct "SimpleDocumentPropertyChangePublisherFactory" as docsdpcpf {}
 
-        interface "PropertyChangePublisher" as docpcp
-        interface "PropertyChangeSubscriber" as docpcs
+                package "region" as docr{
+                    enum "RegionProperty" as docrp {
+                        PathDilationMask(BitMap)
+                        GlyphPathKernel(BitMap)
+                        GutterLineHeight(f32)
+                        LineHeight(usize)
+                        GlyphKerning(f32)
+                        GlyphMinimumSize(f32)
+                        GlyphMaximumSize(f32)
+                        DensitySampleSize(f32)
+                        GlyphRotationSampleSize(f32)
+                        PathGenerationScale(f32)
+                    }
+                    interface "RegionPropertyChangeVisitor" as docrpcv {}
+                    interface "RegionPropertyChangeSubscriber" as docrpcs {}
+                    interface "RegionPropertyChangePublisher" as docrpcp {}
+                    interface "RegionPropertyChangePublisherFactory" as docrpcpf {}
+                    struct "SimpleRegionPropertyChangePublisherFactory" as docsrpcpf {}
+                }
+            }
+        }
 
         struct "SimpleFacadeFactory" as docsff {
             + Facade create_facade()
         }
         struct "SimpleFacade" as docsf {
-            - PropertyChangePublisher notifier
+            - PropertyChangePublisherFactory pc_pub_fact
+            - DocumentPropertyChangePublisherFactory doc_pc_pub_fact
+            - RegionPropertyChangePublisherFactory reg_pc_pub_fact
         }
 
     }
 }
 
 package "roopes"  as roopes {
-    package "patterns::publisher_subscriber" as rps {
+    package "visitor" as rpv {
+        interface "Visitor" as rpvv {}
+    }
+
+    package "publisher_subscriber" as rps {
         interface "MutablePublisher" as rmpsp
         interface "Subscriber" as rpss
 
@@ -60,26 +86,65 @@ package "roopes"  as roopes {
 }
 
 
-docpc -d-> docp
+docsdpcpf ..|> docdpcpf
+docsdpcpf --> rpsvpvp
 
-docp -d-> docrp
+docsrpcpf ..|> docrpcpf
+docsrpcpf --> rpsvpvp
 
-docf --> docpcs
+docspcpf ..|> docpcpf
+docspcpf --> rpsvpvp
+
+docpcv --> docpc
+docdpcv --> docdp
+docrpcv --> docrp
+
+docpcv --|> rpvv
+docdpcv --|> rpvv
+docrpcv --|> rpvv
+
+docpc -d-> docdp
+
+docdp -d-> docrp
+
+docf --> docpcp
+docf --> docdpcp
+docf --> docrpcp
 
 docsf ..|> docf
-docsf --* docpcp
+docsf --* docpcpf
+docsf --* docdpcpf
+docsf --* docrpcpf
+
+docpcpf --> docpcp
+docdpcpf --> docdpcp
+docrpcpf --> docrpcp
 
 docsff --> docsf
-docsff --> rpsvpvp
 docsff --> docf
+docsff --> docspcpf
+docsff --> docsdpcpf
+docsff --> docsrpcpf
 
-rmpsp -|> rpsvpvp
+rpsvpvp ..|> rmpsp
 
 docpcs --|> rpss
 docpcs --> docpc
 
+docdpcs --|> rpss
+docdpcs --> docdp
+
+docrpcs --|> rpss
+docrpcs --> docrp
+
 docpcp --|> rmpsp
 docpcp --> docpc
+
+docdpcp --|> rmpsp
+docdpcp --> docdp
+
+docrpcp --|> rmpsp
+docrpcp --> docrp
 
 
 

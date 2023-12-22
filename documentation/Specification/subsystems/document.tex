@@ -7,9 +7,12 @@
 }
 
 \subsection{Document}
-The document namespace contains logic concerning the state of the persisted document.
-This sub-system listens for the application to change the parameters of the document and persists them.
-Additionally, when a program document file is loaded, it will send notifications to subscribed components.
+The document namespace contains interfaces concerned with the state of a document's user-mutable fields.
+This includes publishers, subscribers, and visitors.
+The module is centered around three enums, each representing different specificity for the event types.
+
+The facade is strictly concerned with creating publishers of the various levels of specificity, for use in other modules.
+No other types are implemented locally: that is left to each of the other submodules such that 
 
 \slidiagram{diagrams/subsystems/document/inter}
 {Document inter-subsystem dependencies.}

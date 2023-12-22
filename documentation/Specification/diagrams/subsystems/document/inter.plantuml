@@ -6,12 +6,13 @@ package "gm" as gm {
 }
 
 package "roopes"  as roopes {
-    component "patterns::publisher_subscriber" as rps
+    component "publisher_subscriber" as rps
+    component "visitor" as rpv
 }
 
 
 doc -u-> rps
-
+doc -u-> rpv
 
 
 @enduml
