@@ -2,70 +2,40 @@
 skinparam componentStyle uml1
 
 package "gm" {
-    package "ui" as ui {
-        interface "PropertyChangeSubscriber" as uipcs
-        interface "PropertyChangePublisher" as uipcp
-    }
-
     package "persistence" as per {
         interface "Facade" as perf{
-            + SaveHandler get_save_handler()
-            + LoadHandler get_load_handler()
-            + PersistedValueEventVisitor get_persisted_value_event_listener()
+            + PersistenceEventHandler get_persistence_event_handler()
+            + LoadEventPublisher get_load_event_publisher()
         }
 
-        struct "PersistenceWorker" as perpw {}
+        struct "SimpleLoadEventPublisher" as perslep {}
+        interface "LoadEventPublisher" as perlep {}
+        interface "LoadEventSubscriber" as perles {}
 
-        interface "SaveHandler" as persh {
-            + void Save()
-        }
-
-        struct "SimpleLoadHandler" as perslh
-        interface "LoadHandler" as perlh {
-            + void Load(location: Path)
+        struct "SimpleFacade" as persf {
+            - PersistedValueEventHandler persistence_event_handler
+            - LoadEventPublisher load_event_publisher
         }
 
         struct "SimpleFacadeFactory" as persff {
             + Facade create_facade()
         }
 
-        struct "SimpleFacade" as persf {
-            - PersistenceWorker worker
+        interface "PersistenceEventHandler" as perpeh {}
+        struct "UnqlitePersistenceEventHandler" as persupeh {
+            - UnQLite unq_document
         }
 
-        struct "SimpleValueEventVisitor" as perspvev {}
-        interface "PersistedValueEventVisitor" as perpvev {}
-        enum "PersistedValueEvent" as perpve {
-            SetValue(PersistedValue)
-            CreateRegion(TODO)
-            RemoveRegion(TODO)
-            SetSaveLocation(String)
+        package "event" as pere {
+            interface "..." as pereellipse {}
         }
+    }
+}
 
-        struct "SimplePersistedValueVisitor" as perspvv {}
-        interface "PersistedValueVisitor" as perpvv {}
-        enum "PersistedValue" as perpv {
-            Font(TODO)
-            SourceImage(BitMap)
-            SourceText(String)
-            OutputScale(f32)
-            RegionValue(TODO, RegionValue)
-        }
-
-        struct "SimpleRegionValueVisitor" as persrvv {}
-        interface "RegionValueVisitor" as perrvv {}
-        enum "RegionValue" as perrv {
-            PathDilationMask(BitMap)
-            GlyphPathKernel(BitMap)
-            GutterLineHeight(f32)
-            LineHeight(usize)
-            GlyphKerning(f32)
-            GlyphMinimumSize(f32)
-            GlyphMaximumSize(f32)
-            DensitySampleSize(f32)
-            GlyphRotationSampleSize(f32)
-            PathGenerationScale(f32)
-        }
+package "roopes" as r {
+    package "publisher_subscriber" as rps{
+        interface "Publisher" as rpsp {}
+        interface "Subscriber" as rpss {}
     }
 }
 
@@ -73,26 +43,29 @@ package "unqlite" as unq {
     struct "UnQLite" as unqunq
 }
 
-perpvev --> perpve
-perpve --> perpv
+perlep --> perles
+perlep --|> rpsp
 
-perpvv --> perpv
-perpv --> perrv
-
-perrvv --> perrv
-
+perslep ..|> perlep
 
 persff --> perf
 persff --> persf
-persff --> perpw
+persff --> persupeh
+persff --> perslep
 
 persf ..|> perf
-persf --* perpw
-perf --|> uipcp
-perf --|> uipcs
+persf --* perpeh
+persf --* perlep
 
-perpw --|> persh
-perpw --|> perlh
-perpw --* unqunq
+perf --> perlep
+perf --> perpeh
+
+persupeh ..|> perpeh
+persupeh --* unqunq
+
+perles --|> perpeh
+perles --|> rpss
+
+perpeh --|> pereellipse
 
 @enduml

@@ -1,0 +1,59 @@
+@startuml events
+skinparam componentStyle uml1
+left to right direction
+
+package "gm" {
+    package "persistence" as per {
+        interface "PersistenceEventHandler" as perpeh {}
+
+        package "event" as pere {
+            interface "PersistedValueEventHandler" as perepveh {}
+            interface "SetValueEventHandler" as peresve {}
+            interface "CreateRegionHandler" as perecrh {}
+            interface "RemoveRegionHandler" as pererrh {}
+
+            package "property" as perep {
+                interface "SetFontHandler" as perepsfh {}
+                interface "SetSourceImageHandler" as perepssih {}
+                interface "SetSourceTextHandler" as perepssth {}
+                interface "SetOutputScaleHandler" as perepsosh {}
+                interface "SetRegionPropertyHandler" as perepsrph {}
+
+                package "region" as perepr {
+                    interface "SetPathDilationMaskHandler" as pereprspdmh {}
+                    interface "SetGlyphPathKernelHandler" as pereprsgpkh {}
+                    interface "SetGutterLineHeightHandler" as pereprsglhh {}
+                    interface "SetLineHeightHandler" as pereprslhh {}
+                    interface "SetGlyphKerningHandler" as pereprsgkh {}
+                    interface "SetGlyphMinimumSizeHandler" as pereprsgminsh {}
+                    interface "SetGlyphMaximumSizeHandler" as pereprsgmaxsh {}
+                    interface "SetDensitySampleSizeHandler" as pereprsdssh {}
+                    interface "SetGlyphRotationSampleSizeHandler" as pereprsgrssh {}
+                    interface "SetPathGenerationScaleHandler" as pereprspgsh {}
+                }
+            }
+        }
+    }
+}
+
+perpeh --|> peresve
+perpeh --|> perecrh
+perpeh --|> pererrh
+perpeh --|> perepveh
+perepveh --|> perepsfh
+perepveh --|> perepssih
+perepveh --|> perepssth
+perepveh --|> perepsosh
+perepveh --|> perepsrph
+perepsrph --|> pereprspdmh
+perepsrph --|> pereprsgpkh
+perepsrph --|> pereprsglhh
+perepsrph --|> pereprslhh
+perepsrph --|> pereprsgkh
+perepsrph --|> pereprsgminsh
+perepsrph --|> pereprsgmaxsh
+perepsrph --|> pereprsdssh
+perepsrph --|> pereprsgrssh
+perepsrph --|> pereprspgsh
+
+@enduml

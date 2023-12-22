@@ -1,10 +1,25 @@
 \subsection{Persistence}
-\permod\ is responsible for reading and writing system parameters to and from self-contained documents.
-This enables the system to recreate the in-progress work of a user after the application has been closed.
+\permod\ is responsible for reading and writing parameters to and from system-external.
+This enables the system to recreate the work of a user after the application has been terminated.
+The system operates on a "document" basis: each document is contained in a (main) application window.
+This document can then be saved to a specific location on the user's local storage device.
+This is implemented by storing an UnQLite-based copy of the latest parameters propagated by other systems.
+
+Any other subsystem can propagate changes to the document.
+In actuality, the \uimod\ is the sole source of changes, due to all user-facing properties being directly editable via that subsystem.
+Additional properties, such as Lines, Points, and Letters are not user-mutable.
+Therefore, the document can be recreated without them, and are omitted from persistence.
+Omitting these properties trades initial load time for document size.
 
 Events that trigger a document write or load are triggered by the user via the interface.
 Load events propagate document parameters associated with them to every subsystem.
-To eliminate coupling, these relationships will be constructed by the system at runtime, such that this subsystem is fully distinct from others.
+These are handled via the persistence LoadEventSubscriber, which is supplied with the necessary events to recreate the in-memory state of the document.
+
+\paragraph{Parameter Quantity and Design Implications}
+There are numerous parameters.
+To reduce system complexity, they are collected into a single interface: PersistenceEventHandler.
+This enables the system to process Region creation and deletion, as well as the save location of the document.
+To ensure a complete and performant system, the subsystem uses the Roopes visitor implementation to ensure all enums are consumed.
 
 \slidiagram{diagrams/subsystems/persistence/inter}
 {Persistence inter-system dependencies.}
@@ -19,19 +34,22 @@ It implements a listener for all the associated fields which a user can modify.
 To ensure correct dataflows, an enum provides typed data fields.
 \permod\ then uses that enum to generate a visitor that acts as a single entry point for clients.
 
+The subsystem uses a SQL-style transactional approach to writing data to a file:
+\begin{itemize}
+      \item On startup, an UnQLite document is created and a new transaction is initiated.
+      \item When save is invoked, the UnQLite transaction is committed and a new one is begun.
+      \item When save as is invoked, the UnQLite document path is set, and save is invoked.
+      \item When load is invoked, the UnQLite file is opened, replacing the existing one, and all parameters are re-published.
+\end{itemize}
+
 
 \lidiagram{diagrams/subsystems/persistence/intra}
 {Persistence subsystem components.}
 {fig:pers_intra}
-{}
 
-The subsystem uses a SQL-style transactional approach to writing data to a file:
-\begin{itemize}
-      \item On startup, an UnQLite document is created and a new transaction is initiated.
-      \item When \verb|gm::persistence::PersistenceWorker::save()| is invoked, the UnQLite transaction is committed and a new one is begun.
-      \item When \verb|...::save_as()| is invoked, the UnQLite document path is set, and \verb|...::save()| is invoked.
-      \item When .\verb|..::load()| is invoked, the UnQLite file is opened, replacing the existing one, and all parameters are re-published.
-\end{itemize}
+\lidiagram{diagrams/subsystems/persistence/events}
+{Persistence subsystem events.  This is a continuation from \prettyref{fig:pers_intra}}
+{fig:pers_events}
 
 
 \subsubsection{Usage}

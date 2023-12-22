@@ -5,8 +5,11 @@ package "gm" {
     component "persistence" as per
 }
 
+component "roopes" as roopes
+
 component "unqlite" as sql
 
 per -u-> sql
+per -u-> roopes
 
 @enduml
