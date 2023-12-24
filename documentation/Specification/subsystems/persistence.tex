@@ -1,19 +1,8 @@
 \subsection{Persistence}
-\permod\ is responsible for reading and writing parameters to and from system-external.
+\permod\ is responsible for reading and writing parameters to and from system-external storage.
 This enables the system to recreate the work of a user after the application has been terminated.
 The system operates on a "document" basis: each document is contained in a (main) application window.
 This document can then be saved to a specific location on the user's local storage device.
-This is implemented by storing an UnQLite-based copy of the latest parameters propagated by other systems.
-
-Any other subsystem can propagate changes to the document.
-In actuality, the \uimod\ is the sole source of changes, due to all user-facing properties being directly editable via that subsystem.
-Additional properties, such as Lines, Points, and Letters are not user-mutable.
-Therefore, the document can be recreated without them, and are omitted from persistence.
-Omitting these properties trades initial load time for document size.
-
-Events that trigger a document write or load are triggered by the user via the interface.
-Load events propagate document parameters associated with them to every subsystem.
-These are handled via the persistence LoadEventSubscriber, which is supplied with the necessary events to recreate the in-memory state of the document.
 
 \paragraph{Parameter Quantity and Design Implications}
 There are numerous parameters.
@@ -28,6 +17,24 @@ To ensure a complete and performant system, the subsystem uses the Roopes visito
 
 
 \subsubsection{Mechanics}
+The document-centric design of this subsystem is implemented using an UnQLite-based copy of the latest parameters propagated by other systems.
+
+Any other subsystem can propagate changes to the document.
+In actuality, the \uimod\ subsystem is the sole source of changes due to all user-facing properties being directly editable via that subsystem.
+Document writes and loads are also triggered solely by the user via the graphical interface.
+
+Additional properties, such as Lines, Points, and Letters are not user-mutable and are therefore omitted from persistence.
+This design initial load time for document size.
+
+\paragraph{Load Events}
+{
+      There is also a special interface incorporated in this system which allows other subsystems to listen for changed parameters when a document is loaded.
+      These load events propagate those reset fields.
+      These are handled via the persistence LoadEventSubscriber, which is supplied with the necessary events to recreate the in-memory state of the document.
+      Client systems must implement this subscriber interface to receive these events.
+      Each subscriber must then define how each incoming event is handled, which are read back by the publisher, one at a time, to re-publish the document settings.
+}
+
 \perftype\ acts as a subscriber to property change events.
 It implements a listener for all the associated fields which a user can modify.
 

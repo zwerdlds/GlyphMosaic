@@ -7,53 +7,191 @@ package "gm" {
         interface "PersistenceEventHandler" as perpeh {}
 
         package "event" as pere {
-            interface "PersistedValueEventHandler" as perepveh {}
-            interface "SetValueEventHandler" as peresve {}
-            interface "CreateRegionHandler" as perecrh {}
-            interface "RemoveRegionHandler" as pererrh {}
+            interface "SetPropertyValueEventHandler" as perespveh {}
+
+            interface "CreateRegionHandler" as perecrh {
+                + void create_region(RegionId region_id)
+            }
+            interface "RemoveRegionHandler" as pererrh {
+                + void remove_region(RegionId region_id)
+            }
+
+            struct "RegionId" as pereri {
+                - usize region_id
+            }
 
             package "property" as perep {
-                interface "SetFontHandler" as perepsfh {}
-                interface "SetSourceImageHandler" as perepssih {}
-                interface "SetSourceTextHandler" as perepssth {}
-                interface "SetOutputScaleHandler" as perepsosh {}
-                interface "SetRegionPropertyHandler" as perepsrph {}
+                struct "Font" as perepf {
+                    - String font_name
+                }
+
+                interface "SetFontPropertyValueHandler" as perepsfh {
+                    + void set_font(Font font)
+                }
+
+                struct "SourceImage" as perepsi {
+                    - Bitmap source_image
+                }
+
+                interface "SetSourceImagePropertyValueHandler" as perepssih {
+                    + void set_source_image(SourceImage source_image)
+                }
+
+
+                struct "SourceText" as perepst {
+                    - String source_text
+                }
+
+                interface "SetSourceTextPropertyValueHandler" as perepssth {
+                    + void set_source_text(SourceText source_text)
+                }
+
+                struct "OutputScale" as perepos {
+                    - float output_scale
+                }
+
+                interface "SetOutputScalePropertyValueHandler" as perepsosh {
+                    + void set_output_scale(OutputScale output_scale)
+                }
+
+                interface "SetRegionPropertyPropertyValueHandler" as perepsrph {}
 
                 package "region" as perepr {
-                    interface "SetPathDilationMaskHandler" as pereprspdmh {}
-                    interface "SetGlyphPathKernelHandler" as pereprsgpkh {}
-                    interface "SetGutterLineHeightHandler" as pereprsglhh {}
-                    interface "SetLineHeightHandler" as pereprslhh {}
-                    interface "SetGlyphKerningHandler" as pereprsgkh {}
-                    interface "SetGlyphMinimumSizeHandler" as pereprsgminsh {}
-                    interface "SetGlyphMaximumSizeHandler" as pereprsgmaxsh {}
-                    interface "SetDensitySampleSizeHandler" as pereprsdssh {}
-                    interface "SetGlyphRotationSampleSizeHandler" as pereprsgrssh {}
-                    interface "SetPathGenerationScaleHandler" as pereprspgsh {}
+
+                    struct "PathDilationMask" as pereprpdm {
+                        - Bitmap path_dilation_mask
+                    }
+                    interface "SetPathDilationMaskPropertyValueHandler" as pereprspdmh {
+                        + void set_path_dilation_mask(RegionId region_id, PathDilationMask path_dilation_mask)
+                    }
+
+                    struct "GlyphPathKernel" as pereprgpk {
+                        - Bitmap glyph_path_kernel
+                    }
+                    interface "SetGlyphPathKernelPropertyValueHandler" as pereprsgpkh {
+                        + void set_glyph_path_kernel(RegionId region_id, GlyphPathKernel glyph_path_kernel)
+                    }
+
+                    struct "GutterLineHeight" as pereprglh {
+                        - usize gutter_line_height
+                    }
+                    interface "SetGutterLineHeightPropertyValueHandler" as pereprsglhh {
+                        + void set_gutter_line_height(RegionId region_id, GutterLineHeight gutter_line_height)
+                    }
+
+                    struct "LineHeight" as pereprlh {
+                        - usize line_height
+                    }
+                    interface "SetLineHeightPropertyValueHandler" as pereprslhh {
+                        + void set_line_height(RegionId region_id, LineHeight line_height)
+                    }
+
+                    struct "GlyphKerning" as pereprgk {
+                        - usize glyph_kerning
+                    }
+                    interface "SetGlyphKerningPropertyValueHandler" as pereprsgkh {
+                        + void set_glyph_kerning(RegionId region_id, GlyphKerning glyph_kerning)
+                    }
+
+                    struct "GlyphMinimumSize" as pereprgmins {
+                        - usize glyph_minimum_size
+                    }
+                    interface "SetGlyphMinimumSizePropertyValueHandler" as pereprsgminsh {
+                        + void set_glyph_minimum_size(RegionId region_id, GlyphMinimumSize glyph_minimum_size)
+                    }
+
+                    struct "GlyphMaximumSize" as pereprgmaxs {
+                        - usize glyph_maximum_size
+                    }
+                    interface "SetGlyphMaximumSizePropertyValueHandler" as pereprsgmaxsh {
+                        + void set_glyph_maximum_size(RegionId region_id, GlyphMaximumSize glyph_maximum_size)
+                    }
+
+                    struct "DensitySampleSize" as pereprdss {
+                        - usize density_sample_size
+                    }
+                    interface "SetDensitySampleSizePropertyValueHandler" as pereprsdssh {
+                        + void set_density_sample_size(RegionId region_id, DensitySampleSize density_sample_size)
+                    }
+
+                    struct "GlyphRotationSampleSize" as pereprgrss {
+                        - usize glyph_rotation_sample_size
+                    }
+                    interface "SetGlyphRotationSampleSizePropertyValueHandler" as pereprsgrssh {
+                        + void set_glyph_rotation_sample_size(RegionId region_id, GlyphRotationSampleSize glyph_rotation_sample_size)
+                    }
+
+                    struct "PathGenerationScale" as pereprpgs {
+                        - float path_generation_scale
+                    }
+                    interface "SetPathGenerationScalePropertyValueHandler" as pereprspgsh {
+                        + void set_path_generation_scale(RegionId region_id, PathGenerationScale path_generation_scale)
+                    }
                 }
             }
         }
     }
 }
 
-perpeh --|> peresve
 perpeh --|> perecrh
 perpeh --|> pererrh
-perpeh --|> perepveh
-perepveh --|> perepsfh
-perepveh --|> perepssih
-perepveh --|> perepssth
-perepveh --|> perepsosh
-perepveh --|> perepsrph
+perpeh --|> perespveh
+perespveh --|> perepsfh
+perepsfh --> perepf
+
+perecrh --> pereri
+pererrh --> pereri
+
+perespveh --|> perepssih
+perepssih --> perepsi
+
+perespveh --|> perepssth
+perepssth --> perepst
+
+perespveh --|> perepsosh
+perepsosh --> perepos
+
+perespveh --|> perepsrph
+
 perepsrph --|> pereprspdmh
+pereprspdmh --> pereprpdm
+pereprspdmh --> pereri
+
 perepsrph --|> pereprsgpkh
+pereprsgpkh --> pereprgpk
+pereprsgpkh --> pereri
+
 perepsrph --|> pereprsglhh
+pereprsglhh --> pereprglh
+pereprsglhh --> pereri
+
 perepsrph --|> pereprslhh
+pereprslhh --> pereprlh
+pereprslhh --> pereri
+
 perepsrph --|> pereprsgkh
+pereprsgkh --> pereprgk
+pereprsgkh --> pereri
+
 perepsrph --|> pereprsgminsh
+pereprsgminsh --> pereprgmins
+pereprsgminsh --> pereri
+
 perepsrph --|> pereprsgmaxsh
+pereprsgmaxsh --> pereprgmaxs
+pereprsgmaxsh --> pereri
+
 perepsrph --|> pereprsdssh
+pereprsdssh --> pereprdss
+pereprsdssh --> pereri
+
 perepsrph --|> pereprsgrssh
+pereprsgrssh --> pereprgrss
+pereprsgrssh --> pereri
+
 perepsrph --|> pereprspgsh
+pereprspgsh --> pereprpgs
+pereprspgsh --> pereri
+
 
 @enduml
