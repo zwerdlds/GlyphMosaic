@@ -1,7 +1,6 @@
 @startuml use_case_diagram
 left to right direction
 skinparam defaultFontName DejaVu Serif
-skinparam linetype ortho
 
 
 :Systems Administrator: as sa
@@ -25,6 +24,9 @@ rectangle "Content" as cms {
 
     usecase "Render mosaic" as rms
     gd --> rms
+
+    usecase "Save mosaic" as sms
+    gd --> sms
 }
 
 @enduml
