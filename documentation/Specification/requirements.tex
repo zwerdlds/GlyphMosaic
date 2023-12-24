@@ -8,7 +8,7 @@ GlyphMosaic’s main built-in functionality is focused entirely on the workflow 
 In the most common workflow,
 \begin{enumerate}
       \item a user will load the source image and text into the program...
-      \item ...adjust various document settings to their needs...
+      \item ...adjust various document parameters...
       \item ...render a high-resolution version of the output mosaic...
       \item ...save that file for use outside the application.
 \end{enumerate}
@@ -19,15 +19,21 @@ Existing systems perform a similar, but limited subset, of the functionality of 
 One system can specify various line patterns, such as spirals.
 Many other examples exist that focus solely on LTR horizontal mosaics.
 
-GlyphMosaic's pathing is \gls{bitmap}-based, using \glspl{glyph_path_kernel} instead.
-Mosaic creators can specify the glyph line pattern by specifying a region line kernel for each region.
-The system then determines a text path that encompasses the entire region, and stamps glyphs from the \gls{src_txt} along the \gls{glyph_path}, scaling according to the \gls{density} from the \gls{src_img} to arrive at the \gls{out_image}.
+GlyphMosaic's pathing is \gls{bitmap}-based, using \glspl{glyph_path_kernel} instead of mathematical equations.
+Mosaic creators can specify the glyph line pattern by specifying a line kernel.
+Areas of the source image which require different path kernels are differentiated by region.
+
+The system uses the kernel dilation iteration paths to stamp glyphs from the \gls{src_txt} along the \gls{glyph_path}, scaling according to the \gls{density} from the \gls{src_img} to arrive at the \gls{out_image}.
 
 Because glyph paths are built from bitmaps instead of mathematical expressions, designers have more options to specify complexity.
-This path complexity enables more interesting patterns, such as following a fold in a piece of fabric, or the curves on a bowl.
+This path complexity enables more distinctive patterns, such as following a fold in a piece of fabric, the curves on a bowl, or the weave of a fabric, among others.
 
 \subsection{Use Cases}
 \label{sec:use_cases}
+
+\lidiagram{diagrams/use_case_diagram}
+{User-system interactions are constrained by the workflow.}
+{fig:use_case}
 
 \begin{itemize}
       \lbodyitem{System Installation}{
